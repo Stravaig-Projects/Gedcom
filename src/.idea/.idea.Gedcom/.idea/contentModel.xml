@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\dev\Gedcom\src" t="IncludeFlat">
+      <e p="Gedcom.sln" t="IncludeFlat" />
+    </e>
+    <e p="C:\Users\colin\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\colin\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_Gedcom.1334150498.00" t="ExcludeRecursive" />
+  </component>
+</project>
