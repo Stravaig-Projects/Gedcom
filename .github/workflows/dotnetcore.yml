@@ -9,9 +9,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      name: Checking out the source code
+      
+    - uses: actions/setup-dotnet@v1
+      name: Setup .NET Core
       with:
         dotnet-version: 3.1.101
-    - name: Build with dotnet
+    
+    - name: Build solution
       run: dotnet build src/Gedcom.sln --configuration Release
+    
+    - name: Test solution
+      run: dotnet test src/Gedcom.UnitTests/Gedcom.UnitTests.csproj
+      
