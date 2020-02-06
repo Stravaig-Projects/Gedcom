@@ -1,4 +1,4 @@
-name: .NET Core
+name: Build Stravaig.Gedcom
 
 on: [push]
 
@@ -20,5 +20,5 @@ jobs:
       run: dotnet build src/Gedcom.sln --configuration Release
     
     - name: Test solution
-      run: dotnet test src/Gedcom.UnitTests/Gedcom.UnitTests.csproj
+      run: dotnet test src/Stravaig.Gedcom.UnitTests/Stravaig.Gedcom.UnitTests.csproj
       
