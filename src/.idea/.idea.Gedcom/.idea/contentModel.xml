@@ -22,6 +22,7 @@
       <e p="Stravaig.Gedcom.UnitTests" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
         <e p="Extensions" t="Include">
+          <e p="CharExtensions_IsGedcomAlphanumTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomAlphaTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomDigitTests.cs" t="Include" />
         </e>
