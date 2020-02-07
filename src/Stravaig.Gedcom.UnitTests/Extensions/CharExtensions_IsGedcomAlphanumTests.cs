@@ -5,6 +5,7 @@ using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.UnitTests.Extensions
 {
+    [TestFixture]
     public class CharExtensions_IsGedcomAlphanumTests
     {
         [Test]
