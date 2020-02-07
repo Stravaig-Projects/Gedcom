@@ -11,6 +11,8 @@ namespace Stravaig.Gedcom.Extensions
         private const char UpperAlpha = (char) 0x41;
         private const char UpperZulu = (char) 0x5A;
         private const char Underscore = (char) 0x5F;
+        private const char Space = (char) 0x20; 
+        private const char NumberSign = (char) 0x23; 
 
         private static readonly char[] AnselAsUnicodeChars = new char[]
         {
@@ -179,6 +181,23 @@ namespace Stravaig.Gedcom.Extensions
                    target == (char)0x60 || 
                    (target >= (char)0x7B && target <= (char)0x7E) ||
                    AnselAsUnicodeChars.Contains(target);
+        }
+        
+        /// <summary>
+        /// Determines if the target value is a GEDCOM non-at character.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// non_at:=
+        ///   [alpha | digit | otherchar | (0x23) | (0x20 ) ]
+        ///   where:
+        ///   (0x20)=space character
+        ///   (0x23)=#
+        /// </remarks>
+        public static bool IsGedcomNonAt(this char target)
+        {
+            return target.IsGedcomAlphanum() || target == Space || target == NumberSign || target.IsGedcomOtherChar();
         }
     }
 }
