@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
 using Shouldly;
 
@@ -15,6 +17,19 @@ namespace Stravaig.Gedcom.UnitTests
             GedcomLevel level = new GedcomLevel(value);
         }
 
+        [Test]
+        [TestCaseSource(nameof(ValidLevelStrings))]
+        public void ctor_ValidStringValues_CreateLevelObject(string value)
+        {
+            GedcomLevel level = new GedcomLevel(value);
+        }
+        
+        [Test]
+        public void ctor_InvalidStringLevel_ThrowArgumentException()
+        {
+            Should.Throw<ArgumentException>( () => new GedcomLevel("123"));
+        }
+        
         [Test]
         public void ctor_AnotherGedcomLevel_CreateDuplicateObject()
         {
@@ -117,6 +132,12 @@ namespace Stravaig.Gedcom.UnitTests
         {
             for (int i = 0; i <= 99; i++)
                 yield return i;
+        }
+        
+        private static IEnumerable<string> ValidLevelStrings()
+        {
+            return ValidLevels()
+                .Select(l => l.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

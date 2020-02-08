@@ -68,19 +68,9 @@ namespace Stravaig.Gedcom.Extensions
             return true;
         }
 
-        public static bool IsGedcomLevel(this string token)
+        public static bool IsGedcomLevel(this string target)
         {
-            if (string.IsNullOrWhiteSpace(token))
-                return false;
-
-            if (token.Length > 2)
-                return false;
-            
-            if (token.Length == 1 && token[0].IsGedcomDigit())
-                return true;
-
-            return (token[0].IsGedcomDigit() && token[1].IsGedcomDigit() && token[0] != Zero);
+            return GedcomLevel.IsValid(target);
         }
-        
     }
 }

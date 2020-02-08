@@ -1,10 +1,13 @@
 using System;
 using System.Globalization;
+using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom
 {
     public struct GedcomLevel
     {
+        private const char Zero = (char) 0x30; // number 0.
+
         private readonly int _value;
 
         public GedcomLevel(int value)
@@ -20,6 +23,28 @@ namespace Stravaig.Gedcom
             _value = level._value;
         }
 
+        public GedcomLevel(string value)
+        {
+            if (!IsValid(value))
+                throw new ArgumentException("The passed value is not a valid GEDCOM level.", nameof(value));
+
+            _value = int.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        public static bool IsValid(string target)
+        {
+            if (string.IsNullOrWhiteSpace(target))
+                return false;
+
+            if (target.Length > 2)
+                return false;
+            
+            if (target.Length == 1 && target[0].IsGedcomDigit())
+                return true;
+
+            return (target[0].IsGedcomDigit() && target[1].IsGedcomDigit() && target[0] != Zero);
+        }
+        
         public override string ToString()
         {
             return _value.ToString(CultureInfo.InvariantCulture);
