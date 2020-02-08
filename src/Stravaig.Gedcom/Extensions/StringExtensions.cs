@@ -5,6 +5,7 @@ namespace Stravaig.Gedcom.Extensions
     public static class StringExtensions
     {
         private const char PointerBookend = (char) 0x40; // @ symbol.
+        private const char Zero = (char) 0x30; // number 0.
         
         /// <summary>
         /// Determines if the target string is a valid pointer identifier.
@@ -66,5 +67,20 @@ namespace Stravaig.Gedcom.Extensions
 
             return true;
         }
+
+        public static bool IsGedcomLevel(this string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                return false;
+
+            if (token.Length > 2)
+                return false;
+            
+            if (token.Length == 1 && token[0].IsGedcomDigit())
+                return true;
+
+            return (token[0].IsGedcomDigit() && token[1].IsGedcomDigit() && token[0] != Zero);
+        }
+        
     }
 }
