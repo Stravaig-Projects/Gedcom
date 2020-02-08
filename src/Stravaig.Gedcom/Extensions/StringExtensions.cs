@@ -1,3 +1,5 @@
+using System;
+
 namespace Stravaig.Gedcom.Extensions
 {
     public static class StringExtensions
@@ -37,6 +39,30 @@ namespace Stravaig.Gedcom.Extensions
                 if (!target[i].IsGedcomNonAt())
                     return false;
             }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Determines if the string is a valid GEDCOM tag.
+        /// </summary>
+        /// <param name="target">The string to check.</param>
+        /// <returns>true, if this matches the format of a GEDCOM tag.</returns>
+        /// <remarks>
+        /// The length of the GEDCOM TAG is a maximum of 31 characters,
+        /// with the first 15 characters being unique.
+        /// tag:= [alphanum | tag + alphanum ]
+        /// </remarks>
+        public static bool IsGedcomTag(this string target)
+        {
+            if (string.IsNullOrWhiteSpace(target))
+                return false;
+            if (target.Length > 31)
+                return false;
+            
+            for(int i=0; i<target.Length; i++)
+                if (!target[i].IsGedcomAlphanum())
+                    return false;
 
             return true;
         }
