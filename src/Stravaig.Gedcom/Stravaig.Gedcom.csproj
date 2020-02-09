@@ -4,19 +4,20 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>8</LangVersion>
 
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <RepositoryUrl>https://github.com/Stravaig-Projects/Gedcom</RepositoryUrl>
         <Copyright>©2020 Stavaig Projects.</Copyright>
         <Authors>Colin Mackay</Authors>
         <PackageProjectUrl>https://github.com/Stravaig-Projects/Gedcom</PackageProjectUrl>
         
         <GITHUB_RUN_NUMBER Condition="$(GITHUB_RUN_NUMBER)==''">0</GITHUB_RUN_NUMBER>
-        <AssemblyVersion>1.0.0.$(GITHUB_RUN_NUMBER)</AssemblyVersion>
+        <AssemblyVersion>1.0.$(GITHUB_RUN_NUMBER)</AssemblyVersion>
+        <VersionPrefix>1.0.$(GITHUB_RUN_NUMBER)</VersionPrefix>
         <GITHUB_REF Condition="$(GITHUB_REF)==''">Unknown</GITHUB_REF>
         <GITHUB_SHA Condition="$(GITHUB_SHA)==''">Unknown</GITHUB_SHA>
 
         <Description>A library to read GEDCOM files.
 
+GitHubRunNumber: $(GITHUB_RUN_NUMBER)
 GitBranch: $(GITHUB_REF)
 GitCommit: $(GITHUB_SHA)</Description>
     </PropertyGroup>
