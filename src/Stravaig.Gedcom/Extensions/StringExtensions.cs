@@ -72,5 +72,10 @@ namespace Stravaig.Gedcom.Extensions
         {
             return GedcomLevel.IsValid(target);
         }
+
+        public static GedcomTag AsGedcomTag(this string target)
+        {
+            return new GedcomTag(target);
+        }
     }
 }
