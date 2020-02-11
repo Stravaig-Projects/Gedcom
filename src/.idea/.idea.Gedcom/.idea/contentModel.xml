@@ -8,9 +8,20 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="Extensions" t="Include">
           <e p="CharExtensions.cs" t="Include" />
+          <e p="Int32Extensions.cs" t="Include" />
           <e p="StringExtensions.cs" t="Include" />
         </e>
+        <e p="GedcomException.cs" t="Include" />
+        <e p="GedcomLevel.cs" t="Include" />
+        <e p="GedcomLine.cs" t="Include" />
+        <e p="GedcomLineBuilder.cs" t="Include" />
+        <e p="GedcomLineParser.cs" t="Include" />
+        <e p="GedcomLineParserException.cs" t="Include" />
         <e p="GedcomLineReader.cs" t="Include" />
+        <e p="GedcomPointer.cs" t="Include" />
+        <e p="GedcomReaderException.cs" t="Include" />
+        <e p="GedcomRecordReader.cs" t="Include" />
+        <e p="GedcomTag.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netstandard2.0" t="Include">
@@ -28,9 +39,17 @@
           <e p="CharExtensions_IsGedcomAlphaTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomDigitTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomOtherCharTests.cs" t="Include" />
+          <e p="StringExtensions_IsGedcomLevelTests.cs" t="Include" />
           <e p="StringExtensions_IsGedcomPointerTests.cs" t="Include" />
+          <e p="StringExtensions_IsGedcomTagTests.cs" t="Include" />
         </e>
+        <e p="GedcomLevelTests.cs" t="Include" />
+        <e p="GedcomLineBuilderTests.cs" t="Include" />
+        <e p="GedcomLineParserTests.cs" t="Include" />
         <e p="GedcomLineReaderTests.cs" t="Include" />
+        <e p="GedcomPointerTests.cs" t="Include" />
+        <e p="GedcomRecordReaderTests.cs" t="Include" />
+        <e p="GedcomTagTests.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
