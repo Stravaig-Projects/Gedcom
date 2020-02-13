@@ -128,6 +128,57 @@ namespace Stravaig.Gedcom.UnitTests
             (p1 != p2).ShouldBeTrue();
         }
 
+        [Test]
+        [TestCase(0,0)]
+        [TestCase(0,1)]
+        [TestCase(1,1)]
+        [TestCase(1,0)]
+        [TestCase(2,0)]
+        public void CanFollowFrom_ValidAssociations_ReturnTrue(int first, int second)
+        {
+            GedcomLevel firstLevel = new GedcomLevel(first);
+            GedcomLevel secondLevel = new GedcomLevel(second);
+
+            secondLevel.CanFollowFrom(firstLevel).ShouldBeTrue();
+        }
+        
+        [Test]
+        [TestCase(0,2)]
+        [TestCase(1,3)]
+        public void CanFollowFrom_InvalidAssociations_ReturnFalse(int first, int second)
+        {
+            GedcomLevel firstLevel = new GedcomLevel(first);
+            GedcomLevel secondLevel = new GedcomLevel(second);
+
+            secondLevel.CanFollowFrom(firstLevel).ShouldBeFalse();
+        }
+
+        [Test]
+        [TestCase(0,0)]
+        [TestCase(0,1)]
+        [TestCase(1,1)]
+        [TestCase(1,0)]
+        [TestCase(2,0)]
+        public void CanBeFollowedBy_ValidAssociations_ReturnTrue(int first, int second)
+        {
+            GedcomLevel firstLevel = new GedcomLevel(first);
+            GedcomLevel secondLevel = new GedcomLevel(second);
+
+            firstLevel.CanFollowFrom(secondLevel).ShouldBeTrue();
+        }
+        
+        [Test]
+        [TestCase(0,2)]
+        [TestCase(1,3)]
+        public void CanBeFollowedBy_InvalidAssociations_ReturnFalse(int first, int second)
+        {
+            GedcomLevel firstLevel = new GedcomLevel(first);
+            GedcomLevel secondLevel = new GedcomLevel(second);
+
+            firstLevel.CanBeFollowedBy(secondLevel).ShouldBeFalse();
+        }
+
+        
         private static IEnumerable<int> ValidLevels()
         {
             for (int i = 0; i <= 99; i++)

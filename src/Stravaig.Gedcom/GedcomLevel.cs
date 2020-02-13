@@ -44,6 +44,16 @@ namespace Stravaig.Gedcom
 
             return (target[0].IsGedcomDigit() && target[1].IsGedcomDigit() && target[0] != Zero);
         }
+
+        public bool CanFollowFrom(GedcomLevel previousLineLevel)
+        {
+            return this._value <= previousLineLevel._value + 1;
+        }
+
+        public bool CanBeFollowedBy(GedcomLevel nextLineLevel)
+        {
+            return nextLineLevel.CanFollowFrom(this);
+        }
         
         public override string ToString()
         {
