@@ -10,8 +10,8 @@
         <PackageProjectUrl>https://github.com/Stravaig-Projects/Gedcom</PackageProjectUrl>
         
         <GITHUB_RUN_NUMBER Condition="$(GITHUB_RUN_NUMBER)==''">0</GITHUB_RUN_NUMBER>
-        <AssemblyVersion>1.0.$(GITHUB_RUN_NUMBER)</AssemblyVersion>
-        <VersionPrefix>1.0.$(GITHUB_RUN_NUMBER)</VersionPrefix>
+        <AssemblyVersion>0.1.$(GITHUB_RUN_NUMBER)</AssemblyVersion>
+        <VersionPrefix>0.1.$(GITHUB_RUN_NUMBER)</VersionPrefix>
         <GITHUB_REF Condition="$(GITHUB_REF)==''">Unknown</GITHUB_REF>
         <GITHUB_SHA Condition="$(GITHUB_SHA)==''">Unknown</GITHUB_SHA>
 
