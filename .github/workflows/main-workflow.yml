@@ -55,7 +55,7 @@ jobs:
       
     - name: Publish nuget
       run: |
-           for f in ./*.nupkg
+           for f in ./*-preview.nupkg
            do
              echo "Publishing package @$f"
              curl -X PUT -u "Stravaig-Projects:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/Stravaig-Projects/
