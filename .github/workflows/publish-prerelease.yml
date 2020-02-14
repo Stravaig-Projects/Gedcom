@@ -1,4 +1,6 @@
-name: prerelease NuGet
+name: Publish Prerelease packages
+
+on: deployment
 
 jobs:
   build:
@@ -15,7 +17,7 @@ jobs:
       run: cat
       
     - name: LS
-      run ls -a -r
+      run: ls -a -r
       
 #    - name: Publish nuget
 #      run: |
