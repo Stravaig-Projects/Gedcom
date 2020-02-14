@@ -37,7 +37,6 @@ jobs:
   deploy-prerelease:
     needs: build
     runs-on: ubuntu-latest
-    # also works with windows-latest and macos-latest
     steps:
     - name: Download artefacts
       uses: actions/download-artifact@v1
@@ -47,13 +46,13 @@ jobs:
 
     - name: List Artefacts
       run: ls -a -r
+      
+    - name: Install NuGet client
+      uses: warrenbuckley/Setup-Nuget@v1
 
     - name: Add private GitHub registry to NuGet
       run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/Stravaig-Projects/index.json -Username Stravaig-Projects -Password ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Install NuGet client
-      uses: warrenbuckley/Setup-Nuget@v1
-        
     - name: Publish Package
       run: nuget push *-preview.nupkg -Source "GPR"
 
