@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
+using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.UnitTests
 {
@@ -178,6 +179,49 @@ namespace Stravaig.Gedcom.UnitTests
             firstLevel.CanBeFollowedBy(secondLevel).ShouldBeFalse();
         }
 
+        [Test]
+        [TestCaseSource(nameof(ValidNextLineLevelMaxValues))]
+        public void NextLineLevelMax_ForValuesBelow98_ReturnValuePlusOne(GedcomLevel level, GedcomLevel max)
+        {
+            level.NextLineLevelMax.ShouldBe(max);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ValidSubordinateLevels))]
+        public void IsSubordinateTo_ForValidPairs_ReturnsTrue(GedcomLevel parentLevel, GedcomLevel subordinateLevel)
+        {
+            subordinateLevel.IsSubordinateTo(parentLevel)
+                .ShouldBeTrue();
+        }
+
+        [Test]
+        [TestCaseSource(nameof(InvalidSubordinateLevels))]
+        public void IsSubordinateTo_ForInvalidPairs_ReturnsFalse(GedcomLevel parentLevel, GedcomLevel subordinateLevel)
+        {
+            subordinateLevel.IsSubordinateTo(parentLevel)
+                .ShouldBeFalse();
+        }
+
+
+        
+        private static IEnumerable<GedcomLevel[]> InvalidSubordinateLevels()
+        {
+            for (int i = 0; i <= 99; i++)
+                yield return new GedcomLevel[] {i.AsGedcomLevel() , i.AsGedcomLevel()};
+            for (int i = 0; i <= 98; i++)
+                yield return new GedcomLevel[] {(i + 1).AsGedcomLevel() , i.AsGedcomLevel()};
+        }
+        private static IEnumerable<GedcomLevel[]> ValidSubordinateLevels()
+        {
+            for (int i = 0; i <= 98; i++)
+                yield return new GedcomLevel[] {i.AsGedcomLevel(), (i + 1).AsGedcomLevel()};
+        }
+        
+        private static IEnumerable<GedcomLevel[]> ValidNextLineLevelMaxValues()
+        {
+            for (int i = 0; i <= 98; i++)
+                yield return new GedcomLevel[] {i.AsGedcomLevel(), (i + 1).AsGedcomLevel()};
+        }
         
         private static IEnumerable<int> ValidLevels()
         {

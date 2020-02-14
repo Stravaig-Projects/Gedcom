@@ -44,6 +44,8 @@ namespace Stravaig.Gedcom
 
             return (target[0].IsGedcomDigit() && target[1].IsGedcomDigit() && target[0] != Zero);
         }
+        
+        public GedcomLevel NextLineLevelMax => new GedcomLevel(Math.Min(_value+1,99));
 
         public bool CanFollowFrom(GedcomLevel previousLineLevel)
         {
@@ -53,6 +55,11 @@ namespace Stravaig.Gedcom
         public bool CanBeFollowedBy(GedcomLevel nextLineLevel)
         {
             return nextLineLevel.CanFollowFrom(this);
+        }
+
+        public bool IsSubordinateTo(GedcomLevel previousLineLevel)
+        {
+            return _value == previousLineLevel._value + 1;
         }
         
         public override string ToString()
