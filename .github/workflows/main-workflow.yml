@@ -57,6 +57,7 @@ jobs:
       run: |
            for f in ./*.nupkg
            do
-             curl -vX PUT -u "Stravaig-Projects:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/Stravaig-Projects/
+             echo "Publishing package @$f"
+             curl -X PUT -u "Stravaig-Projects:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/Stravaig-Projects/
            done
       shell: bash
