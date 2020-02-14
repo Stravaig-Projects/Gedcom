@@ -164,7 +164,7 @@ namespace Stravaig.Gedcom.UnitTests
             GedcomLevel firstLevel = new GedcomLevel(first);
             GedcomLevel secondLevel = new GedcomLevel(second);
 
-            firstLevel.CanFollowFrom(secondLevel).ShouldBeTrue();
+            firstLevel.CanBeFollowedBy(secondLevel).ShouldBeTrue();
         }
         
         [Test]
