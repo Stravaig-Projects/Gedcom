@@ -45,8 +45,17 @@ jobs:
         name: packages
         path: .
 
-    - name: CAT
-      run: cat
-      
-    - name: LS
+    - name: List Artefacts
       run: ls -a -r
+
+    - name: Add private GitHub registry to NuGet
+      run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/Stravaig-Projects/index.json -Username Stravaig-Projects -Password ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install NuGet client
+      uses: warrenbuckley/Setup-Nuget@v1
+        
+    - name: Publish Package
+      run: nuget push *-preview.nupkg -Source "GPR"
+
+    - name: Publish Symbols Package
+      run: nuget push *-preview.symbols.nupkg -Source "GPR"
