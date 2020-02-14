@@ -22,42 +22,42 @@ jobs:
     - name: Test solution
       run: dotnet test src/Stravaig.Gedcom.UnitTests/Stravaig.Gedcom.UnitTests.csproj
       
-    - name: Create Preview Packages
-      run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --version-suffix preview --output prerelease-packages
+    # - name: Create Preview Packages
+    #   run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --version-suffix preview --output prerelease-packages
       
-    - name: Upload prerelease artefacts
-      uses: actions/upload-artifact@1.0.0
-      with:
-        name: prerelease-packages
-        path: prerelease-packages
+    # - name: Upload prerelease artefacts
+    #   uses: actions/upload-artifact@1.0.0
+    #   with:
+    #     name: prerelease-packages
+    #     path: prerelease-packages
       
-    - name: Create Stable Packages
-      run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --output stable-packages
+    # - name: Create Stable Packages
+    #   run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --output stable-packages
 
-    - name: Upload stable artefacts
-      uses: actions/upload-artifact@1.0.0
-      with:
-        name: stable-packages
-        path: stable-packages
+    # - name: Upload stable artefacts
+    #   uses: actions/upload-artifact@1.0.0
+    #   with:
+    #     name: stable-packages
+    #     path: stable-packages
 
-  deploy-prerelease:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Download artefacts
-      uses: actions/download-artifact@v1
-      with:
-        name: prerelease-packages
-        path: .
+  # deploy-prerelease:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Download artefacts
+  #     uses: actions/download-artifact@v1
+  #     with:
+  #       name: prerelease-packages
+  #       path: .
 
-    - name: List Artefacts
-      run: ls -a -r
+  #   - name: List Artefacts
+  #     run: ls -a -r
       
-    - name: Publish nuget
-      run: |
-           for f in ./*-preview.nupkg
-           do
-             echo "Publishing package @$f"
-             curl -X PUT -u "Stravaig-Projects:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/Stravaig-Projects/
-           done
-      shell: bash
+  #   - name: Publish nuget
+  #     run: |
+  #          for f in ./*-preview.nupkg
+  #          do
+  #            echo "Publishing package @$f"
+  #            curl -X PUT -u "Stravaig-Projects:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/Stravaig-Projects/
+  #          done
+  #     shell: bash
