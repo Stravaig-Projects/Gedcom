@@ -23,16 +23,22 @@ jobs:
       run: dotnet test src/Stravaig.Gedcom.UnitTests/Stravaig.Gedcom.UnitTests.csproj
       
     - name: Create Preview Packages
-      run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --version-suffix preview --output packages
+      run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --version-suffix preview --output prerelease-packages
       
-    - name: Create Stable Packages
-      run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --output packages
-
-    - name: Upload artefacts
+    - name: Upload prerelease artefacts
       uses: actions/upload-artifact@1.0.0
       with:
-        name: packages
-        path: packages
+        name: prerelease-packages
+        path: prerelease-packages
+      
+    - name: Create Stable Packages
+      run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --output stable-packages
+
+    - name: Upload stable artefacts
+      uses: actions/upload-artifact@1.0.0
+      with:
+        name: stable-packages
+        path: stable-packages
 
   deploy-prerelease:
     needs: build
@@ -41,20 +47,16 @@ jobs:
     - name: Download artefacts
       uses: actions/download-artifact@v1
       with:
-        name: packages
+        name: prerelease-packages
         path: .
 
     - name: List Artefacts
       run: ls -a -r
       
-    - name: Install NuGet client
-      uses: warrenbuckley/Setup-Nuget@v1
-
-    - name: Add private GitHub registry to NuGet
-      run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/Stravaig-Projects/index.json -Username Stravaig-Projects -Password ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Publish Package
-      run: nuget push *-preview.nupkg -Source "GPR"
-
-    - name: Publish Symbols Package
-      run: nuget push *-preview.symbols.nupkg -Source "GPR"
+    - name: Publish nuget
+      run: |
+           for f in ./*.nupkg
+           do
+             curl -vX PUT -u "Stravaig-Projects:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/Stravaig-Projects/
+           done
+      shell: bash
