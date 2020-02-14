@@ -22,14 +22,14 @@ jobs:
     - name: Test solution
       run: dotnet test src/Stravaig.Gedcom.UnitTests/Stravaig.Gedcom.UnitTests.csproj
       
-    # - name: Create Preview Packages
-    #   run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --version-suffix preview --output packages
+    - name: Create Preview Packages
+      run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --version-suffix preview --output packages
       
-    # - name: Create Stable Packages
-    #   run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --output packages
+    - name: Create Stable Packages
+      run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --output packages
 
-    # - name: Upload artefacts
-    #   uses: actions/upload-artifact@1.0.0
-    #   with:
-    #     name: packages
-    #     path: packages
+    - name: Upload artefacts
+      uses: actions/upload-artifact@1.0.0
+      with:
+        name: packages
+        path: packages
