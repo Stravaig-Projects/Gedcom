@@ -5,18 +5,13 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
 using Stravaig.Gedcom.Extensions;
+using Stravaig.Gedcom.UnitTests._helpers;
 
 namespace Stravaig.Gedcom.UnitTests
 {
     [TestFixture]
-    public class GedcomLineReaderTests
+    public class GedcomLineReaderTests : AsyncTestBase
     {
-        public enum Read
-        {
-            Synchronous,
-            Asynchronous
-        }
-        
         [Test]
         public void EnsureThatUnderlyingReaderIsClosedOnDispose()
         {
@@ -164,12 +159,6 @@ namespace Stravaig.Gedcom.UnitTests
             return await reader.ReadLineAsync();
         }
         
-        private static IEnumerable<Read> ReadTypes()
-        {
-            yield return Read.Synchronous;
-            yield return Read.Asynchronous;
-        }
-
         private static IEnumerable<(Read, string)> DummyFiles()
         {
             string[] files =
