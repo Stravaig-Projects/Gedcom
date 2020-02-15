@@ -44,7 +44,7 @@ namespace Stravaig.Gedcom
                 throw BuildGedcomReaderException(ex);
             }
         }
-
+        
         public async Task<GedcomLine> ReadLineAsync()
         {
             if (_isAtEnd)

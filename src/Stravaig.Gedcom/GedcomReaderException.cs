@@ -6,6 +6,11 @@ namespace Stravaig.Gedcom
     [Serializable]
     public class GedcomReaderException : GedcomException
     {
+        public GedcomReaderException(int lineNumber, string message) 
+            : base(message)
+        {
+            LineNumber = lineNumber;
+        }
         public GedcomReaderException(int lineNumber, string message, Exception inner) 
             : base(message, inner)
         {

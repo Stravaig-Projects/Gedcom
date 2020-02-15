@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 
 namespace Stravaig.Gedcom
 {
+    [DebuggerDisplay("{Level} {CrossReferenceId} {Tag} {Value}")]
     public class GedcomLine
     {
         public GedcomLevel Level { get; }

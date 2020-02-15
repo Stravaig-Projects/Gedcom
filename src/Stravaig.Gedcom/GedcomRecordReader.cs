@@ -1,30 +1,121 @@
-using System;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace Stravaig.Gedcom
 {
-    public class GedcomRecordReader : IDisposable
+    public class GedcomRecordReader
     {
-        private readonly GedcomLineReader _lineReader;
-        public GedcomRecordReader(TextReader reader)
+        private readonly GedcomLineReader _reader;
+        private int _lineNumber;
+        private GedcomLine _peekedLine = null;
+        public GedcomRecordReader(GedcomLineReader reader)
         {
-            _lineReader = new GedcomLineReader(reader);
+            _reader = reader;
         }
         
-        private void ReleaseUnmanagedResources()
+        public GedcomRecord ReadRecord()
         {
-            _lineReader.Dispose();
+            return ReadChildRecord(null);
         }
 
-        public void Dispose()
+        private GedcomRecord ReadChildRecord(GedcomRecord parent)
         {
-            ReleaseUnmanagedResources();
-            GC.SuppressFinalize(this);
+            var currentLine = ReadLine();
+            if (currentLine == null)
+                return null;
+            
+            var result = GedcomRecord.From(currentLine, parent);
+            var nextLine = PeekLine();
+            if (nextLine == null)
+                return result;
+            
+            ThrowIfSubsequentLineLevelIncorrect(currentLine, nextLine);
+            if (nextLine.Level.IsSubordinateTo(currentLine.Level))
+                ReadChildRecord(result);
+            
+            nextLine = PeekLine();
+            if (nextLine == null)
+                return result;
+            
+            if (nextLine.Level == currentLine.Level)
+                ReadChildRecord(parent);
+            
+            return result;
         }
 
-        ~GedcomRecordReader()
+        public async Task<GedcomRecord> ReadRecordAsync()
         {
-            ReleaseUnmanagedResources();
+            return await ReadChildRecordAsync(null);
+        }
+        
+        private async Task<GedcomRecord> ReadChildRecordAsync(GedcomRecord parent)
+        {
+            var currentLine = await ReadLineAsync();
+            if (currentLine == null)
+                return null;
+            
+            var result = GedcomRecord.From(currentLine, parent);
+            var nextLine = await PeekLineAsync();
+            if (nextLine == null)
+                return result;
+            
+            ThrowIfSubsequentLineLevelIncorrect(currentLine, nextLine);
+            if (nextLine.Level.IsSubordinateTo(currentLine.Level))
+                await ReadChildRecordAsync(result);
+            
+            nextLine = await PeekLineAsync();
+            if (nextLine == null)
+                return result;
+            
+            if (nextLine.Level == currentLine.Level)
+                await ReadChildRecordAsync(parent);
+            
+            return result;
+        }
+
+        private void ThrowIfSubsequentLineLevelIncorrect(GedcomLine currentLine, GedcomLine nextLine)
+        {
+            if (!nextLine.Level.CanFollowFrom(currentLine.Level))
+                throw new GedcomReaderException(
+                    _lineNumber,
+                    $"Unexpected Line Level. Got {nextLine.Level}, expected 0 to {currentLine.Level.NextLineLevelMax}");
+        }
+        
+        private GedcomLine PeekLine()
+        {
+            return _peekedLine ??= _reader.ReadLine();
+        }
+
+        private async Task<GedcomLine> PeekLineAsync()
+        {
+            return _peekedLine ??= await _reader.ReadLineAsync();
+        }
+
+        private GedcomLine ReadLine()
+        {
+            if (_peekedLine != null)
+                return ReadPeekedLine();
+
+            var result = _reader.ReadLine();
+            _lineNumber = _reader.LineNumber;
+            return result;
+        }
+        
+        private async Task<GedcomLine> ReadLineAsync()
+        {
+            if (_peekedLine != null)
+                return ReadPeekedLine();
+
+            var result = await _reader.ReadLineAsync();
+            _lineNumber = _reader.LineNumber;
+            return result;
+        }
+        
+        private GedcomLine ReadPeekedLine()
+        {
+            GedcomLine result = _peekedLine;
+            _peekedLine = null;
+            _lineNumber++;
+            return result;
         }
     }
 }

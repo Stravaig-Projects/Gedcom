@@ -1,0 +1,12 @@
+0 HEAD
+1 SOUR SyniumFamilyTree
+2 NAME MobileFamilyTree
+2 VERS 9.0.11
+2 CORP Synium Software GmbH Germany (syniumsoftware.com)
+1 CHAR UTF-8
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 PLAC
+2 FORM Place,County,State,Country
+1 SUBM @SUBM1@

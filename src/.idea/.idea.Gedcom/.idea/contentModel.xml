@@ -20,6 +20,7 @@
         <e p="GedcomLineReader.cs" t="Include" />
         <e p="GedcomPointer.cs" t="Include" />
         <e p="GedcomReaderException.cs" t="Include" />
+        <e p="GedcomRecord.cs" t="Include" />
         <e p="GedcomRecordReader.cs" t="Include" />
         <e p="GedcomTag.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
@@ -32,6 +33,16 @@
         <e p="Stravaig.Gedcom.csproj" t="IncludeRecursive" />
       </e>
       <e p="Stravaig.Gedcom.UnitTests" t="IncludeRecursive">
+        <e p="_helpers" t="Include">
+          <e p="AsyncTestBase.cs" t="Include" />
+          <e p="ResourceFactory.cs" t="Include" />
+        </e>
+        <e p="_resources" t="Include">
+          <e p="GedcomRecordReaderTests" t="Include">
+            <e p="header-jumps-levels.ged" t="Include" />
+            <e p="header.ged" t="Include" />
+          </e>
+        </e>
         <e p="bin" t="ExcludeRecursive" />
         <e p="Extensions" t="Include">
           <e p="CharExtensions_Data.cs" t="Include" />

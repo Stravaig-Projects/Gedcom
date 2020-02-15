@@ -5,6 +5,7 @@ namespace Stravaig.Gedcom
 {
     public struct GedcomTag
     {
+        private const char Underscore = (char) 0x95;
         private readonly string _value;
 
         public GedcomTag(string value)
@@ -17,6 +18,8 @@ namespace Stravaig.Gedcom
             _value = value;
         }
 
+        public bool IsUserDefined => _value[0] == Underscore;
+        
         public GedcomTag(GedcomTag tag)
         {
             _value = tag._value;
