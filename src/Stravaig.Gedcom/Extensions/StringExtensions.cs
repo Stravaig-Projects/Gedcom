@@ -77,5 +77,10 @@ namespace Stravaig.Gedcom.Extensions
         {
             return new GedcomTag(target);
         }
+
+        public static GedcomPointer AsGedcomPointer(this string target)
+        {
+            return new GedcomPointer(target);
+        }
     }
 }
