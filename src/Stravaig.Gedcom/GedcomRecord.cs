@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace Stravaig.Gedcom
 {
@@ -38,12 +40,32 @@ namespace Stravaig.Gedcom
         public string Value => _line.Value;
         public IReadOnlyList<GedcomRecord> Children => _children;
         public GedcomRecord Parent => _parent;
-        public IReadOnlyList<GedcomRecord> SiblingsInclusive => _parent?.Children ?? EmptyArray;
-        public IReadOnlyList<GedcomRecord> SiblingsExclusive => SiblingsInclusive.Where(s => s != this).ToArray();
+
+        public IReadOnlyList<GedcomRecord> SiblingsInclusive =>
+            _parent?.Children
+            ?? EmptyArray;
+
+        public IReadOnlyList<GedcomRecord> SiblingsExclusive =>
+            SiblingsInclusive.Where(s => s != this)
+                .ToArray();
         
-        public void AttachChild(GedcomRecord child)
+        private void AttachChild(GedcomRecord child)
         {
             _children.Add(child);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            ToStringAppend(sb, this);
+            return sb.ToString().TrimEnd();
+        }
+
+        private void ToStringAppend(StringBuilder sb, GedcomRecord record)
+        {
+            sb.AppendLine(record._line.ToString());
+            foreach (GedcomRecord child in record._children)
+                ToStringAppend(sb, child);
         }
     }
 }

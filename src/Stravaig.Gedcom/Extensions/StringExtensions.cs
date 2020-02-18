@@ -82,5 +82,11 @@ namespace Stravaig.Gedcom.Extensions
         {
             return new GedcomPointer(target);
         }
+
+        public static GedcomLine AsGedcomLine(this string target)
+        {
+            GedcomLineParser parser = new GedcomLineParser();
+            return parser.Parse(target);
+        }
     }
 }
