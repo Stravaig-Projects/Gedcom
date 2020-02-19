@@ -7,6 +7,12 @@ namespace Stravaig.Gedcom.UnitTests
     [TestFixture]
     public class GedcomLineBuilderTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            GedcomSettings.LineLength = LineLengthSettings.Strict;
+        }
+        
         [Test]
         public void Build_OnUnusedBuilder_ThrowsException()
         {
