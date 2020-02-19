@@ -20,7 +20,7 @@ jobs:
         dotnet-version: 3.1.101
     
     - name: Test solution
-      run: dotnet test src/Stravaig.Gedcom.UnitTests/Stravaig.Gedcom.UnitTests.csproj
+      run: dotnet test src/Stravaig.Gedcom.UnitTests/Stravaig.Gedcom.UnitTests.csproj --configuration Release
       
     # - name: Create Preview Packages
     #   run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --version-suffix preview --output prerelease-packages
