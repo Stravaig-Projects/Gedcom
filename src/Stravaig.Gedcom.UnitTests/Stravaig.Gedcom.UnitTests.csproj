@@ -25,6 +25,7 @@
     <ItemGroup>
       <EmbeddedResource Include="_resources\GedcomRecordReaderTests\header-jumps-levels.ged" />
       <EmbeddedResource Include="_resources\GedcomRecordReaderTests\header.ged" />
+      <EmbeddedResource Include="_resources\GedcomRecordReaderTests\two-record-file.ged" />
     </ItemGroup>
 
 </Project>

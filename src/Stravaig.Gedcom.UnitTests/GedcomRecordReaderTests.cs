@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
@@ -91,6 +92,27 @@ namespace Stravaig.Gedcom.UnitTests
         
         [Test]
         [TestCaseSource(nameof(ReadTypes))]
+        public async Task ReadRecord_WithTwoRecordFile_ReturnsBothRecords(Read type)
+        {
+            using TextReader textReader = ResourceFactory.GetReader(GetType(), "two-record-file.ged");
+            using var lineReader = new GedcomLineReader(textReader);
+            var recordReader = new GedcomRecordReader(lineReader);
+
+            var headRecord = await ReadMaybeAsync(recordReader, type);
+            headRecord.ShouldNotBeNull();
+            headRecord.Tag.ShouldBe("HEAD".AsGedcomTag());
+
+            var secondRecord = await ReadMaybeAsync(recordReader, type);
+            secondRecord.ShouldNotBeNull();
+            secondRecord.Tag.ShouldBe("SUBM".AsGedcomTag());
+
+            var nullRecord = await ReadMaybeAsync(recordReader, type);
+            nullRecord.ShouldBeNull();
+        }
+
+        
+        [Test]
+        [TestCaseSource(nameof(ReadTypes))]
         public async Task ReadRecord_WithIncorrectLevel_ThrowsException(Read type)
         {
             using TextReader textReader = ResourceFactory.GetReader(GetType(), "header-jumps-levels.ged");
@@ -108,6 +130,37 @@ namespace Stravaig.Gedcom.UnitTests
                 ex.LineNumber.ShouldBe(4);
             }
         }
+
+#if !DEBUG
+        [Ignore("This is a stress test that runs on my local machine only because the source file contains PII.")]
+#endif
+        [Test]
+        [TestCaseSource(nameof(ReadTypes))]
+        public async Task StressTest(Read type)
+        {
+            string path = Path.GetFullPath("..\\..\\..\\..\\..\\test-files\\Family Tree of Colin Mackay.ged");
+            Console.WriteLine($"File path = {path}");
+
+            // The test uses a GEDCOM file created by Synium Mobile Family
+            // Tree, which does not strictly adhere to the specification.
+            GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
+            await using FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using TextReader textReader =  new StreamReader(stream, Encoding.UTF8);
+            using var lineReader = new GedcomLineReader(textReader);
+            var recordReader = new GedcomRecordReader(lineReader);
+
+            int counter = 0;
+            GedcomRecord record = await ReadMaybeAsync(recordReader, type);
+            while(record != null)
+            {
+                counter++;
+                Console.WriteLine($"Record #{counter}");
+                Console.WriteLine(record);
+                Console.WriteLine(new string('-', 80));
+                record = await ReadMaybeAsync(recordReader, type);
+            }
+            VerifySyncAsyncCorrelate(counter, type);
+        }        
         
         private async Task<GedcomRecord> ReadMaybeAsync(GedcomRecordReader reader, Read type)
         {

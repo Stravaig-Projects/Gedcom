@@ -22,7 +22,9 @@
         <e p="GedcomReaderException.cs" t="Include" />
         <e p="GedcomRecord.cs" t="Include" />
         <e p="GedcomRecordReader.cs" t="Include" />
+        <e p="GedcomSettings.cs" t="Include" />
         <e p="GedcomTag.cs" t="Include" />
+        <e p="LineLengthSettings.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netstandard2.0" t="Include">
@@ -41,6 +43,7 @@
           <e p="GedcomRecordReaderTests" t="Include">
             <e p="header-jumps-levels.ged" t="Include" />
             <e p="header.ged" t="Include" />
+            <e p="two-record-file.ged" t="Include" />
           </e>
         </e>
         <e p="bin" t="ExcludeRecursive" />
@@ -58,8 +61,10 @@
         <e p="GedcomLineBuilderTests.cs" t="Include" />
         <e p="GedcomLineParserTests.cs" t="Include" />
         <e p="GedcomLineReaderTests.cs" t="Include" />
+        <e p="GedcomLineTests.cs" t="Include" />
         <e p="GedcomPointerTests.cs" t="Include" />
         <e p="GedcomRecordReaderTests.cs" t="Include" />
+        <e p="GedcomRecordTests.cs" t="Include" />
         <e p="GedcomTagTests.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">

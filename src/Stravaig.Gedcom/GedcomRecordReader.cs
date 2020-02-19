@@ -36,7 +36,7 @@ namespace Stravaig.Gedcom
             if (nextLine == null)
                 return result;
             
-            if (nextLine.Level == currentLine.Level)
+            if (nextLine.Level == currentLine.Level && parent != null)
                 ReadChildRecord(parent);
             
             return result;
@@ -66,7 +66,7 @@ namespace Stravaig.Gedcom
             if (nextLine == null)
                 return result;
             
-            if (nextLine.Level == currentLine.Level)
+            if (nextLine.Level == currentLine.Level && parent != null)
                 await ReadChildRecordAsync(parent);
             
             return result;
