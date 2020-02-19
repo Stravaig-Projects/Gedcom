@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Shouldly;
+using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.UnitTests
 {
@@ -12,6 +13,7 @@ namespace Stravaig.Gedcom.UnitTests
         [SetUp]
         public void SetUp()
         {
+            GedcomSettings.LineLength = LineLengthSettings.Strict;
             _parser = new GedcomLineParser();
         }
     
@@ -109,6 +111,41 @@ namespace Stravaig.Gedcom.UnitTests
                 () => _parser.Parse(lineString));
             ex.CharacterPosition.ShouldBe(12);
             ex.Message.ShouldBe("Expected a tag value, at character position 12.");
+        }
+
+        [Test]
+        public void Parse_SettingsStrict_ThrowsWhenLineOver255Chars()
+        {
+            string line = "0 SOUR ".PadRight(256, '*');
+            Should.Throw<GedcomLineParserException>(() => _parser.Parse(line))
+                .CharacterPosition.ShouldBe(0);
+        }
+
+        [Test]
+        public void Parse_SettingsValueTo255_ThrowsWhenValueOver255Chars()
+        {
+            GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
+            string line = "0 SOUR ".PadRight(264, '*');
+            Should.Throw<GedcomLineParserException>(() => _parser.Parse(line))
+                .CharacterPosition.ShouldBe(7);
+        }
+
+        [Test]
+        public void Parse_SettingsValueTo255WithValueOf255_AcceptsLine()
+        {
+            GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
+            string line = "0 SOUR "+new string('*',255);
+            GedcomLine result = _parser.Parse(line);
+            result.Value.Length.ShouldBe(255);
+        }
+
+        [Test]
+        public void Parse_SettingsValueToAny_AcceptsLine()
+        {
+            GedcomSettings.LineLength = LineLengthSettings.Any;
+            string line = "0 SOUR "+new string('*',32000);
+            GedcomLine result = _parser.Parse(line);
+            result.Value.Length.ShouldBe(32000);
         }
     }
 }

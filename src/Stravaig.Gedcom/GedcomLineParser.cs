@@ -21,7 +21,7 @@ namespace Stravaig.Gedcom
         {
             if (string.IsNullOrWhiteSpace(line))
                 throw new ArgumentException("Line cannot be null or whitespace.", nameof(line));
-            if (line.Length > 255)
+            if (GedcomSettings.LineLength == LineLengthSettings.Strict && line.Length > 255)
                 throw new GedcomLineParserException("Line cannot be longer than 255 characters.", 0);
             
             _builder.Reset();
@@ -35,6 +35,7 @@ namespace Stravaig.Gedcom
             int position = line.Length - newLine.Length;
             State state = State.AtStart;
             string[] tokens = newLine.Split(Delim);
+            int valuePosition = 0;
             StringBuilder valueSb = null;
             foreach (string token in tokens)
             {
@@ -53,6 +54,7 @@ namespace Stravaig.Gedcom
                         break;
                     case State.ProcessedTag:
                         valueSb = new StringBuilder(token);
+                        valuePosition = position;
                         state = State.ProcessingLineValue;
                         break;
                     case State.ProcessingLineValue:
@@ -66,7 +68,12 @@ namespace Stravaig.Gedcom
             }
 
             if (valueSb != null)
-                _builder.SetValue(valueSb.ToString());
+            {
+                string value = valueSb.ToString();
+                _builder.SetValue(value);
+                if (GedcomSettings.LineLength == LineLengthSettings.ValueUpTo255 && value.Length > 255)
+                    throw new GedcomLineParserException("Line value cannot be longer than 255 characters.", valuePosition);
+            }
             
             return _builder.Build();
         }
