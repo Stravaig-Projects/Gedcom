@@ -88,5 +88,20 @@ namespace Stravaig.Gedcom.Extensions
             GedcomLineParser parser = new GedcomLineParser();
             return parser.Parse(target);
         }
+
+        public static GedcomSex AsGedcomSex(this string target)
+        {
+            switch (target)
+            {
+                case "M":
+                    return GedcomSex.Male;
+                case "F":
+                    return GedcomSex.Female;
+                case "U":
+                    return GedcomSex.Undetermined;
+                default:
+                    return GedcomSex.NotKnown;
+            }
+        }
     }
 }
