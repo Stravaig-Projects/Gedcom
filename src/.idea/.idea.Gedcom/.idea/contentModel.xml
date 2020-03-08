@@ -11,7 +11,9 @@
           <e p="Int32Extensions.cs" t="Include" />
           <e p="StringExtensions.cs" t="Include" />
         </e>
+        <e p="GedcomDatabase.cs" t="Include" />
         <e p="GedcomException.cs" t="Include" />
+        <e p="GedcomIndividualRecord.cs" t="Include" />
         <e p="GedcomLevel.cs" t="Include" />
         <e p="GedcomLine.cs" t="Include" />
         <e p="GedcomLineBuilder.cs" t="Include" />
@@ -23,6 +25,7 @@
         <e p="GedcomRecord.cs" t="Include" />
         <e p="GedcomRecordReader.cs" t="Include" />
         <e p="GedcomSettings.cs" t="Include" />
+        <e p="GedcomSex.cs" t="Include" />
         <e p="GedcomTag.cs" t="Include" />
         <e p="LineLengthSettings.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
@@ -40,6 +43,9 @@
           <e p="ResourceFactory.cs" t="Include" />
         </e>
         <e p="_resources" t="Include">
+          <e p="GedcomIndividualRecordTests" t="Include">
+            <e p="IndividualOne.ged" t="Include" />
+          </e>
           <e p="GedcomRecordReaderTests" t="Include">
             <e p="header-jumps-levels.ged" t="Include" />
             <e p="header.ged" t="Include" />
@@ -53,10 +59,13 @@
           <e p="CharExtensions_IsGedcomAlphaTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomDigitTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomOtherCharTests.cs" t="Include" />
+          <e p="StringExtensions_AsGedcomSex.cs" t="Include" />
           <e p="StringExtensions_IsGedcomLevelTests.cs" t="Include" />
           <e p="StringExtensions_IsGedcomPointerTests.cs" t="Include" />
           <e p="StringExtensions_IsGedcomTagTests.cs" t="Include" />
         </e>
+        <e p="GedcomDatabaseTests.cs" t="Include" />
+        <e p="GedcomIndividualRecordTests.cs" t="Include" />
         <e p="GedcomLevelTests.cs" t="Include" />
         <e p="GedcomLineBuilderTests.cs" t="Include" />
         <e p="GedcomLineParserTests.cs" t="Include" />
