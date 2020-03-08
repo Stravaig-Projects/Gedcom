@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Stravaig.FamilyTreeGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "--SourceFile \"../../../../../test-files/Family Tree of Colin Mackay.ged\" --DestinationFolder \"../../../../../test-files/output\""
+    }
+  }
+}

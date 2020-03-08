@@ -1,6 +1,5 @@
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.Extensions.Logging;
 using Stravaig.Gedcom;
@@ -16,7 +15,7 @@ namespace Stravaig.FamilyTreeGenerator
             _logger = logger;
         }
 
-        public async Task Run(string[] args)
+        public void Run(string[] args)
         {
             CommandLineOptions options = Parser.Default
                 .ParseArguments<CommandLineOptions>(args)
@@ -26,24 +25,26 @@ namespace Stravaig.FamilyTreeGenerator
             if (options == null)
                 return;
 
-            GedcomDatabase database = await GetDatabaseAsync(options.SourceFile);
+            GedcomDatabase database = GetDatabase(options.SourceFile);
 
-            foreach (var individual in database.IndividualRecords)
+            int counter = 0;
+            foreach (var individual in database.IndividualRecords.Values)
             {
-                _logger.LogInformation($"Processing {individual.Value.Name}...");                
+                counter++;
+                _logger.LogInformation($"Processing #{counter}: {individual.Name}...");                
             }
         }
 
-        private async Task<GedcomDatabase> GetDatabaseAsync(string optionsSourceFile)
+        private GedcomDatabase GetDatabase(string optionsSourceFile)
         {
             GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
-            await using FileStream gedcomFileStream = new FileStream(optionsSourceFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using FileStream gedcomFileStream = new FileStream(optionsSourceFile, FileMode.Open, FileAccess.Read, FileShare.Read);
             using TextReader streamReader = new StreamReader(gedcomFileStream, Encoding.UTF8);
             using GedcomLineReader lineReader = new GedcomLineReader(streamReader);
             GedcomRecordReader recordReader = new GedcomRecordReader(lineReader);
             
             GedcomDatabase result = new GedcomDatabase();
-            await result.PopulateAsync(recordReader);
+            result.Populate(recordReader);
             return result;
         }
     }

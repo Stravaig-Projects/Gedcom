@@ -1,19 +1,18 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Stravaig.FamilyTreeGenerator
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             var services = new ServiceCollection();
             AddLoggingServices(services);
             services.AddTransient<Application>();
-            await using var provider = services.BuildServiceProvider();
+            using var provider = services.BuildServiceProvider();
             var app = provider.GetRequiredService<Application>();
-            await app.Run(args);
+            app.Run(args);
         }
 
         private static void AddLoggingServices(ServiceCollection services)

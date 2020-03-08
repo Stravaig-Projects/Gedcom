@@ -16,6 +16,9 @@
           </e>
         </e>
         <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
         <e p="Stravaig.FamilyTreeGenerator.csproj" t="IncludeRecursive" />
       </e>
       <e p="Stravaig.Gedcom" t="IncludeRecursive">
@@ -34,6 +37,7 @@
         <e p="GedcomLineParser.cs" t="Include" />
         <e p="GedcomLineParserException.cs" t="Include" />
         <e p="GedcomLineReader.cs" t="Include" />
+        <e p="GedcomNameRecord.cs" t="Include" />
         <e p="GedcomPointer.cs" t="Include" />
         <e p="GedcomReaderException.cs" t="Include" />
         <e p="GedcomRecord.cs" t="Include" />
