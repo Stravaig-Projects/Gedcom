@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.Gedcom", "Stravaig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.Gedcom.UnitTests", "Stravaig.Gedcom.UnitTests\Stravaig.Gedcom.UnitTests.csproj", "{6561D63D-F21C-4621-A735-104FED4881CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.FamilyTreeGenerator", "Stravaig.FamilyTreeGenerator\Stravaig.FamilyTreeGenerator.csproj", "{AAFF692E-54EF-4D33-816F-81D5ED89BA2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{6561D63D-F21C-4621-A735-104FED4881CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6561D63D-F21C-4621-A735-104FED4881CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6561D63D-F21C-4621-A735-104FED4881CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAFF692E-54EF-4D33-816F-81D5ED89BA2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAFF692E-54EF-4D33-816F-81D5ED89BA2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAFF692E-54EF-4D33-816F-81D5ED89BA2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAFF692E-54EF-4D33-816F-81D5ED89BA2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
