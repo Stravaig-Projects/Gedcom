@@ -25,13 +25,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests
 
         public override Application Handle(Application command)
         {
+            _commander.Publish(new InitFileSystem());
             int counter = 0;
             foreach (var individual in _database.IndividualRecords.Values)
             {
                 counter++;
                 _logger.LogInformation($"Processing #{counter}: {individual.Name}...");
                 _commander.Publish(new RenderIndividual(individual));
-                         }
+            }
             return base.Handle(command);
         }
     }

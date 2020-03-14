@@ -20,10 +20,17 @@
         </e>
         <e p="Requests" t="Include">
           <e p="Application.cs" t="Include" />
-          <e p="ApplicationHandler.cs" t="Include" />
+          <e p="Handlers" t="Include">
+            <e p="ApplicationHandler.cs" t="Include" />
+            <e p="InitFileSystemForMarkdownHandler.cs" t="Include" />
+            <e p="RenderIndividualAsMarkdownHandler.cs" t="Include" />
+          </e>
+          <e p="InitFileSystem.cs" t="Include" />
           <e p="RenderIndividual.cs" t="Include" />
-          <e p="RenderIndividualAsMarkdownHandler.cs" t="Include" />
           <e p="Request.cs" t="Include" />
+        </e>
+        <e p="Services" t="Include">
+          <e p="FileNamer.cs" t="Include" />
         </e>
         <e p="Stravaig.FamilyTreeGenerator.csproj" t="IncludeRecursive" />
       </e>

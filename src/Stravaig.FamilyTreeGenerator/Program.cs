@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Paramore.Brighter.Extensions.DependencyInjection;
 using Stravaig.FamilyTreeGenerator.Requests;
+using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom;
 
 namespace Stravaig.FamilyTreeGenerator
@@ -47,6 +48,7 @@ namespace Stravaig.FamilyTreeGenerator
             services.AddBrighter().Handlers(registry =>
             {
                 registry.Register<Application, ApplicationHandler>();
+                registry.Register<InitFileSystem, InitFileSystemForMarkdownHandler>();
                 registry.Register<RenderIndividual, RenderIndividualAsMarkdownHandler>();
             });
             GedcomDatabase database = GetDatabase(options.SourceFile);
@@ -56,6 +58,7 @@ namespace Stravaig.FamilyTreeGenerator
                 CommandLineOptions opts = p.GetRequiredService<CommandLineOptions>();
                 return GetDatabase(opts.SourceFile);
             });
+            services.AddSingleton<IFileNamer, FileNamer>();
             services.AddTransient<ApplicationHandler>();
         }
 
