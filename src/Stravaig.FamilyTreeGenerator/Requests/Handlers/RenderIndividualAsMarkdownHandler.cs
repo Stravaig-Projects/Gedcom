@@ -30,8 +30,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
             WriteHeader(writer, command.Individual);
+            WriteFooter(writer, command.Individual);
             
             return base.Handle(command);
+        }
+
+        private void WriteFooter(TextWriter writer, GedcomIndividualRecord person)
+        {
+            writer.WriteLine();
+            writer.WriteLine("## See also");
+            writer.WriteLine();
+            writer.WriteLine("- Indexes");
+            writer.WriteLine($"  - [By family name]({_fileNamer.GetByNameIndexFile(true, true)})");
         }
 
         private void WriteHeader(TextWriter writer, GedcomIndividualRecord commandIndividual)

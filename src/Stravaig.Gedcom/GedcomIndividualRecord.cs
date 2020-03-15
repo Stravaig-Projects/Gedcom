@@ -47,8 +47,8 @@ namespace Stravaig.Gedcom
         public string FamilyName => Name == null
             ? string.Empty
             : Name.Substring(
-                Name.IndexOf("/", StringComparison.Ordinal), 
-                Name.LastIndexOf("/", StringComparison.Ordinal) - Name.IndexOf("/", StringComparison.Ordinal));
+                Name.IndexOf("/", StringComparison.Ordinal) + 1, 
+                Name.LastIndexOf("/", StringComparison.Ordinal) - Name.IndexOf("/", StringComparison.Ordinal) - 1);
 
         public GedcomNameRecord[] Names => _lazyNames.Value;
         

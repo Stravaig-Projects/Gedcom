@@ -8,7 +8,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
     public interface IFileNamer
     {
         string GetIndividualFile(GedcomIndividualRecord individual, bool relativeToRoot = false, bool withHttpSlash = false);
-        FileInfo GetByNameIndexFile();
+        string GetByNameIndexFile(bool relativeToRoot = false, bool withHttpSlash = false);
         IEnumerable<DirectoryInfo>  RequiredDirectories();
         DirectoryInfo BaseDirectory();
     }
@@ -41,11 +41,15 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return path;
         }
 
-        public FileInfo GetByNameIndexFile()
+        public string GetByNameIndexFile(bool relativeToRoot = false, bool withHttpSlash = false)
         {
-            var dir = BaseDirectory();
-            var fullPath = Path.Join(dir.FullName, "Index-ByName.md");
-            return new FileInfo(fullPath);
+            const string fileName = "Index-ByName.md";
+            if (relativeToRoot)
+                return fileName;
+            var baseDirectory = BaseDirectory();
+            var path = Path.Join(baseDirectory.FullName, "Index-ByName.md");
+            if (withHttpSlash) path = path.Replace("\\", "/");
+            return path;
         }
 
         public IEnumerable<DirectoryInfo> RequiredDirectories()

@@ -27,7 +27,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             _logger.LogInformation("Rendering Index by name.");
 
             var fileName = _fileNamer.GetByNameIndexFile();
-            using FileStream fs = new FileStream(fileName.FullName, FileMode.Create, FileAccess.Write, FileShare.Read);
+            using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
             WriteHeader(writer);
             WriteIndex(writer, command.Individuals);
@@ -65,7 +65,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                 foreach (var person in familyMembers)
                 {
                     string filePath = _fileNamer.GetIndividualFile(person, true, true);
-                    writer.Write($"- **[{person.Name}]({filePath})**");
+                    writer.Write($"- **[{person.NameWithoutMarker.Trim()}]({filePath})**");
 
                     if (person.BirthEvent == null && person.DeathEvent == null)
                     {
