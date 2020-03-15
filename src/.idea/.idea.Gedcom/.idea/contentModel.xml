@@ -42,7 +42,9 @@
           <e p="StringExtensions.cs" t="Include" />
         </e>
         <e p="GedcomDatabase.cs" t="Include" />
+        <e p="GedcomDateRecord.cs" t="Include" />
         <e p="GedcomException.cs" t="Include" />
+        <e p="GedcomIndividualEventRecord.cs" t="Include" />
         <e p="GedcomIndividualRecord.cs" t="Include" />
         <e p="GedcomLevel.cs" t="Include" />
         <e p="GedcomLine.cs" t="Include" />
@@ -96,6 +98,7 @@
           <e p="StringExtensions_IsGedcomTagTests.cs" t="Include" />
         </e>
         <e p="GedcomDatabaseTests.cs" t="Include" />
+        <e p="GedcomIndividualEventRecordTests.cs" t="Include" />
         <e p="GedcomIndividualRecordTests.cs" t="Include" />
         <e p="GedcomLevelTests.cs" t="Include" />
         <e p="GedcomLineBuilderTests.cs" t="Include" />

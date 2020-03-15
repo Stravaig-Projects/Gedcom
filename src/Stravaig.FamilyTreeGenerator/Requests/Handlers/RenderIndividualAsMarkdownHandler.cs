@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,47 @@ namespace Stravaig.FamilyTreeGenerator.Requests
         {
             var name = commandIndividual.Name.Replace("/", "");
             writer.WriteLine($"# {name}");
-        }   
+            var birthDate = commandIndividual.BirthEvent?.Date;
+            var deathDate = commandIndividual.DeathEvent?.Date;
+
+            if (birthDate != null || deathDate != null)
+            {
+                writer.Write("(");
+                if (birthDate != null)
+                {
+                    DateTime? exactDate = birthDate.ExactDate;
+                    if (exactDate.HasValue)
+                    {
+                        writer.Write($"{exactDate:d MMMM, yyyy}");
+                    }
+                    else
+                    {
+                        writer.Write(birthDate.RawDateValue);
+                    }
+                }
+                else
+                {
+                    writer.Write("?");
+                }
+                writer.Write(" - ");
+                if (deathDate != null)
+                {
+                    DateTime? exactDate = deathDate.ExactDate;
+                    if (exactDate.HasValue)
+                    {
+                        writer.Write($"{exactDate:d MMMM, yyyy}");
+                    }
+                    else
+                    {
+                        writer.Write(deathDate.RawDateValue);
+                    }
+                }
+                else
+                {
+                    writer.Write("?");
+                }
+                writer.WriteLine(")");
+            }
+        }
     }
 }

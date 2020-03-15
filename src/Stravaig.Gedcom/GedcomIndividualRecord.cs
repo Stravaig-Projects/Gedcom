@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom
@@ -11,6 +12,7 @@ namespace Stravaig.Gedcom
         
         private readonly GedcomRecord _record;
         private readonly Lazy<GedcomNameRecord[]> _lazyNames;
+        private readonly Lazy<GedcomIndividualEventRecord[]> _lazyEvents;
 
         public GedcomIndividualRecord(GedcomRecord record)
         {
@@ -25,6 +27,12 @@ namespace Stravaig.Gedcom
                     .Where(r => r.Tag == GedcomNameRecord.NameTag)
                     .Select(r => new GedcomNameRecord(r))
                     .ToArray());
+
+            _lazyEvents = new Lazy<GedcomIndividualEventRecord[]>(
+                () => _record.Children
+                    .Where(r => GedcomIndividualEventRecord.EventTags.Contains(r.Tag))
+                    .Select(r => new GedcomIndividualEventRecord(r))
+                    .ToArray());
         }
 
         // ReSharper disable once PossibleInvalidOperationException
@@ -37,7 +45,13 @@ namespace Stravaig.Gedcom
         public GedcomNameRecord[] Names => _lazyNames.Value;
         
         public GedcomSex Sex => _record.Children.FirstOrDefault(r => r.Tag == SexTag)?.Value.AsGedcomSex() ?? GedcomSex.NotKnown;
-        
-        
+
+        public GedcomIndividualEventRecord[] Events => _lazyEvents.Value;
+
+        public GedcomIndividualEventRecord BirthEvent =>
+            Events.FirstOrDefault(e => e.Tag == GedcomIndividualEventRecord.BirthTag);
+
+        public GedcomIndividualEventRecord DeathEvent =>
+            Events.FirstOrDefault(e => e.Tag == GedcomIndividualEventRecord.DeathTag);
     }
 }
