@@ -96,6 +96,9 @@ namespace Stravaig.Gedcom
                     .Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries)
                     .FirstOrDefault(p => p.Length == 3 && MonthNames.Contains(p));
 
+                if (string.IsNullOrWhiteSpace(monthPart))
+                    return null;
+                
                 return MonthNameAsNumber(monthPart);
             }
         }
