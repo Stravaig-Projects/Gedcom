@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using Stravaig.Gedcom.Extensions;
 
@@ -39,8 +40,15 @@ namespace Stravaig.Gedcom
         // Checked in the ctor.
         public GedcomPointer CrossReferenceId => _record.CrossReferenceId.Value;
 
-        public string Name => (Names.FirstOrDefault(n => n.Type == string.Empty)
-                              ?? Names.FirstOrDefault())?.Name;
+        public string Name => Names.FirstOrDefault()?.Name;
+
+        public string NameWithoutMarker => Name?.Replace("/", "");
+
+        public string FamilyName => Name == null
+            ? string.Empty
+            : Name.Substring(
+                Name.IndexOf("/", StringComparison.Ordinal), 
+                Name.LastIndexOf("/", StringComparison.Ordinal) - Name.IndexOf("/", StringComparison.Ordinal));
 
         public GedcomNameRecord[] Names => _lazyNames.Value;
         

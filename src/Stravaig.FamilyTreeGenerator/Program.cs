@@ -50,6 +50,7 @@ namespace Stravaig.FamilyTreeGenerator
                 registry.Register<Application, ApplicationHandler>();
                 registry.Register<InitFileSystem, InitFileSystemForMarkdownHandler>();
                 registry.Register<RenderIndividual, RenderIndividualAsMarkdownHandler>();
+                registry.Register<RenderIndex, RenderIndexByNameAsMarkdownHandler>();
             });
             GedcomDatabase database = GetDatabase(options.SourceFile);
             services.AddSingleton<CommandLineOptions>(options);

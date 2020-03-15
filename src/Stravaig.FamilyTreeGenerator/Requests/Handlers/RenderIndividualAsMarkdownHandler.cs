@@ -27,7 +27,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                 $"Render As Markdown {command.Individual.CrossReferenceId} : {command.Individual.Name}");
 
             var fileName = _fileNamer.GetIndividualFile(command.Individual);
-            using FileStream fs = new FileStream(fileName.FullName, FileMode.Create, FileAccess.Write, FileShare.Read);
+            using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
             WriteHeader(writer, command.Individual);
             
@@ -36,7 +36,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
 
         private void WriteHeader(TextWriter writer, GedcomIndividualRecord commandIndividual)
         {
-            var name = commandIndividual.Name.Replace("/", "");
+            var name = commandIndividual.NameWithoutMarker;
             writer.WriteLine($"# {name}");
             var birthDate = commandIndividual.BirthEvent?.Date;
             var deathDate = commandIndividual.DeathEvent?.Date;

@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Stravaig.Gedcom;
@@ -27,12 +28,15 @@ namespace Stravaig.FamilyTreeGenerator.Requests
         {
             _commander.Publish(new InitFileSystem());
             int counter = 0;
-            foreach (var individual in _database.IndividualRecords.Values)
+
+            var individuals = _database.IndividualRecords.Values.ToArray();
+            foreach (var individual in individuals)
             {
                 counter++;
                 _logger.LogInformation($"Processing #{counter}: {individual.Name}...");
                 _commander.Publish(new RenderIndividual(individual));
             }
+            _commander.Publish(new RenderIndex(individuals));
             return base.Handle(command);
         }
     }
