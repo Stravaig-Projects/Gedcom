@@ -85,7 +85,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                         format = format.TrimEnd('-');
                         var date = new DateTime(year??1, month??1, day??1);
                         writer.Write(" (");
-                        writer.Write(date.ToString(format));
+                        if (!string.IsNullOrWhiteSpace(format))
+                            writer.Write(date.ToString(format));
                         writer.Write(" - ");
                     }
                     else
@@ -104,7 +105,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                         if (year.HasValue) format += "yyyy";
                         format = format.TrimEnd('-');
                         var date = new DateTime(year??1, month??1, day??1);
-                        writer.Write(date.ToString(format));
+                        if (!string.IsNullOrWhiteSpace(format))
+                            writer.Write(date.ToString(format));
                         writer.Write(")");
                     }
                     else
