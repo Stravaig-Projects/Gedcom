@@ -7,8 +7,8 @@ namespace Stravaig.FamilyTreeGenerator.Services
 {
     public interface IFileNamer
     {
-        string GetIndividualFile(GedcomIndividualRecord individual, bool relativeToRoot = false, bool withHttpSlash = false);
-        string GetByNameIndexFile(bool relativeToRoot = false, bool withHttpSlash = false);
+        string GetIndividualFile(GedcomIndividualRecord individual, string relativeTo = null);
+        string GetByNameIndexFile(string relativeTo = null);
         IEnumerable<DirectoryInfo>  RequiredDirectories();
         DirectoryInfo BaseDirectory();
     }
@@ -22,9 +22,9 @@ namespace Stravaig.FamilyTreeGenerator.Services
             _options = options;
         }
         
-        public string GetIndividualFile(GedcomIndividualRecord individual, bool relativeToRoot = false, bool withHttpSlash = false)
+        public string GetIndividualFile(GedcomIndividualRecord individual, string relativeTo = null)
         {
-            var peopleDir = PeopleDirectory(relativeToRoot);
+            var peopleDir = PeopleDirectory(relativeTo);
             var personName = individual.NameWithoutMarker
                 .MakeFileNameSafe()
                 ?.Replace(" ", "-") ?? "X";
@@ -36,26 +36,26 @@ namespace Stravaig.FamilyTreeGenerator.Services
                 ?.Replace(" ", "-") ?? "X";
             var fileName = $"{individual.CrossReferenceId}-{personName}-b{birth}-d{death}.md";
             var path = Path.Join(peopleDir, fileName);
-            if (relativeToRoot == false) path = Path.GetFullPath(path);
-            if (withHttpSlash) path = path.Replace("\\", "/");
+            path = path.Replace("\\", "/");
+            
             return path;
         }
 
-        public string GetByNameIndexFile(bool relativeToRoot = false, bool withHttpSlash = false)
+        public string GetByNameIndexFile(string relativeTo = null)
         {
             const string fileName = "Index-ByName.md";
-            if (relativeToRoot)
-                return fileName;
             var baseDirectory = BaseDirectory();
             var path = Path.Join(baseDirectory.FullName, "Index-ByName.md");
-            if (withHttpSlash) path = path.Replace("\\", "/");
+            if (relativeTo != null)
+                path = Path.GetRelativePath(relativeTo, path);
+            path = path.Replace("\\", "/");
             return path;
         }
 
         public IEnumerable<DirectoryInfo> RequiredDirectories()
         {
             yield return BaseDirectory();
-            yield return new DirectoryInfo(PeopleDirectory(false));
+            yield return new DirectoryInfo(PeopleDirectory());
         }
 
         public DirectoryInfo BaseDirectory()
@@ -64,11 +64,11 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return new DirectoryInfo(absoluteRootPath);
         }
 
-        private string PeopleDirectory(bool relativeToRoot)
+        private string PeopleDirectory(string relativeTo = null)
         {
-            if (relativeToRoot)
-                return "people";
             var peopleDirectory = Path.Join(BaseDirectory().FullName, "people");
+            if (relativeTo != null)
+                peopleDirectory = Path.GetRelativePath(relativeTo, peopleDirectory);
             return peopleDirectory;
         }
     }

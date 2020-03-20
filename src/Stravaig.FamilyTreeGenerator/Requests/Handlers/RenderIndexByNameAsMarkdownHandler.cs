@@ -64,7 +64,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                     .ToArray();
                 foreach (var person in familyMembers)
                 {
-                    string filePath = _fileNamer.GetIndividualFile(person, true, true);
+                    string basePath = _fileNamer.BaseDirectory().FullName;
+                    string filePath = _fileNamer.GetIndividualFile(person, basePath);
                     writer.Write($"- **[{person.NameWithoutMarker.Trim()}]({filePath})**");
 
                     if (person.BirthEvent == null && person.DeathEvent == null)

@@ -37,11 +37,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests
 
         private void WriteFooter(TextWriter writer, GedcomIndividualRecord person)
         {
+            var thisDirectory = new FileInfo(_fileNamer.GetIndividualFile(person)).DirectoryName;
+            var indexByNameFile = _fileNamer.GetByNameIndexFile(thisDirectory);
             writer.WriteLine();
             writer.WriteLine("## See also");
             writer.WriteLine();
             writer.WriteLine("- Indexes");
-            writer.WriteLine($"  - [By family name]({_fileNamer.GetByNameIndexFile(true, true)})");
+            writer.WriteLine($"  - [By family name]({indexByNameFile})");
         }
 
         private void WriteHeader(TextWriter writer, GedcomIndividualRecord commandIndividual)
