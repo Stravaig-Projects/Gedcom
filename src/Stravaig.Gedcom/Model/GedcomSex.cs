@@ -1,4 +1,4 @@
-namespace Stravaig.Gedcom
+namespace Stravaig.Gedcom.Model
 {
     public enum GedcomSex
     {

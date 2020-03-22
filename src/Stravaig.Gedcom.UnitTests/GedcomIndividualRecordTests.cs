@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Shouldly;
 using Stravaig.Gedcom.Extensions;
+using Stravaig.Gedcom.Model;
 using Stravaig.Gedcom.UnitTests._helpers;
 
 namespace Stravaig.Gedcom.UnitTests

@@ -1,4 +1,5 @@
 using System;
+using Stravaig.Gedcom.Model;
 
 namespace Stravaig.Gedcom.Extensions
 {

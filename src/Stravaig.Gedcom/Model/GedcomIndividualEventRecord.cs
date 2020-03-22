@@ -1,9 +1,8 @@
 using System;
-using System.Diagnostics.Tracing;
 using System.Linq;
 using Stravaig.Gedcom.Extensions;
 
-namespace Stravaig.Gedcom
+namespace Stravaig.Gedcom.Model
 {
     public class GedcomIndividualEventRecord
     {

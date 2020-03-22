@@ -1,4 +1,5 @@
 using Stravaig.Gedcom;
+using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests
 {

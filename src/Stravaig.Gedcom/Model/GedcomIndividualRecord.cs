@@ -1,10 +1,8 @@
 using System;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Threading;
 using Stravaig.Gedcom.Extensions;
 
-namespace Stravaig.Gedcom
+namespace Stravaig.Gedcom.Model
 {
     public class GedcomIndividualRecord
     {
@@ -54,6 +52,8 @@ namespace Stravaig.Gedcom
         
         public GedcomSex Sex => _record.Children.FirstOrDefault(r => r.Tag == SexTag)?.Value.AsGedcomSex() ?? GedcomSex.NotKnown;
 
+        public GedcomFamilyRecord[] Families => 
+        
         public GedcomIndividualEventRecord[] Events => _lazyEvents.Value;
 
         public GedcomIndividualEventRecord BirthEvent =>

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom;
+using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests
 {

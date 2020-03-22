@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using Shouldly;
 using Stravaig.Gedcom.Extensions;
+using Stravaig.Gedcom.Model;
 
 namespace Stravaig.Gedcom.UnitTests
 {

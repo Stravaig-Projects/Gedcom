@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.Gedcom;
+using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Services
 {

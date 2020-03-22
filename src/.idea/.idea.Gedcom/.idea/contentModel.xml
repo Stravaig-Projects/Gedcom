@@ -47,26 +47,28 @@
           <e p="StringExtensions.cs" t="Include" />
         </e>
         <e p="GedcomDatabase.cs" t="Include" />
-        <e p="GedcomDateApproximationType.cs" t="Include" />
-        <e p="GedcomDateRecord.cs" t="Include" />
         <e p="GedcomException.cs" t="Include" />
-        <e p="GedcomIndividualEventRecord.cs" t="Include" />
-        <e p="GedcomIndividualRecord.cs" t="Include" />
         <e p="GedcomLevel.cs" t="Include" />
         <e p="GedcomLine.cs" t="Include" />
         <e p="GedcomLineBuilder.cs" t="Include" />
         <e p="GedcomLineParser.cs" t="Include" />
         <e p="GedcomLineParserException.cs" t="Include" />
         <e p="GedcomLineReader.cs" t="Include" />
-        <e p="GedcomNameRecord.cs" t="Include" />
         <e p="GedcomPointer.cs" t="Include" />
         <e p="GedcomReaderException.cs" t="Include" />
         <e p="GedcomRecord.cs" t="Include" />
         <e p="GedcomRecordReader.cs" t="Include" />
         <e p="GedcomSettings.cs" t="Include" />
-        <e p="GedcomSex.cs" t="Include" />
         <e p="GedcomTag.cs" t="Include" />
         <e p="LineLengthSettings.cs" t="Include" />
+        <e p="Model" t="Include">
+          <e p="GedcomDateApproximationType.cs" t="Include" />
+          <e p="GedcomDateRecord.cs" t="Include" />
+          <e p="GedcomIndividualEventRecord.cs" t="Include" />
+          <e p="GedcomIndividualRecord.cs" t="Include" />
+          <e p="GedcomNameRecord.cs" t="Include" />
+          <e p="GedcomSex.cs" t="Include" />
+        </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netstandard2.0" t="Include">
