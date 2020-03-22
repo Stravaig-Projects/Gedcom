@@ -51,8 +51,6 @@ namespace Stravaig.Gedcom.Model
         public GedcomNameRecord[] Names => _lazyNames.Value;
         
         public GedcomSex Sex => _record.Children.FirstOrDefault(r => r.Tag == SexTag)?.Value.AsGedcomSex() ?? GedcomSex.NotKnown;
-
-        public GedcomFamilyRecord[] Families => 
         
         public GedcomIndividualEventRecord[] Events => _lazyEvents.Value;
 
