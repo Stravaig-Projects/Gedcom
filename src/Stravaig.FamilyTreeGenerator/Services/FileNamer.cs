@@ -46,7 +46,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
         {
             const string fileName = "Index-ByName.md";
             var baseDirectory = BaseDirectory();
-            var path = Path.Join(baseDirectory.FullName, "Index-ByName.md");
+            var path = Path.Join(baseDirectory.FullName, fileName);
             if (relativeTo != null)
                 path = Path.GetRelativePath(relativeTo, path);
             path = path.Replace("\\", "/");

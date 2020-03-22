@@ -26,7 +26,7 @@ namespace Stravaig.Gedcom.UnitTests
                 await MaybePopulateAsync(type, database, null);
                 Assert.Fail("Should have thrown an ArgumentNullException");
             }
-            catch (ArgumentNullException anex)
+            catch (ArgumentNullException)
             {
                 // This is fine - the test worked
             }
