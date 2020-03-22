@@ -10,12 +10,14 @@ namespace Stravaig.Gedcom
         private readonly List<GedcomRecord> _records;
         private readonly Dictionary<GedcomPointer, GedcomRecord> _crossReferencedRecords;
         private readonly Dictionary<GedcomPointer, GedcomIndividualRecord> _individualRecords;
-
+        private readonly Dictionary<GedcomPointer, GedcomFamilyRecord> _familyRecords;
+        
         public GedcomDatabase()
         {
             _records = new List<GedcomRecord>();
             _crossReferencedRecords = new Dictionary<GedcomPointer, GedcomRecord>();
             _individualRecords = new Dictionary<GedcomPointer, GedcomIndividualRecord>();
+            _familyRecords = new Dictionary<GedcomPointer, GedcomFamilyRecord>();
         }
 
         public void Populate(GedcomRecordReader reader)
@@ -49,6 +51,7 @@ namespace Stravaig.Gedcom
         public IReadOnlyDictionary<GedcomPointer, GedcomRecord> CrossReferencedRecords => _crossReferencedRecords;
 
         public IReadOnlyDictionary<GedcomPointer, GedcomIndividualRecord> IndividualRecords => _individualRecords;
+        public IReadOnlyDictionary<GedcomPointer, GedcomFamilyRecord> FamilyRecords => _familyRecords;
 
         private void ProcessRecord(GedcomRecord record)
         {
@@ -57,7 +60,9 @@ namespace Stravaig.Gedcom
             {
                 _crossReferencedRecords.Add(record.CrossReferenceId.Value, record);
                 if (record.Tag == GedcomIndividualRecord.Tag)
-                    _individualRecords.Add(record.CrossReferenceId.Value, new GedcomIndividualRecord(record));
+                    _individualRecords.Add(record.CrossReferenceId.Value, new GedcomIndividualRecord(record, this));
+                else if (record.Tag == GedcomFamilyRecord.FamilyTag)
+                    _familyRecords.Add(record.CrossReferenceId.Value, new GedcomFamilyRecord(record, this));
             }
             
         }

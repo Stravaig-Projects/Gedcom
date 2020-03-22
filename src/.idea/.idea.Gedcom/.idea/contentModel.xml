@@ -64,6 +64,9 @@
         <e p="Model" t="Include">
           <e p="GedcomDateApproximationType.cs" t="Include" />
           <e p="GedcomDateRecord.cs" t="Include" />
+          <e p="GedcomFamilyLinkRecord.cs" t="Include" />
+          <e p="GedcomFamilyRecord.cs" t="Include" />
+          <e p="GedcomFamilyType.cs" t="Include" />
           <e p="GedcomIndividualEventRecord.cs" t="Include" />
           <e p="GedcomIndividualRecord.cs" t="Include" />
           <e p="GedcomNameRecord.cs" t="Include" />

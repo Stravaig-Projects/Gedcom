@@ -11,10 +11,10 @@ namespace Stravaig.Gedcom.Model
         public static readonly GedcomTag BirthTag = "BIRT".AsGedcomTag();
         public static readonly GedcomTag DeathTag = "DEAT".AsGedcomTag();
 
-        public static readonly GedcomTag[] EventTags = new[]
+        public static readonly GedcomTag[] EventTags =
         {
             BirthTag,
-            DeathTag
+            DeathTag,
         };
         
         private readonly GedcomRecord _record;

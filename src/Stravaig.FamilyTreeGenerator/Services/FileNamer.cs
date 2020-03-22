@@ -9,6 +9,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
     public interface IFileNamer
     {
         string GetIndividualFile(GedcomIndividualRecord individual, string relativeTo = null);
+        string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo);
         string GetByNameIndexFile(string relativeTo = null);
         IEnumerable<DirectoryInfo>  RequiredDirectories();
         DirectoryInfo BaseDirectory();
@@ -23,6 +24,11 @@ namespace Stravaig.FamilyTreeGenerator.Services
             _options = options;
         }
         
+        public string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo)
+        {
+            var thisDirectory = new FileInfo(GetIndividualFile(relativeTo)).DirectoryName;
+            return GetIndividualFile(individual, thisDirectory);
+        }
         public string GetIndividualFile(GedcomIndividualRecord individual, string relativeTo = null)
         {
             var peopleDir = PeopleDirectory(relativeTo);
