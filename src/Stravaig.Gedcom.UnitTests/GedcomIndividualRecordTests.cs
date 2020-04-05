@@ -21,11 +21,12 @@ namespace Stravaig.Gedcom.UnitTests
 
         private GedcomIndividualRecord GetIndividualRecord(string resourceName)
         {
+            var database = new GedcomDatabase();
             using var reader = ResourceFactory.GetReader(GetType(), resourceName);
             using var lr = new GedcomLineReader(reader);
             GedcomRecordReader rr = new GedcomRecordReader(lr);
             var record = rr.ReadRecord();
-            var individualRecord = new GedcomIndividualRecord(record);
+            var individualRecord = new GedcomIndividualRecord(record, database);
             return individualRecord;
         }
     }
