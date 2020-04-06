@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
 
@@ -232,7 +233,8 @@ namespace Stravaig.Gedcom.Model.Parsers
             }
 
             if (_currentToken.Equals("BEF", StringComparison.InvariantCultureIgnoreCase) ||
-                _currentToken.Equals("AFT", StringComparison.InvariantCultureIgnoreCase))
+                _currentToken.Equals("AFT", StringComparison.InvariantCultureIgnoreCase) ||
+                _currentToken.Equals("BET", StringComparison.InvariantCultureIgnoreCase))
             {
                 ParseDateRange();
                 return;
@@ -289,7 +291,37 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseDateRange()
         {
-            throw new NotImplementedException();
+            Type = DateType.Range;
+            if (_currentToken.Equals("BEF", StringComparison.InvariantCultureIgnoreCase))
+            {
+                _state = State.SecondDate;
+                MoveNext();
+                ParseDate();
+                MoveNext();
+            }
+            else if (_currentToken.Equals("AFT", StringComparison.InvariantCultureIgnoreCase))
+            {
+                _state = State.FirstDate;
+                MoveNext();
+                ParseDate();
+                MoveNext();
+            }
+            else if (_currentToken.Equals("BET", StringComparison.InvariantCultureIgnoreCase))
+            {
+                _state = State.FirstDate;
+                MoveNext();
+                ParseDate();
+                if (_currentToken.Equals("AND", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _state = State.SecondDate;
+                    MoveNext();
+                    ParseDate();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Date range expected \"AND\" after first date, in the pattern \"BET <start-date> AND <end-date>\"");
+                }
+            }
         }
 
         private void ParseDatePeriod()
@@ -300,7 +332,6 @@ namespace Stravaig.Gedcom.Model.Parsers
                 _state = State.FirstDate;
                 MoveNext();
                 ParseDate();
-                MoveNext();
             }
 
             if (_currentToken != null && 
@@ -309,7 +340,6 @@ namespace Stravaig.Gedcom.Model.Parsers
                 _state = State.SecondDate;
                 MoveNext();
                 ParseDate();
-                MoveNext();
             }
         }
 
@@ -372,6 +402,7 @@ namespace Stravaig.Gedcom.Model.Parsers
                     Year1 = _currentTokenAsInt;
                 else
                     Year2 = _currentTokenAsInt;
+                MoveNext();
             }
         }
 

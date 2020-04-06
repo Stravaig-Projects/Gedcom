@@ -187,6 +187,63 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var periodFrom1946To1992 = periodFromSep1946ToNov1992.SetMonth1(null).SetMonth2(null).SetRaw("FROM @#DGREGORIAN@ 1946 TO @#DGREGORIAN@ 1991");
             yield return periodFrom1946To1992;
             yield return periodFrom1946To1992.SetRaw("FROM 1946 TO 1991");
+            
+            
+            var rangeBetween25Jan1759And21July1796 = new TestCaseData("BET @#DGREGORIAN@ 25 JAN 1759 AND @#DGREGORIAN@ 21 JUL 1796")
+            {
+                Type = DateType.Range,
+                Calendar = CalendarEscape.Gregorian,
+                Day1 = 25,
+                Month1 = 1,
+                Year1 = 1759,
+                Day2 = 21,
+                Month2 = 7,
+                Year2 = 1796
+            };
+            yield return rangeBetween25Jan1759And21July1796;
+            yield return rangeBetween25Jan1759And21July1796.SetRaw("BET @#DGREGORIAN@ 25 JAN 1759 AND @#DGREGORIAN@ 21 JUL 1796");
+            yield return rangeBetween25Jan1759And21July1796.SetRaw("BET 25 JAN 1759 AND 21 JUL 1796");
+            var rangeBetweenJan1759AndJuly1796 = rangeBetween25Jan1759And21July1796.SetDay1(null).SetDay2(null).SetRaw("BET @#DGREGORIAN@ JAN 1759 AND @#DGREGORIAN@ JUL 1796");
+            yield return rangeBetweenJan1759AndJuly1796;
+            yield return rangeBetweenJan1759AndJuly1796.SetRaw("BET JAN 1759 AND JUL 1796");
+            var rangeBetween1759And1796 = rangeBetweenJan1759AndJuly1796.SetMonth1(null).SetMonth2(null).SetRaw("BET @#DGREGORIAN@ 1759 AND @#DGREGORIAN@ 1796");
+            yield return rangeBetween1759And1796;
+            yield return rangeBetween1759And1796.SetRaw("BET 1759 AND 1796");
+            
+            
+            var rangeAfter25Jan1759 = new TestCaseData("AFT @#DGREGORIAN@ 25 JAN 1759")
+            {
+                Type = DateType.Range,
+                Calendar = CalendarEscape.Gregorian,
+                Day1 = 25,
+                Month1 = 1,
+                Year1 = 1759,
+            };
+            yield return rangeAfter25Jan1759;
+            yield return rangeAfter25Jan1759.SetRaw("AFT 25 JAN 1759");
+            var rangeAfterJan1759 = rangeAfter25Jan1759.SetDay1(null).SetRaw("AFT @#DGREGORIAN@ JAN 1759");
+            yield return rangeAfterJan1759;
+            yield return rangeAfterJan1759.SetRaw("AFT JAN 1759");
+            var rangeAfter1759 = rangeAfterJan1759.SetMonth1(null).SetRaw("AFT @#DGREGORIAN@ 1759");
+            yield return rangeAfter1759;
+            yield return rangeAfter1759.SetRaw("AFT 1759");
+
+            var rangeBefore21July1796 = new TestCaseData("BEF @#DGREGORIAN@ 21 JUL 1796")
+            {
+                Type = DateType.Range,
+                Calendar = CalendarEscape.Gregorian,
+                Day2 = 21,
+                Month2 = 7,
+                Year2 = 1796
+            };
+            yield return rangeBefore21July1796;
+            yield return rangeBefore21July1796.SetRaw("BEF 21 JUL 1796");
+            var rangeBeforeJuly1796 = rangeBefore21July1796.SetDay2(null).SetRaw("BEF @#DGREGORIAN@ JUL 1796");
+            yield return rangeBeforeJuly1796;
+            yield return rangeBeforeJuly1796.SetRaw("BEF JUL 1796");
+            var rangeBefore1796 = rangeBeforeJuly1796.SetMonth2(null).SetRaw("BEF @#DGREGORIAN@ 1796");
+            yield return rangeBefore1796;
+            yield return rangeBefore1796.SetRaw("BEF 1796");
         }
     }
 }
