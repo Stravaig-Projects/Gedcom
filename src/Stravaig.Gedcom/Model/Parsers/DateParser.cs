@@ -44,6 +44,9 @@ using System.Linq;
 // YEAR_GREG:=
 //   [ <NUMBER> | <NUMBER>/<DIGIT><DIGIT> ]
 //
+// DATE_JULN:=
+//   [ <YEAR>[B.C.] | <MONTH> <YEAR> | <DAY> <MONTH> <YEAR> ]
+//
 // The slash "/" <DIGIT><DIGIT> a year modifier which shows the possible date alternatives for
 // pre-1752 date brought about by a changing the beginning of the year from MAR to JAN in the
 // English calendar change of 1752, for example, 15 APR 1699/00.
@@ -173,12 +176,13 @@ namespace Stravaig.Gedcom.Model.Parsers
         
         public string Error { get; private set; }
         public DateType Type { get; private set; }
-        public CalendarEscape Calendar { get; private set; }
         
+        public CalendarEscape Calendar1 { get; private set; }
         public int? Day1 { get; private set; }
         public int? Month1 { get; private set; }
         public int? Year1 { get; private set; }
 
+        public CalendarEscape Calendar2 { get; private set; }
         public int? Day2 { get; private set; }
         public int? Month2 { get; private set; }
         public int? Year2 { get; private set; }
@@ -189,13 +193,14 @@ namespace Stravaig.Gedcom.Model.Parsers
             _state = State.AtStart;
             Error = null;
             Type = DateType.Unknown;
+            Calendar1 = CalendarEscape.Gregorian;
             Day1 = null;
             Month1 = null;
             Year1 = null;
+            Calendar2 = CalendarEscape.Gregorian;
             Day2 = null;
             Month2 = null;
             Year2 = null;
-            Calendar = CalendarEscape.Gregorian;
             MoveNext();
         }
         
@@ -261,7 +266,7 @@ namespace Stravaig.Gedcom.Model.Parsers
             }
 
             Type = DateType.Date;
-            ParseDateGregorian();
+            ParseDateGregorianOrJulian();
         }
 
         private void ParseDate()
@@ -271,7 +276,7 @@ namespace Stravaig.Gedcom.Model.Parsers
                 ParseCalendarEscape();
             }
 
-            ParseDateGregorian();
+            ParseDateGregorianOrJulian();
         }
 
         private void ParseDatePhrase()
@@ -345,13 +350,17 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseCalendarEscape()
         {
+            Action<CalendarEscape> setCalendar =
+                _state == State.FirstDate
+                    ? new Action<CalendarEscape>(c => Calendar1 = c)
+                    : new Action<CalendarEscape>(c => Calendar2 = c);
             switch (_currentToken)
             {
                 case "@#DHEBREW@":
-                    Calendar = CalendarEscape.Hebrew;
+                    setCalendar(CalendarEscape.Hebrew);
                     break;
                 case "@#DROMAN@":
-                    Calendar = CalendarEscape.Roman;
+                    setCalendar(CalendarEscape.Roman);
                     break;
                 case "@#DFRENCH":
                     MoveNext();
@@ -359,16 +368,16 @@ namespace Stravaig.Gedcom.Model.Parsers
                     return;
                 case "@#DFRENCHR@":
                 case "R@":
-                    Calendar = CalendarEscape.French;
+                    setCalendar(CalendarEscape.French);
                     break;
                 case "@#DGREGORIAN@":
-                    Calendar = CalendarEscape.Gregorian;
+                    setCalendar(CalendarEscape.Gregorian);
                     break;
                 case "@#DJULIAN@":
-                    Calendar = CalendarEscape.Julian;
+                    setCalendar(CalendarEscape.Julian);
                     break;
                 case "@#DUNKNOWN@":
-                    Calendar = CalendarEscape.Unknown;
+                    setCalendar(CalendarEscape.Unknown);
                     break;
                 default:
                     throw new InvalidOperationException($"Expected a Calendar Escape, but got \"{_currentToken}\".");
@@ -376,7 +385,7 @@ namespace Stravaig.Gedcom.Model.Parsers
             MoveNext();
         }
 
-        private void ParseDateGregorian()
+        private void ParseDateGregorianOrJulian()
         {
             if (CurrentTokenLooksLikeDay())
             {

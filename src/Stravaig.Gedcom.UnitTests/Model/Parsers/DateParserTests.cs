@@ -18,12 +18,13 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             }
             public string RawStringValue { get; private set; }
             public DateType Type { get; set; }
-            public CalendarEscape Calendar { get; set; }
-        
+            
+            public CalendarEscape Calendar1 { get; set; }
             public int? Day1 { get; set; }
             public int? Month1 { get; set; }
             public int? Year1 { get; set; }
 
+            public CalendarEscape Calendar2 { get; set; }
             public int? Day2 { get; set; }
             public int? Month2 { get; set; }
             public int? Year2 { get; set; }
@@ -66,7 +67,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             public override string ToString()
             {
                 return
-                    $"\"{RawStringValue}\": Type={Type}, Calendar={Calendar}, Day1={Day1}, Month1={Month1}, Year1={Year1}, Day2={Day2}, Month2={Month2}, Year2={Year2}";
+                    $"\"{RawStringValue}\": Type={Type}, Calendar1={Calendar1}, Day1={Day1}, Month1={Month1}, Year1={Year1}, Calendar2={Calendar2}, Day2={Day2}, Month2={Month2}, Year2={Year2}";
             }
 
             public TestCaseData Clone()
@@ -74,10 +75,11 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
                 return new TestCaseData(RawStringValue)
                 {
                     Type = Type,
-                    Calendar = Calendar,
+                    Calendar1 = Calendar1,
                     Day1 = Day1,
                     Month1 = Month1,
                     Year1 = Year1,
+                    Calendar2 = Calendar2,
                     Day2 = Day2,
                     Month2 = Month2,
                     Year2 = Year2,
@@ -104,10 +106,11 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
         {
             _parser.Parse(data.RawStringValue).ShouldBeTrue(_parser.Error);
             _parser.Type.ShouldBe(data.Type);
-            _parser.Calendar.ShouldBe(data.Calendar);
+            _parser.Calendar1.ShouldBe(data.Calendar1);
             _parser.Day1.ShouldBe(data.Day1);
             _parser.Month1.ShouldBe(data.Month1);
             _parser.Year1.ShouldBe(data.Year1);
+            _parser.Calendar2.ShouldBe(data.Calendar2);
             _parser.Day2.ShouldBe(data.Day2);
             _parser.Month2.ShouldBe(data.Month2);
             _parser.Year2.ShouldBe(data.Year2);
@@ -118,7 +121,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var date3Apr2020 = new TestCaseData("@#DGREGORIAN@ 03 APR 2020")
             {
                 Type = DateType.Date,
-                Calendar = CalendarEscape.Gregorian,
+                Calendar1 = CalendarEscape.Gregorian,
                 Day1 = 3,
                 Month1 = 4,
                 Year1 = 2020
@@ -137,7 +140,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var periodFrom13Apr2012 = new TestCaseData("FROM @#DGREGORIAN@ 13 APR 2012")
             {
                 Type = DateType.Period,
-                Calendar = CalendarEscape.Gregorian,
+                Calendar1 = CalendarEscape.Gregorian,
                 Day1 = 13,
                 Month1 = 4,
                 Year1 = 2012
@@ -154,7 +157,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var periodTo25Feb2019 = new TestCaseData("TO @#DGREGORIAN@ 25 FEB 2019")
             {
                 Type = DateType.Period,
-                Calendar = CalendarEscape.Gregorian,
+                Calendar2 = CalendarEscape.Gregorian,
                 Day2 = 25,
                 Month2 = 2,
                 Year2 = 2019
@@ -171,10 +174,11 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var periodFrom5Sep1946To24Nov1991 = new TestCaseData("FROM @#DGREGORIAN@ 5 SEP 1946 TO @#DGREGORIAN@ 24 NOV 1991")
             {
                 Type = DateType.Period,
-                Calendar = CalendarEscape.Gregorian,
+                Calendar1 = CalendarEscape.Gregorian,
                 Day1 = 5,
                 Month1 = 9,
                 Year1 = 1946,
+                Calendar2 = CalendarEscape.Gregorian,
                 Day2 = 24,
                 Month2 = 11,
                 Year2 = 1991
@@ -188,14 +192,28 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             yield return periodFrom1946To1992;
             yield return periodFrom1946To1992.SetRaw("FROM 1946 TO 1991");
             
+            var periodFrom31Oct1739To23June1795 = new TestCaseData("FROM @#DJULIAN@ 31 OCT 1739 TO @#DGREGORIAN@ 23 JUN 1795")
+            {
+                Type = DateType.Period,
+                Calendar1 = CalendarEscape.Julian,
+                Day1 = 31,
+                Month1 = 10,
+                Year1 = 1739,
+                Calendar2 = CalendarEscape.Gregorian,
+                Day2 = 23,
+                Month2 = 6,
+                Year2 = 1795
+            };
+            yield return periodFrom31Oct1739To23June1795;
             
             var rangeBetween25Jan1759And21July1796 = new TestCaseData("BET @#DGREGORIAN@ 25 JAN 1759 AND @#DGREGORIAN@ 21 JUL 1796")
             {
                 Type = DateType.Range,
-                Calendar = CalendarEscape.Gregorian,
+                Calendar1 = CalendarEscape.Gregorian,
                 Day1 = 25,
                 Month1 = 1,
                 Year1 = 1759,
+                Calendar2 = CalendarEscape.Gregorian,
                 Day2 = 21,
                 Month2 = 7,
                 Year2 = 1796
@@ -214,7 +232,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var rangeAfter25Jan1759 = new TestCaseData("AFT @#DGREGORIAN@ 25 JAN 1759")
             {
                 Type = DateType.Range,
-                Calendar = CalendarEscape.Gregorian,
+                Calendar1 = CalendarEscape.Gregorian,
                 Day1 = 25,
                 Month1 = 1,
                 Year1 = 1759,
@@ -231,7 +249,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var rangeBefore21July1796 = new TestCaseData("BEF @#DGREGORIAN@ 21 JUL 1796")
             {
                 Type = DateType.Range,
-                Calendar = CalendarEscape.Gregorian,
+                Calendar2 = CalendarEscape.Gregorian,
                 Day2 = 21,
                 Month2 = 7,
                 Year2 = 1796
@@ -244,6 +262,21 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var rangeBefore1796 = rangeBeforeJuly1796.SetMonth2(null).SetRaw("BEF @#DGREGORIAN@ 1796");
             yield return rangeBefore1796;
             yield return rangeBefore1796.SetRaw("BEF 1796");
+            
+            var rangeFrom31Oct1739To23June1795 = new TestCaseData("BET @#DJULIAN@ 31 OCT 1739 AND @#DGREGORIAN@ 23 JUN 1795")
+            {
+                Type = DateType.Range,
+                Calendar1 = CalendarEscape.Julian,
+                Day1 = 31,
+                Month1 = 10,
+                Year1 = 1739,
+                Calendar2 = CalendarEscape.Gregorian,
+                Day2 = 23,
+                Month2 = 6,
+                Year2 = 1795
+            };
+            yield return rangeFrom31Oct1739To23June1795;
+            
         }
     }
 }
