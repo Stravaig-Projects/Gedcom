@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using NUnit.Framework;
 using Shouldly;
 using Stravaig.Gedcom.Model;
@@ -19,7 +18,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             }
             public string RawStringValue { get; private set; }
             public DateType Type { get; set; }
-            
+            public string DatePhrase { get; set; }
             public CalendarEscape Calendar1 { get; set; }
             public int? Day1 { get; set; }
             public int? Month1 { get; set; }
@@ -329,6 +328,18 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             yield return estimated1835;
             yield return estimated1835.SetRaw("EST 1835");
 
+            var interpreted4Jul1776 = new TestCaseData("INT @#DGREGORIAN@ 4 JUL 1776 (July 4th '76)")
+            {
+                Type = DateType.Interpreted,
+                Calendar1 = CalendarEscape.Gregorian,
+                Day1 = 4,
+                Month1 = 7,
+                Year1 = 1776,
+                DatePhrase = "July 4th 1776",
+            };
+            yield return interpreted4Jul1776;
+            yield return interpreted4Jul1776.SetRaw("INT 4 JUL 1776 (July 4th '76)");
+            
         }
     }
 }

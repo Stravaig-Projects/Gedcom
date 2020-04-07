@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 // From THE GEDCOM STANDARD-release-5.5.1.pdf
 // pages 45-48, 52, 65
@@ -187,6 +188,7 @@ namespace Stravaig.Gedcom.Model.Parsers
         
         public string Error { get; private set; }
         public DateType Type { get; private set; }
+        public string DatePhrase { get; set; }
         public CalendarEscape Calendar1 { get; private set; }
         public int? Day1 { get; private set; }
         public int? Month1 { get; private set; }
@@ -203,6 +205,7 @@ namespace Stravaig.Gedcom.Model.Parsers
             _state = State.AtStart;
             Error = null;
             Type = DateType.Unknown;
+            DatePhrase = null;
             Calendar1 = CalendarEscape.Gregorian;
             Day1 = null;
             Month1 = null;
@@ -299,12 +302,30 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseDatePhrase()
         {
-            throw new NotImplementedException();
+            StringBuilder sb = new StringBuilder();
+            while (_state != State.NoMoreTokens)
+            {
+                if (sb.Length > 0)
+                    sb.Append(" ");
+                sb.Append(_currentToken);
+                MoveNext();
+            }
+
+            if (sb.Length >= 2 && sb[0]=='(' && sb[sb.Length - 1] == ')')
+            {
+                sb.Remove(0, 1);
+                sb.Remove(sb.Length - 1, 1);
+            }
+            
+            DatePhrase = sb.ToString();
         }
 
         private void ParseDateInterpreted()
         {
-            throw new NotImplementedException();
+            Type = DateType.Interpreted;
+            MoveNext();
+            ParseDate();
+            ParseDatePhrase();
         }
 
         private void ParseDateApproximated()
