@@ -101,6 +101,37 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
         }
 
         [Test]
+        public void Parse_CorruptedDate_ResultsInError()
+        {
+            _parser.Parse("7 APRIL 2020");
+            Console.WriteLine(_parser.Error);
+            _parser.Calendar1.ShouldBe(CalendarEscape.Gregorian);
+            _parser.Type.ShouldBe(DateType.Date);
+            _parser.Error.ShouldNotBeNull();
+        }
+        
+        [Test]
+        public void Parse_CorruptedBetweenRange_ResultsInError()
+        {
+            _parser.Parse("BET 15 OCT 1985 & 15 OCT 2015");
+            Console.WriteLine(_parser.Error);
+            _parser.Calendar1.ShouldBe(CalendarEscape.Gregorian);
+            _parser.Type.ShouldBe(DateType.Range);
+            _parser.Day1.ShouldBe(15);
+            _parser.Month1.ShouldBe(10);
+            _parser.Year1.ShouldBe(1985);
+            _parser.Error.ShouldNotBeNull();
+        }
+
+        [Test]
+        public void Parse_InvalidCalendar_ResultsInError()
+        {
+            _parser.Parse("@#NOT_A_CALENDAR@");
+            Console.WriteLine(_parser.Error);
+            _parser.Error.ShouldNotBeNull();
+                 }
+        
+        [Test]
         [TestCaseSource(nameof(HappyPathTestData))]
         public void Parse_HappyPaths(TestCaseData data)
         {

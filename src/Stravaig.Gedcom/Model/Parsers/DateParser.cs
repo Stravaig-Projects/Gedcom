@@ -176,9 +176,9 @@ namespace Stravaig.Gedcom.Model.Parsers
                 string message = ioex.Message + Environment.NewLine;
                 string upToErrorPoint = string.Join(" ", _tokens.Take(_position));
                 string fromErrorPoint = string.Join(" ", _tokens.Skip(_position));
-                message += $"  at character position {upToErrorPoint.Length}.{Environment.NewLine}"
+                message += $"  at character position {upToErrorPoint.Length + 1}.{Environment.NewLine}"
                            + $"{upToErrorPoint} {fromErrorPoint}{Environment.NewLine}"
-                           + new string(' ', upToErrorPoint.Length) + "^";
+                           + new string(' ', upToErrorPoint.Length + 1) + "^";
                 Error = message;
                 return false;
             }
@@ -434,17 +434,21 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseDateGregorianOrJulian()
         {
+            bool gotDay = false;
             if (CurrentTokenLooksLikeDay())
             {
                 if (_state == State.FirstDate)
                     Day1 = _currentTokenAsInt;
                 else
                     Day2 = _currentTokenAsInt;
+                gotDay = true;
                 MoveNext();
             }
 
-            if (CurrentTokenLooksLikeMonth())
+            if (CurrentTokenLooksLikeMonth() || gotDay)
             {
+                if (gotDay && _currentTokenAsInt == null)
+                    throw new InvalidOperationException($"Expected a valid month, but got \"{_currentToken}\".");
                 if (_state == State.FirstDate)
                     Month1 = _currentTokenAsInt;
                 else
