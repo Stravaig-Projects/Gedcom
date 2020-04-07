@@ -269,6 +269,7 @@ namespace Stravaig.Gedcom.Model.Parsers
 
             if (_currentToken.StartsWith("("))
             {
+                Type = DateType.Phrase;
                 ParseDatePhrase();
                 return;
             }

@@ -340,6 +340,13 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             yield return interpreted4Jul1776;
             yield return interpreted4Jul1776.SetRaw("INT 4 JUL 1776 (July 4th '76)");
             
+            var phrase = new TestCaseData("(Easter)")
+            {
+                Type = DateType.Phrase,
+                Calendar1 = CalendarEscape.Gregorian,
+                DatePhrase = "Easter"
+            };
+            yield return phrase;
         }
     }
 }
