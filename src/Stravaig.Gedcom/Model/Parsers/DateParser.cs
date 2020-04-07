@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
 
@@ -127,6 +126,17 @@ namespace Stravaig.Gedcom.Model.Parsers
 {
     public class DateParser
     {
+        private const string SymbolAbout = "ABT";
+        private const string SymbolAfter = "AFT";
+        private const string SymbolAnd = "AND";
+        private const string SymbolBefore = "BEF";
+        private const string SymbolBetween = "BET";
+        private const string SymbolCalculated = "CAL";
+        private const string SymbolEstimated = "EST";
+        private const string SymbolFrom = "FROM";
+        private const string SymbolInterpreted = "INT";
+        private const string SymbolTo = "TO";
+
         private static readonly string[] MonthNames = new[]
         {
             // THE GEDCOM STANDARD-release-5.5.1.pdf
@@ -147,6 +157,7 @@ namespace Stravaig.Gedcom.Model.Parsers
         private State _state = State.AtStart;
         
         private string[] _tokens;
+
         public bool Parse(string rawDateValue)
         {
             if (string.IsNullOrWhiteSpace(rawDateValue))
@@ -229,30 +240,25 @@ namespace Stravaig.Gedcom.Model.Parsers
                 return;
             }
 
-            if (_currentToken.Equals("FROM", StringComparison.InvariantCultureIgnoreCase) ||
-                _currentToken.Equals("TO", StringComparison.InvariantCultureIgnoreCase))
+            if (IsCurrentTokenOneOf(SymbolFrom, SymbolTo))
             {
                 ParseDatePeriod();
                 return;
             }
 
-            if (_currentToken.Equals("BEF", StringComparison.InvariantCultureIgnoreCase) ||
-                _currentToken.Equals("AFT", StringComparison.InvariantCultureIgnoreCase) ||
-                _currentToken.Equals("BET", StringComparison.InvariantCultureIgnoreCase))
+            if (IsCurrentTokenOneOf(SymbolBefore, SymbolAfter, SymbolBetween))
             {
                 ParseDateRange();
                 return;
             }
-            
-            if (IsCurrentToken("ABT") ||
-                IsCurrentToken("CAL") ||
-                IsCurrentToken("EST"))
+
+            if (IsCurrentTokenOneOf(SymbolAbout, SymbolCalculated, SymbolEstimated))
             {
                 ParseDateApproximated();
                 return;
             }
 
-            if (_currentToken.Equals("INT", StringComparison.InvariantCultureIgnoreCase))
+            if (IsCurrentToken(SymbolInterpreted))
             {
                 ParseDateInterpreted();
                 return;
@@ -270,7 +276,15 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private bool IsCurrentToken(string symbol)
         {
-            return _currentToken.Equals(symbol, StringComparison.InvariantCultureIgnoreCase);
+
+            return _currentToken != null &&
+                   _currentToken.Equals(symbol, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private bool IsCurrentTokenOneOf(params string[] symbols)
+        {
+            return _currentToken != null &&
+                   symbols.Any(s => _currentToken.Equals(s, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private void ParseDate()
@@ -295,9 +309,9 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseDateApproximated()
         {
-            if (IsCurrentToken("ABT"))
+            if (IsCurrentToken(SymbolAbout))
                 Type = DateType.ApproximatedAbout;
-            else if (IsCurrentToken("CAL"))
+            else if (IsCurrentToken(SymbolCalculated))
                 Type = DateType.ApproximatedCalculated;
             else
                 Type = DateType.ApproximatedEstimated;
@@ -309,26 +323,26 @@ namespace Stravaig.Gedcom.Model.Parsers
         private void ParseDateRange()
         {
             Type = DateType.Range;
-            if (_currentToken.Equals("BEF", StringComparison.InvariantCultureIgnoreCase))
+            if (IsCurrentToken(SymbolBefore))
             {
                 _state = State.SecondDate;
                 MoveNext();
                 ParseDate();
                 MoveNext();
             }
-            else if (_currentToken.Equals("AFT", StringComparison.InvariantCultureIgnoreCase))
+            else if (IsCurrentToken(SymbolAfter))
             {
                 _state = State.FirstDate;
                 MoveNext();
                 ParseDate();
                 MoveNext();
             }
-            else if (_currentToken.Equals("BET", StringComparison.InvariantCultureIgnoreCase))
+            else if (IsCurrentToken(SymbolBetween))
             {
                 _state = State.FirstDate;
                 MoveNext();
                 ParseDate();
-                if (_currentToken.Equals("AND", StringComparison.InvariantCultureIgnoreCase))
+                if (IsCurrentToken(SymbolAnd))
                 {
                     _state = State.SecondDate;
                     MoveNext();
@@ -344,15 +358,14 @@ namespace Stravaig.Gedcom.Model.Parsers
         private void ParseDatePeriod()
         {
             Type = DateType.Period;
-            if (_currentToken.Equals("FROM", StringComparison.InvariantCultureIgnoreCase))
+            if (IsCurrentToken(SymbolFrom))
             {
                 _state = State.FirstDate;
                 MoveNext();
                 ParseDate();
             }
 
-            if (_currentToken != null && 
-                _currentToken.Equals("TO", StringComparison.InvariantCultureIgnoreCase))
+            if (IsCurrentToken(SymbolTo))
             {
                 _state = State.SecondDate;
                 MoveNext();
@@ -432,7 +445,7 @@ namespace Stravaig.Gedcom.Model.Parsers
             _currentTokenAsInt = null;
             for (int i = 0; i < MonthNames.Length; i++)
             {
-                if (_currentToken.Equals(MonthNames[i], StringComparison.InvariantCultureIgnoreCase))
+                if (IsCurrentToken(MonthNames[i]))
                 {
                     _currentTokenAsInt = i + 1;
                     return true;

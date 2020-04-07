@@ -6,7 +6,9 @@ namespace Stravaig.Gedcom.Model
         Date,
         Period,
         Range,
-        Approximated,
+        ApproximatedAbout,
+        ApproximatedCalculated,
+        ApproximatedEstimated,
         Interpreted,
         Phrase,
     }
