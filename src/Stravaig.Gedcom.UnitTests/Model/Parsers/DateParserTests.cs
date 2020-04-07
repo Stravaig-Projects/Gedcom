@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Xml;
 using NUnit.Framework;
 using Shouldly;
 using Stravaig.Gedcom.Model;
@@ -277,6 +278,57 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             };
             yield return rangeFrom31Oct1739To23June1795;
             
+            var about4June1955 = new TestCaseData("ABT @#DGREGORIAN@ 4 Jun 1955")
+            {
+                Type = DateType.ApproximatedAbout,
+                Calendar1 = CalendarEscape.Gregorian,
+                Day1 = 4,
+                Month1 = 6,
+                Year1 = 1955,
+            };
+            yield return about4June1955;
+            yield return about4June1955.SetRaw("ABT 4 JUN 1955");
+            var aboutJune1955 = about4June1955.SetDay1(null).SetRaw("ABT @#DGREGORIAN@ Jun 1955");
+            yield return aboutJune1955;
+            yield return aboutJune1955.SetRaw("ABT JUN 1955");
+            var about1955 = aboutJune1955.SetMonth1(null).SetRaw("ABT @#DGREGORIAN@ 1955");
+            yield return about1955;
+            yield return about1955.SetRaw("ABT 1955");
+            
+            var calculated15May1987 = new TestCaseData("CAL @#DGREGORIAN@ 15 May 1987")
+            {
+                Type = DateType.ApproximatedCalculated,
+                Calendar1 = CalendarEscape.Gregorian,
+                Day1 = 15,
+                Month1 = 5,
+                Year1 = 1987,
+            };
+            yield return calculated15May1987;
+            yield return calculated15May1987.SetRaw("CAL 15 MAY 1987");
+            var calculatedMay1987 = calculated15May1987.SetDay1(null).SetRaw("CAL @#DGREGORIAN@ May 1987");
+            yield return calculatedMay1987;
+            yield return calculatedMay1987.SetRaw("CAL MAY 1987");
+            var calculated1987 = calculatedMay1987.SetMonth1(null).SetRaw("CAL @#DGREGORIAN@ 1987");
+            yield return calculated1987;
+            yield return calculated1987.SetRaw("CAL 1987");
+            
+            var estimated25November1835 = new TestCaseData("EST @#DGREGORIAN@ 25 NOV 1835")
+            {
+                Type = DateType.ApproximatedEstimated,
+                Calendar1 = CalendarEscape.Gregorian,
+                Day1 = 25,
+                Month1 = 11,
+                Year1 = 1835,
+            };
+            yield return estimated25November1835;
+            yield return estimated25November1835.SetRaw("EST 25 NOV 1835");
+            var estimatedNovember1835 = estimated25November1835.SetDay1(null).SetRaw("EST @#DGREGORIAN@ NOV 1835");
+            yield return estimatedNovember1835;
+            yield return estimatedNovember1835.SetRaw("EST NOV 1835");
+            var estimated1835 = estimatedNovember1835.SetMonth1(null).SetRaw("EST @#DGREGORIAN@ 1835");
+            yield return estimated1835;
+            yield return estimated1835.SetRaw("EST 1835");
+
         }
     }
 }

@@ -176,7 +176,6 @@ namespace Stravaig.Gedcom.Model.Parsers
         
         public string Error { get; private set; }
         public DateType Type { get; private set; }
-        
         public CalendarEscape Calendar1 { get; private set; }
         public int? Day1 { get; private set; }
         public int? Month1 { get; private set; }
@@ -244,10 +243,10 @@ namespace Stravaig.Gedcom.Model.Parsers
                 ParseDateRange();
                 return;
             }
-
-            if (_currentToken.Equals("ABT", StringComparison.InvariantCultureIgnoreCase) ||
-                _currentToken.Equals("CAL", StringComparison.InvariantCultureIgnoreCase) ||
-                _currentToken.Equals("EST", StringComparison.InvariantCultureIgnoreCase))
+            
+            if (IsCurrentToken("ABT") ||
+                IsCurrentToken("CAL") ||
+                IsCurrentToken("EST"))
             {
                 ParseDateApproximated();
                 return;
@@ -267,6 +266,11 @@ namespace Stravaig.Gedcom.Model.Parsers
 
             Type = DateType.Date;
             ParseDateGregorianOrJulian();
+        }
+
+        private bool IsCurrentToken(string symbol)
+        {
+            return _currentToken.Equals(symbol, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void ParseDate()
@@ -291,7 +295,15 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseDateApproximated()
         {
-            throw new NotImplementedException();
+            if (IsCurrentToken("ABT"))
+                Type = DateType.ApproximatedAbout;
+            else if (IsCurrentToken("CAL"))
+                Type = DateType.ApproximatedCalculated;
+            else
+                Type = DateType.ApproximatedEstimated;
+
+            MoveNext();
+            ParseDate();
         }
 
         private void ParseDateRange()
