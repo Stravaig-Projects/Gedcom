@@ -189,12 +189,12 @@ namespace Stravaig.Gedcom.Model.Parsers
         public string Error { get; private set; }
         public DateType Type { get; private set; }
         public string DatePhrase { get; set; }
-        public CalendarEscape Calendar1 { get; private set; }
+        public CalendarType Calendar1 { get; private set; }
         public int? Day1 { get; private set; }
         public int? Month1 { get; private set; }
         public int? Year1 { get; private set; }
 
-        public CalendarEscape Calendar2 { get; private set; }
+        public CalendarType Calendar2 { get; private set; }
         public int? Day2 { get; private set; }
         public int? Month2 { get; private set; }
         public int? Year2 { get; private set; }
@@ -206,11 +206,11 @@ namespace Stravaig.Gedcom.Model.Parsers
             Error = null;
             Type = DateType.Unknown;
             DatePhrase = null;
-            Calendar1 = CalendarEscape.Gregorian;
+            Calendar1 = CalendarType.Gregorian;
             Day1 = null;
             Month1 = null;
             Year1 = null;
-            Calendar2 = CalendarEscape.Gregorian;
+            Calendar2 = CalendarType.Gregorian;
             Day2 = null;
             Month2 = null;
             Year2 = null;
@@ -397,17 +397,17 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseCalendarEscape()
         {
-            Action<CalendarEscape> setCalendar =
+            Action<CalendarType> setCalendar =
                 _state == State.FirstDate
-                    ? new Action<CalendarEscape>(c => Calendar1 = c)
-                    : new Action<CalendarEscape>(c => Calendar2 = c);
+                    ? new Action<CalendarType>(c => Calendar1 = c)
+                    : new Action<CalendarType>(c => Calendar2 = c);
             switch (_currentToken)
             {
                 case "@#DHEBREW@":
-                    setCalendar(CalendarEscape.Hebrew);
+                    setCalendar(CalendarType.Hebrew);
                     break;
                 case "@#DROMAN@":
-                    setCalendar(CalendarEscape.Roman);
+                    setCalendar(CalendarType.Roman);
                     break;
                 case "@#DFRENCH":
                     MoveNext();
@@ -415,16 +415,16 @@ namespace Stravaig.Gedcom.Model.Parsers
                     return;
                 case "@#DFRENCHR@":
                 case "R@":
-                    setCalendar(CalendarEscape.French);
+                    setCalendar(CalendarType.French);
                     break;
                 case "@#DGREGORIAN@":
-                    setCalendar(CalendarEscape.Gregorian);
+                    setCalendar(CalendarType.Gregorian);
                     break;
                 case "@#DJULIAN@":
-                    setCalendar(CalendarEscape.Julian);
+                    setCalendar(CalendarType.Julian);
                     break;
                 case "@#DUNKNOWN@":
-                    setCalendar(CalendarEscape.Unknown);
+                    setCalendar(CalendarType.Unknown);
                     break;
                 default:
                     throw new InvalidOperationException($"Expected a Calendar Escape, but got \"{_currentToken}\".");

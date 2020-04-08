@@ -19,12 +19,12 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             public string RawStringValue { get; private set; }
             public DateType Type { get; set; }
             public string DatePhrase { get; set; }
-            public CalendarEscape Calendar1 { get; set; }
+            public CalendarType Calendar1 { get; set; }
             public int? Day1 { get; set; }
             public int? Month1 { get; set; }
             public int? Year1 { get; set; }
 
-            public CalendarEscape Calendar2 { get; set; }
+            public CalendarType Calendar2 { get; set; }
             public int? Day2 { get; set; }
             public int? Month2 { get; set; }
             public int? Year2 { get; set; }
@@ -105,7 +105,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
         {
             _parser.Parse("7 APRIL 2020");
             Console.WriteLine(_parser.Error);
-            _parser.Calendar1.ShouldBe(CalendarEscape.Gregorian);
+            _parser.Calendar1.ShouldBe(CalendarType.Gregorian);
             _parser.Type.ShouldBe(DateType.Date);
             _parser.Error.ShouldNotBeNull();
         }
@@ -115,7 +115,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
         {
             _parser.Parse("BET 15 OCT 1985 & 15 OCT 2015");
             Console.WriteLine(_parser.Error);
-            _parser.Calendar1.ShouldBe(CalendarEscape.Gregorian);
+            _parser.Calendar1.ShouldBe(CalendarType.Gregorian);
             _parser.Type.ShouldBe(DateType.Range);
             _parser.Day1.ShouldBe(15);
             _parser.Month1.ShouldBe(10);
@@ -152,7 +152,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var date3Apr2020 = new TestCaseData("@#DGREGORIAN@ 03 APR 2020")
             {
                 Type = DateType.Date,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 3,
                 Month1 = 4,
                 Year1 = 2020
@@ -171,7 +171,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var periodFrom13Apr2012 = new TestCaseData("FROM @#DGREGORIAN@ 13 APR 2012")
             {
                 Type = DateType.Period,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 13,
                 Month1 = 4,
                 Year1 = 2012
@@ -188,7 +188,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var periodTo25Feb2019 = new TestCaseData("TO @#DGREGORIAN@ 25 FEB 2019")
             {
                 Type = DateType.Period,
-                Calendar2 = CalendarEscape.Gregorian,
+                Calendar2 = CalendarType.Gregorian,
                 Day2 = 25,
                 Month2 = 2,
                 Year2 = 2019
@@ -205,11 +205,11 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var periodFrom5Sep1946To24Nov1991 = new TestCaseData("FROM @#DGREGORIAN@ 5 SEP 1946 TO @#DGREGORIAN@ 24 NOV 1991")
             {
                 Type = DateType.Period,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 5,
                 Month1 = 9,
                 Year1 = 1946,
-                Calendar2 = CalendarEscape.Gregorian,
+                Calendar2 = CalendarType.Gregorian,
                 Day2 = 24,
                 Month2 = 11,
                 Year2 = 1991
@@ -226,11 +226,11 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var periodFrom31Oct1739To23June1795 = new TestCaseData("FROM @#DJULIAN@ 31 OCT 1739 TO @#DGREGORIAN@ 23 JUN 1795")
             {
                 Type = DateType.Period,
-                Calendar1 = CalendarEscape.Julian,
+                Calendar1 = CalendarType.Julian,
                 Day1 = 31,
                 Month1 = 10,
                 Year1 = 1739,
-                Calendar2 = CalendarEscape.Gregorian,
+                Calendar2 = CalendarType.Gregorian,
                 Day2 = 23,
                 Month2 = 6,
                 Year2 = 1795
@@ -240,11 +240,11 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var rangeBetween25Jan1759And21July1796 = new TestCaseData("BET @#DGREGORIAN@ 25 JAN 1759 AND @#DGREGORIAN@ 21 JUL 1796")
             {
                 Type = DateType.Range,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 25,
                 Month1 = 1,
                 Year1 = 1759,
-                Calendar2 = CalendarEscape.Gregorian,
+                Calendar2 = CalendarType.Gregorian,
                 Day2 = 21,
                 Month2 = 7,
                 Year2 = 1796
@@ -263,7 +263,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var rangeAfter25Jan1759 = new TestCaseData("AFT @#DGREGORIAN@ 25 JAN 1759")
             {
                 Type = DateType.Range,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 25,
                 Month1 = 1,
                 Year1 = 1759,
@@ -280,7 +280,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var rangeBefore21July1796 = new TestCaseData("BEF @#DGREGORIAN@ 21 JUL 1796")
             {
                 Type = DateType.Range,
-                Calendar2 = CalendarEscape.Gregorian,
+                Calendar2 = CalendarType.Gregorian,
                 Day2 = 21,
                 Month2 = 7,
                 Year2 = 1796
@@ -297,11 +297,11 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var rangeFrom31Oct1739To23June1795 = new TestCaseData("BET @#DJULIAN@ 31 OCT 1739 AND @#DGREGORIAN@ 23 JUN 1795")
             {
                 Type = DateType.Range,
-                Calendar1 = CalendarEscape.Julian,
+                Calendar1 = CalendarType.Julian,
                 Day1 = 31,
                 Month1 = 10,
                 Year1 = 1739,
-                Calendar2 = CalendarEscape.Gregorian,
+                Calendar2 = CalendarType.Gregorian,
                 Day2 = 23,
                 Month2 = 6,
                 Year2 = 1795
@@ -311,7 +311,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var about4June1955 = new TestCaseData("ABT @#DGREGORIAN@ 4 Jun 1955")
             {
                 Type = DateType.ApproximatedAbout,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 4,
                 Month1 = 6,
                 Year1 = 1955,
@@ -328,7 +328,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var calculated15May1987 = new TestCaseData("CAL @#DGREGORIAN@ 15 May 1987")
             {
                 Type = DateType.ApproximatedCalculated,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 15,
                 Month1 = 5,
                 Year1 = 1987,
@@ -345,7 +345,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var estimated25November1835 = new TestCaseData("EST @#DGREGORIAN@ 25 NOV 1835")
             {
                 Type = DateType.ApproximatedEstimated,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 25,
                 Month1 = 11,
                 Year1 = 1835,
@@ -362,7 +362,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var interpreted4Jul1776 = new TestCaseData("INT @#DGREGORIAN@ 4 JUL 1776 (July 4th '76)")
             {
                 Type = DateType.Interpreted,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 Day1 = 4,
                 Month1 = 7,
                 Year1 = 1776,
@@ -374,7 +374,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             var phrase = new TestCaseData("(Easter)")
             {
                 Type = DateType.Phrase,
-                Calendar1 = CalendarEscape.Gregorian,
+                Calendar1 = CalendarType.Gregorian,
                 DatePhrase = "Easter"
             };
             yield return phrase;

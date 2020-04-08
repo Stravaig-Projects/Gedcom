@@ -1,6 +1,6 @@
 namespace Stravaig.Gedcom.Model
 {
-    public enum CalendarEscape
+    public enum CalendarType
     {
         Gregorian,
         Hebrew,
