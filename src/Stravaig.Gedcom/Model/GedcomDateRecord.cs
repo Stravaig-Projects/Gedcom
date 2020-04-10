@@ -1,20 +1,24 @@
 using System;
 using Stravaig.Gedcom.Constants;
 using Stravaig.Gedcom.Extensions;
+using Stravaig.Gedcom.Model.Comparers;
 using Stravaig.Gedcom.Model.Parsers;
+using Stravaig.Gedcom.Settings;
 
 namespace Stravaig.Gedcom.Model
 {
     public class GedcomDateRecord : IComparable, IComparable<GedcomDateRecord>
     {
         private readonly GedcomRecord _record;
+        private readonly GedcomDatabase _database;
         public static readonly GedcomTag DateTag = "DATE".AsGedcomTag();
         
         private readonly Lazy<DateParser> _parser;
         
-        public GedcomDateRecord(GedcomRecord record)
+        public GedcomDateRecord(GedcomRecord record, GedcomDatabase database)
         {
             _record = record ?? throw new ArgumentNullException(nameof(record));
+            _database = database ?? throw new ArgumentNullException(nameof(database));
             if (record.Tag != DateTag)
                 throw new ArgumentException($"The record must be a DATE type.");
             
@@ -27,8 +31,9 @@ namespace Stravaig.Gedcom.Model
         }
 
         public string RawDateValue => _record.Value;
-
+        public DateOrderingRule OrderingRule => _database.Settings.DateOrderingRule;
         public bool IsSuccessful => string.IsNullOrWhiteSpace(_parser.Value.Error);
+        public bool HasCoherentDate => IsSuccessful && Type != DateType.Phrase;
         public string Error => _parser.Value.Error;
         public DateType Type => _parser.Value.Type;
         public int? Year1 => _parser.Value.Year1;
@@ -82,29 +87,7 @@ namespace Stravaig.Gedcom.Model
             if (other == null)
                 return Order.ThisFollowsOther;
 
-            if (Year1 == null || other.Year1 == null)
-                return Order.ThisFollowsOther;
-
-            if (this.Year1 < other.Year1)
-                return Order.ThisPrecedesOther;
-            if (this.Year1 > other.Year1)
-                return Order.ThisFollowsOther;
-
-            int thisMonth = this.Month1 ?? 6;
-            int otherMonth = other.Month1 ?? 6;
-            if (thisMonth < otherMonth)
-                return Order.ThisPrecedesOther;
-            if (thisMonth > otherMonth)
-                return Order.ThisFollowsOther;
-
-            int thisDay = this.Day1 ?? 15;
-            int otherDay = this.Day1 ?? 15;
-            if (thisDay < otherDay)
-                return Order.ThisPrecedesOther;
-            if (thisDay > otherDay)
-                return Order.ThisFollowsOther;
-            
-            return Order.ThisOccursInTheSamePositionAsOther;
+            return DateComparer.CompareDate(this, other);
         }
     }
 }

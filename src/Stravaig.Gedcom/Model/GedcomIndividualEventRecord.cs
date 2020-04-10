@@ -18,10 +18,12 @@ namespace Stravaig.Gedcom.Model
         };
         
         private readonly GedcomRecord _record;
+        private readonly GedcomDatabase _database;
 
-        public GedcomIndividualEventRecord(GedcomRecord record)
+        public GedcomIndividualEventRecord(GedcomRecord record, GedcomDatabase database)
         {
             _record = record ?? throw new ArgumentNullException(nameof(record));
+            _database = database ?? throw new ArgumentNullException(nameof(database));
             if (!EventTags.Contains(record.Tag))
                 throw new ArgumentException($"The record must be a known event type. One of {string.Join(", ", EventTags.Select(et=>et.ToString()))}.");
         }
@@ -47,7 +49,7 @@ namespace Stravaig.Gedcom.Model
             {
                 var record = _record.Children.FirstOrDefault(r => r.Tag == GedcomDateRecord.DateTag);
                 if (record != null)
-                    return new GedcomDateRecord(record);
+                    return new GedcomDateRecord(record, _database);
                 return null;
             }
         } 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Stravaig.Gedcom.Model;
+using Stravaig.Gedcom.Settings;
 
-namespace Stravaig.Gedcom
+namespace Stravaig.Gedcom.Model
 {
     public class GedcomDatabase
     {
@@ -18,7 +18,10 @@ namespace Stravaig.Gedcom
             _crossReferencedRecords = new Dictionary<GedcomPointer, GedcomRecord>();
             _individualRecords = new Dictionary<GedcomPointer, GedcomIndividualRecord>();
             _familyRecords = new Dictionary<GedcomPointer, GedcomFamilyRecord>();
+            Settings = new DatabaseSettings();
         }
+        
+        public DatabaseSettings Settings { get; }
 
         public void Populate(GedcomRecordReader reader)
         {

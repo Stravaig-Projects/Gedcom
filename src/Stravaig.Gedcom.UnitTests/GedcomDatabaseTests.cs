@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
+using Stravaig.Gedcom.Model;
 using Stravaig.Gedcom.UnitTests._helpers;
 
 namespace Stravaig.Gedcom.UnitTests
