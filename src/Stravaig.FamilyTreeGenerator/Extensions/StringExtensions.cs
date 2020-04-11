@@ -1,5 +1,3 @@
-using System;
-
 namespace Stravaig.FamilyTreeGenerator.Extensions
 {
     public static class StringExtensions
@@ -16,6 +14,11 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
                 .Replace(":", "-")
                 .Replace("/", "-")
                 .Replace("\\", "-");
+        }
+
+        public static bool HasContent(this string target)
+        {
+            return !string.IsNullOrWhiteSpace(target);
         }
     }
 }

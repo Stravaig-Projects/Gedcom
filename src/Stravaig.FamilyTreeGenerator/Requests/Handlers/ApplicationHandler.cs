@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Stravaig.Gedcom;
+using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests
 {
@@ -35,7 +36,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                 counter++;
                 _logger.LogInformation($"Processing #{counter}: {individual.Name}...");
                 _commander.Publish(new RenderIndividual(individual));
-            }
+            } 
             _commander.Publish(new RenderIndex(individuals));
             return base.Handle(command);
         }

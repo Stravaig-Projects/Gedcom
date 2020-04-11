@@ -8,6 +8,7 @@ using Paramore.Brighter.Extensions.DependencyInjection;
 using Stravaig.FamilyTreeGenerator.Requests;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom;
+using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator
 {
@@ -60,6 +61,7 @@ namespace Stravaig.FamilyTreeGenerator
                 return GetDatabase(opts.SourceFile);
             });
             services.AddSingleton<IFileNamer, FileNamer>();
+            services.AddSingleton<IDateRenderer, DateRenderer>();
             services.AddTransient<ApplicationHandler>();
         }
 

@@ -6,6 +6,7 @@ using System.Text;
 using Humanizer;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
+using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
@@ -15,13 +16,16 @@ namespace Stravaig.FamilyTreeGenerator.Requests
     public class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual>
     {
         private readonly ILogger<RenderIndividualAsMarkdownHandler> _logger;
+        private readonly IDateRenderer _dateRenderer;
         private readonly IFileNamer _fileNamer;
 
         public RenderIndividualAsMarkdownHandler(
             ILogger<RenderIndividualAsMarkdownHandler> logger,
+            IDateRenderer dateRenderer,
             IFileNamer fileNamer)
         {
             _logger = logger;
+            _dateRenderer = dateRenderer;
             _fileNamer = fileNamer;
         }
 
@@ -52,7 +56,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                 writer.Write("(");
                 if (birthDate != null)
                 {
-                    DateTime? exactDate = birthDate.ExactDate;
+                    DateTime? exactDate = birthDate.ExactDate1;
                     if (exactDate.HasValue)
                     {
                         writer.Write($"{exactDate:d MMMM, yyyy}");
@@ -69,7 +73,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                 writer.Write(" - ");
                 if (deathDate != null)
                 {
-                    DateTime? exactDate = deathDate.ExactDate;
+                    DateTime? exactDate = deathDate.ExactDate1;
                     if (exactDate.HasValue)
                     {
                         writer.Write($"{exactDate:d MMMM, yyyy}");
@@ -96,46 +100,19 @@ namespace Stravaig.FamilyTreeGenerator.Requests
 
         private void WriteTimeLineBirth(TextWriter writer, GedcomIndividualRecord subject)
         {
+            writer.WriteLine();
             var name = subject.NameWithoutMarker;
             var birthday = subject.BirthEvent?.Date;
             writer.Write($"* **{name}** was born");
             if (birthday != null)
             {
-                bool displayDate = false;
-                switch (birthday.ApproximationType)
+                var date = _dateRenderer.RenderAsProse(birthday);
+                if (date.HasContent())
                 {
-                    case GedcomDateApproximationType.About:
-                        writer.Write(" about");
-                        displayDate = true;
-                        break;
-                    case GedcomDateApproximationType.Calculated:
-                        writer.Write(" calculated to");
-                        displayDate = true;
-                        break;
-                    case GedcomDateApproximationType.Estimated:
-                        writer.Write(" estimated as");
-                        displayDate = true;
-                        break;
-                    case GedcomDateApproximationType.Exact:
-                        if (birthday.Day.HasValue)
-                            writer.Write(" on");
-                        else
-                            writer.Write(" in");
-                        break;
+                    writer.Write(" ");
+                    writer.Write(date);
                 }
-
-                if (displayDate)
-                {
-                    if (birthday.Day.HasValue)
-                        writer.Write($" {birthday.Day.Value.Ordinalize()} of");
-
-                    if (birthday.Month.HasValue)
-                        writer.Write($" {new DateTime(1, birthday.Month.Value, 1):MMMM}");
-
-                    if (birthday.Year.HasValue)
-                        writer.Write($" {birthday.Year.Value}");
-                }
-
+                
                 var parentFamily = subject.ChildToFamilies.FirstOrDefault();
                 if (parentFamily != null)
                 {

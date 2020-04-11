@@ -59,9 +59,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests
 
                 var familyMembers = family
                     .OrderBy(fm => fm.Name)
-                    .ThenBy(fm => fm.BirthEvent?.Date?.Year)
-                    .ThenBy(fm => fm.BirthEvent?.Date?.Month)
-                    .ThenBy(fm => fm.BirthEvent?.Date?.Day)
+                    .ThenBy(fm => fm.BirthEvent?.Date?.Year1)
+                    .ThenBy(fm => fm.BirthEvent?.Date?.Month1)
+                    .ThenBy(fm => fm.BirthEvent?.Date?.Day1)
                     .ToArray();
                 foreach (var person in familyMembers)
                 {
@@ -77,9 +77,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                     
                     if (person.BirthEvent != null)
                     {
-                        int? day = person.BirthEvent.Date?.Day;
-                        int? month = person.BirthEvent.Date?.Month;
-                        int? year = person.BirthEvent.Date?.Year;
+                        int? day = person.BirthEvent.Date?.Day1;
+                        int? month = person.BirthEvent.Date?.Month1;
+                        int? year = person.BirthEvent.Date?.Year1;
                         string format = "";
                         if (day.HasValue) format += "d/";
                         if (month.HasValue) format += "MMM/";
@@ -98,9 +98,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests
 
                     if (person.DeathEvent != null)
                     {
-                        int? day = person.DeathEvent.Date?.Day;
-                        int? month = person.DeathEvent.Date?.Month;
-                        int? year = person.DeathEvent.Date?.Year;
+                        int? day = person.DeathEvent.Date?.Day1;
+                        int? month = person.DeathEvent.Date?.Month1;
+                        int? year = person.DeathEvent.Date?.Year1;
                         string format = "";
                         if (day.HasValue) format += "d/";
                         if (month.HasValue) format += "MMM/";
