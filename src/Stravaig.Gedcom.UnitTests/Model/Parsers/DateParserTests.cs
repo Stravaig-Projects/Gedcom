@@ -147,6 +147,15 @@ namespace Stravaig.Gedcom.UnitTests.Model.Parsers
             _parser.Year2.ShouldBe(data.Year2);
         }
 
+        [Test]
+        public void Parse_22May_ShouldBeAnError()
+        {
+            var result = _parser.Parse("22/May");
+            Console.WriteLine(_parser.Error);
+            result.ShouldBeFalse();
+        }
+        
+
         public static IEnumerable<TestCaseData> HappyPathTestData()
         {
             var date3Apr2020 = new TestCaseData("@#DGREGORIAN@ 03 APR 2020")

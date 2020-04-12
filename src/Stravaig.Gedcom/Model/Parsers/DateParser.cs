@@ -274,8 +274,13 @@ namespace Stravaig.Gedcom.Model.Parsers
                 return;
             }
 
-            Type = DateType.Date;
-            ParseDateGregorianOrJulian();
+            if (CurrentTokenLooksLikeDay() || CurrentTokenLooksLikeMonth() || CurrentTokenLooksLikeYear())
+            {
+                Type = DateType.Date;
+                ParseDateGregorianOrJulian();
+                return;
+            }
+            throw new InvalidOperationException($"The token \"{_currentToken}\" was not recognised as the start of a date.");
         }
 
         private bool IsCurrentToken(string symbol)
