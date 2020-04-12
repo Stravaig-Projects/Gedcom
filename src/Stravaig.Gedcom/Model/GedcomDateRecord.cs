@@ -68,6 +68,62 @@ namespace Stravaig.Gedcom.Model
             }
         }
 
+        public DateTime? EndOfExtent
+        {
+            get
+            {
+                if (HasCoherentDate)
+                {
+                    int year = 9999;
+                    if (Year2.HasValue)
+                        year = Year2.Value;
+                    else if (Year1.HasValue)
+                        year = Year1.Value;
+                    int month = 12;
+                    if (Month2.HasValue)
+                        month = Month2.Value;
+                    else if (Month1.HasValue)
+                        month = Month1.Value;
+                    int day = DateTime.DaysInMonth(year, month);
+                    if (Day2.HasValue)
+                        day = Day2.Value;
+                    else if (Day1.HasValue)
+                        day = Day1.Value;
+                    return new DateTime(year, month, day);
+                }
+
+                return null;
+            }
+        }
+
+        public DateTime? BeginningOfExtent
+        {
+            get
+            {
+                if (HasCoherentDate)
+                {
+                    int year = 1;
+                    if (Year1.HasValue)
+                        year = Year1.Value;
+                    else if (Year2.HasValue)
+                        year = Year2.Value;
+                    int month = 1;
+                    if (Month1.HasValue)
+                        month = Month1.Value;
+                    else if (Month2.HasValue)
+                        month = Month2.Value;
+                    int day = 1;
+                    if (Day1.HasValue)
+                        day = Day1.Value;
+                    else if (Day2.HasValue)
+                        day = Day2.Value;
+                    return new DateTime(year, month, day);
+                }
+
+                return null;
+            }
+        }
+
         public int CompareTo(object obj)
         {
             switch (obj)

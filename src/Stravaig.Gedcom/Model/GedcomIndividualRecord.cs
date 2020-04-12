@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using Stravaig.Gedcom.Extensions;
+using Stravaig.Gedcom.Settings;
 
 namespace Stravaig.Gedcom.Model
 {
@@ -48,6 +49,8 @@ namespace Stravaig.Gedcom.Model
         // Checked in the ctor.
         public GedcomPointer CrossReferenceId => _record.CrossReferenceId.Value;
 
+        public int AssumedDeathAge => _database.Settings.AssumedDeathAge;
+        
         public string Name => Names.FirstOrDefault()?.Name;
 
         public string NameWithoutMarker => Name?.Replace("/", "");

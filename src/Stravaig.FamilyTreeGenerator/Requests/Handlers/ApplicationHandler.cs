@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
+using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests
 {
@@ -30,7 +31,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             _commander.Publish(new InitFileSystem());
             int counter = 0;
 
-            var individuals = _database.IndividualRecords.Values.ToArray();
+            var individuals = _database.IndividualRecords.Values
+                .Where(ir=>ir.IsDead())
+                .ToArray();
             foreach (var individual in individuals)
             {
                 counter++;
