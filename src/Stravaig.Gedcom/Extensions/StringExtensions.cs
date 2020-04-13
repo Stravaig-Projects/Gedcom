@@ -104,5 +104,10 @@ namespace Stravaig.Gedcom.Extensions
                     return GedcomSex.NotKnown;
             }
         }
+        
+        public static bool HasContent(this string target)
+        {
+            return !string.IsNullOrWhiteSpace(target);
+        }
     }
 }

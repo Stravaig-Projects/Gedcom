@@ -16,6 +16,7 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<GedcomNameRecord[]> _lazyNames;
         private readonly Lazy<GedcomIndividualEventRecord[]> _lazyEvents;
         private readonly Lazy<GedcomFamilyLinkRecord[]> _lazyFamilies;
+        private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
 
         public GedcomIndividualRecord(GedcomRecord record, GedcomDatabase database)
         {
@@ -42,6 +43,12 @@ namespace Stravaig.Gedcom.Model
                 () => _record.Children
                     .Where(r => GedcomFamilyLinkRecord.FamilyTags.Contains(r.Tag))
                     .Select(r => new GedcomFamilyLinkRecord(r, _database))
+                    .ToArray());
+
+            _lazyNotes = new Lazy<GedcomNoteRecord[]>(
+                () => _record.Children
+                    .Where(r => r.Tag == GedcomNoteRecord.NoteTag)
+                    .Select(r => new GedcomNoteRecord(r, _database))
                     .ToArray());
         }
 
@@ -84,5 +91,7 @@ namespace Stravaig.Gedcom.Model
 
         public GedcomIndividualEventRecord DeathEvent =>
             Events.FirstOrDefault(e => e.Tag == GedcomIndividualEventRecord.DeathTag);
+
+        public GedcomNoteRecord[] Notes => _lazyNotes.Value;
     }
 }

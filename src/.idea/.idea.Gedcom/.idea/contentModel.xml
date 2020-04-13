@@ -98,6 +98,7 @@
           <e p="GedcomIndividualEventRecord.cs" t="Include" />
           <e p="GedcomIndividualRecord.cs" t="Include" />
           <e p="GedcomNameRecord.cs" t="Include" />
+          <e p="GedcomNoteRecord.cs" t="Include" />
           <e p="GedcomSex.cs" t="Include" />
           <e p="Parsers" t="Include">
             <e p="DateParser.cs" t="Include" />

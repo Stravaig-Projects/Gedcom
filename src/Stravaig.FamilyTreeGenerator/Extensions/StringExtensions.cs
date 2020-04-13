@@ -15,10 +15,5 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
                 .Replace("/", "-")
                 .Replace("\\", "-");
         }
-
-        public static bool HasContent(this string target)
-        {
-            return !string.IsNullOrWhiteSpace(target);
-        }
     }
 }

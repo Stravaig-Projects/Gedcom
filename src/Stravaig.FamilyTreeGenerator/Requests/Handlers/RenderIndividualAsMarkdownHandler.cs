@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using Paramore.Brighter;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom;
+using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests
@@ -39,11 +41,50 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
             WriteHeader(writer, command.Individual);
             WriteTimeline(writer, command.Individual);
+            WriteNotes(writer, command.Individual);
+            WriteAssociations(writer, command.Individual);
             WriteFooter(writer, command.Individual);
             
             return base.Handle(command);
         }
-        
+
+        private void WriteNotes(TextWriter writer, GedcomIndividualRecord subject)
+        {
+            if (subject.Notes.Any())
+            {
+                writer.WriteLine("## Notes");
+                for (int i = 0; i < subject.Notes.Length; i++)
+                {
+                    if (subject.Notes.Length > 1)
+                    {
+                        writer.WriteLine();
+                        writer.WriteLine($"### Note #{i+1}");
+                    }
+                    writer.WriteLine();
+                    var note = subject.Notes[i];
+                    var lines = note.Text.Split(Environment.NewLine);
+                    foreach (string line in lines)
+                    {
+                        writer.Write("> ");
+                        writer.WriteLine(line);
+                    }
+                    writer.WriteLine();
+                }
+            }
+        }
+
+        private void WriteAssociations(TextWriter writer, GedcomIndividualRecord subject)
+        {
+            List<GedcomIndividualRecord> parentsAndGuardians = new List<GedcomIndividualRecord>();
+            List<GedcomIndividualRecord> siblings = new List<GedcomIndividualRecord>();
+            foreach (var family in subject.ChildToFamilies)
+            {
+                siblings.AddRange(family.Children);
+                parentsAndGuardians.AddRange(family.Spouses);
+            }
+            
+        }
+
         private void WriteHeader(TextWriter writer, GedcomIndividualRecord subject)
         {
             var name = subject.NameWithoutMarker;
@@ -89,6 +130,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                 }
                 writer.WriteLine(")");
             }
+
+            writer.WriteLine();
         }
 
         private void WriteTimeline(TextWriter writer, GedcomIndividualRecord subject)
@@ -97,6 +140,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
 
             WriteTimeLineBirth(writer, subject);
             WriteTimeLineDeath(writer, subject);
+            writer.WriteLine();
         }
 
         private void WriteTimeLineDeath(TextWriter writer, GedcomIndividualRecord subject)
