@@ -96,6 +96,24 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             writer.WriteLine("## Timeline");
 
             WriteTimeLineBirth(writer, subject);
+            WriteTimeLineDeath(writer, subject);
+        }
+
+        private void WriteTimeLineDeath(TextWriter writer, GedcomIndividualRecord subject)
+        {
+            writer.WriteLine();
+            var deathday = subject.DeathEvent?.Date;
+            writer.Write($"* **Died**");
+            if (deathday != null)
+            {
+                var date = _dateRenderer.RenderAsProse(deathday);
+                if (date.HasContent())
+                {
+                    writer.Write(" ");
+                    writer.Write(date);
+                }
+            }
+            writer.WriteLine(".");
         }
 
         private void WriteTimeLineBirth(TextWriter writer, GedcomIndividualRecord subject)
@@ -103,7 +121,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             writer.WriteLine();
             var name = subject.NameWithoutMarker;
             var birthday = subject.BirthEvent?.Date;
-            writer.Write($"* **{name}** was born");
+            writer.Write($"* **Born**");
             if (birthday != null)
             {
                 var date = _dateRenderer.RenderAsProse(birthday);

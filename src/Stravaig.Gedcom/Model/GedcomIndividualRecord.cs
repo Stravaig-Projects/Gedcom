@@ -78,7 +78,7 @@ namespace Stravaig.Gedcom.Model
                 .ToArray();
         
         public GedcomIndividualEventRecord[] Events => _lazyEvents.Value;
-
+        
         public GedcomIndividualEventRecord BirthEvent =>
             Events.FirstOrDefault(e => e.Tag == GedcomIndividualEventRecord.BirthTag);
 
