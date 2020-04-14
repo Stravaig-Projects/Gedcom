@@ -109,5 +109,27 @@ namespace Stravaig.Gedcom.Extensions
         {
             return !string.IsNullOrWhiteSpace(target);
         }
+
+        /// <summary>
+        /// Gets a substring between the start and indexes inclusive.
+        /// </summary>
+        /// <param name="target">The string to be sectioned</param>
+        /// <param name="startIndex">The start index</param>
+        /// <param name="endIndex">The end index</param>
+        /// <returns>The substring between the two indexes</returns>
+        public static string Section(this string target, int startIndex, int endIndex)
+        {
+            if (string.IsNullOrEmpty(target))
+                return string.Empty;
+            
+            if (target.Length <= startIndex)
+                return string.Empty;
+
+            int length = (endIndex - startIndex) + 1;
+            if (startIndex + length > target.Length)
+                length = target.Length - startIndex;
+
+            return target.Substring(startIndex, length);
+        }
     }
 }

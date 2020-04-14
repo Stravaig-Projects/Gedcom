@@ -144,6 +144,7 @@
           <e p="StringExtensions_IsGedcomLevelTests.cs" t="Include" />
           <e p="StringExtensions_IsGedcomPointerTests.cs" t="Include" />
           <e p="StringExtensions_IsGedcomTagTests.cs" t="Include" />
+          <e p="StringExtensions_SectionTests.cs" t="Include" />
         </e>
         <e p="GedcomDatabaseTests.cs" t="Include" />
         <e p="GedcomIndividualEventRecordTests.cs" t="Include" />

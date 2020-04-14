@@ -19,6 +19,13 @@ namespace Stravaig.Gedcom.Model
 
         public string Name => _record.Value;
 
+        public string WholeName => Name.Replace("/", " ")
+            .Replace("  ", " ");
+
+        public string Surname => Name.Count(c => c == '/') != 2
+            ? string.Empty
+            : Name.Substring(Name.IndexOf('/')+1, Name.LastIndexOf('/')-1);
+
         public string Type => _record.Children
             .SingleOrDefault(r => r.Tag == TypeTag)
             ?.Value ?? string.Empty;

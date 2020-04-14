@@ -7,6 +7,7 @@ using System.Text;
 using Humanizer;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
+using Paramore.Brighter.Eventsourcing.Exceptions;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom;
@@ -40,12 +41,46 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
             WriteHeader(writer, command.Individual);
+            WriteNames(writer, command.Individual);
             WriteTimeline(writer, command.Individual);
             WriteNotes(writer, command.Individual);
             WriteAssociations(writer, command.Individual);
             WriteFooter(writer, command.Individual);
             
             return base.Handle(command);
+        }
+
+        private void WriteNames(TextWriter writer, GedcomIndividualRecord subject)
+        {
+            if (subject.Names.Length > 1)
+            {
+                writer.WriteLine("## Names");
+                writer.WriteLine();
+                foreach (var name in subject.Names)
+                {
+                    writer.Write($"* {name.WholeName.Trim()}");
+                    if (name.Type.HasContent())
+                    {
+                        switch (name.Type)
+                        {
+                            case "variation":
+                                writer.Write(" (variation)");
+                                break;
+                            case "married":
+                                writer.Write(" (married name)");
+                                break;
+                            case "nick":
+                                writer.Write(" (nickname)");
+                                break;
+                            default:
+                                writer.Write($" ({name.Type})");
+                                break;
+                        }
+                    }
+                    writer.WriteLine();
+                }
+                writer.WriteLine();
+            }
         }
 
         private void WriteNotes(TextWriter writer, GedcomIndividualRecord subject)
