@@ -1,15 +1,13 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Stravaig.FamilyTreeGenerator.Services;
-using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
 
-namespace Stravaig.FamilyTreeGenerator.Requests
+namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
     public class RenderIndexByNameAsMarkdownHandler : RequestHandler<RenderIndex>
     {

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Stravaig.Gedcom.Constants;
 using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model.Comparers;
@@ -7,6 +8,7 @@ using Stravaig.Gedcom.Settings;
 
 namespace Stravaig.Gedcom.Model
 {
+    [DebuggerDisplay("{RawDateValue}")]
     public class GedcomDateRecord : IComparable, IComparable<GedcomDateRecord>
     {
         private readonly GedcomRecord _record;
@@ -144,6 +146,25 @@ namespace Stravaig.Gedcom.Model
                 return Order.ThisFollowsOther;
 
             return DateComparer.CompareDate(this, other);
+        }
+
+        public bool IsBetween(GedcomDateRecord start, GedcomDateRecord end, bool inclusive = true)
+        {
+            if (start == null) throw new ArgumentNullException(nameof(start));
+            if (end == null) throw new ArgumentNullException(nameof(end));
+            
+            int startComparison = DateComparer.CompareDate(start, this);
+            if (startComparison == Order.XIsLessThanY || 
+                (inclusive && startComparison == Order.XEqualsY))
+            {
+                int endComparison = DateComparer.CompareDate(this, end);
+                if (endComparison == Order.XIsLessThanY || (inclusive && endComparison == Order.XEqualsY))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

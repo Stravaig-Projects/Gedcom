@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Paramore.Brighter.Extensions.DependencyInjection;
 using Stravaig.FamilyTreeGenerator.Requests;
+using Stravaig.FamilyTreeGenerator.Requests.Handlers;
+using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
@@ -53,6 +55,8 @@ namespace Stravaig.FamilyTreeGenerator
                 registry.Register<RenderIndividual, RenderIndividualAsMarkdownHandler>();
                 registry.Register<RenderIndex, RenderIndexByNameAsMarkdownHandler>();
             });
+            services.AddTransient<IFootnoteOrganiser, MarkdownFootnoteOrganiser>();
+            
             GedcomDatabase database = GetDatabase(options.SourceFile);
             services.AddSingleton<CommandLineOptions>(options);
             services.AddSingleton<GedcomDatabase>(p=>

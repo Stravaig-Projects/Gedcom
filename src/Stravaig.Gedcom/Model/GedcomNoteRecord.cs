@@ -1,62 +1,40 @@
 using System;
-using System.Linq;
-using System.Text;
 using Stravaig.Gedcom.Extensions;
+
+// NOTE_STRUCTURE:=
+// [
+//   n NOTE @<XREF:NOTE>@ {1:1} p.27
+//   |
+//   n NOTE [<SUBMITTER_TEXT> | <NULL>] {1:1} p.63
+//     +1 [CONC|CONT] <SUBMITTER_TEXT> {0:M}
+// ]
+//
+// Note: There are special considerations required when using the CONC tag. The
+// usage is to provide a note string that can be concatenated together so that
+// the display program can do its own word wrapping according to its display
+// window size. The requirement for usage is to either break the text line in
+// the middle of a word, or if at the end of a word, to add a space to the
+// first of the next CONC line. Otherwise most operating systems will strip off
+// the trailing space and the space is lost in the reconstitution of the note. 
 
 namespace Stravaig.Gedcom.Model
 {
-    public class GedcomNoteRecord
+    public class GedcomNoteRecord : MultiLineTextRecord
     {
         public static readonly GedcomTag NoteTag = "NOTE".AsGedcomTag();
-        public static readonly GedcomTag ContinuedTag = "CONT".AsGedcomTag();
-        public static readonly GedcomTag ConcatenatedTag = "CONC".AsGedcomTag();
-        private static readonly GedcomTag[] TextTags = new[] {ContinuedTag, ConcatenatedTag};
 
-        private readonly GedcomRecord _record;
-        private readonly GedcomDatabase _database;
         private readonly Lazy<string> _noteText;
 
         public GedcomNoteRecord(GedcomRecord record, GedcomDatabase database)
+            : base(record, database)
         {
-            _record = record ?? throw new ArgumentNullException(nameof(record));
-            _database = database ?? throw new ArgumentNullException(nameof(database));
-
             if (record.Tag != NoteTag)
-                throw new ArgumentException("Expected a \"NOTE\" link record.", nameof(record));
+                throw new ArgumentException("Expected a \"NOTE\" record.", nameof(record));
 
-            _noteText = new Lazy<string>(() =>
-            {
-                if (_record.Value.IsGedcomPointer())
-                    return GetReferencedNote();
-                
-                bool isFirst = true;
-                StringBuilder sb = new StringBuilder();
-                if (record.Value.HasContent())
-                {
-                    sb.Append(_record.Value);
-                    isFirst = false;
-                }
-                var textEntries = _record.Children.Where(r => TextTags.Contains(r.Tag));
-                foreach (var textEntry in textEntries)
-                {
-                    if (isFirst)
-                        isFirst = false;
-                    else if (textEntry.Tag == ContinuedTag)
-                        sb.AppendLine();
-                    sb.Append(textEntry.Value);
-                }
-
-                return sb.ToString();
-            });
+            _noteText = new Lazy<string>(GetText);
         }
 
-        private string GetReferencedNote()
-        {
-            var pointer = _record.Value.AsGedcomPointer();
-            var note = _database.NoteRecords[pointer];
-            return note.Text;
-        }
-
+        public GedcomPointer? CrossReferenceId => _record.CrossReferenceId;
         public string Text => _noteText.Value;
     }
 }

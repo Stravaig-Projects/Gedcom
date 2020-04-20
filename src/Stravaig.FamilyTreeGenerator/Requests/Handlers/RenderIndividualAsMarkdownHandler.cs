@@ -1,34 +1,36 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Humanizer;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
-using Paramore.Brighter.Eventsourcing.Exceptions;
 using Stravaig.FamilyTreeGenerator.Extensions;
+using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
-using Stravaig.Gedcom;
 using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model;
 
-namespace Stravaig.FamilyTreeGenerator.Requests
+namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
-    public class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual>
+    public partial class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual>, IDisposable
     {
         private readonly ILogger<RenderIndividualAsMarkdownHandler> _logger;
         private readonly IDateRenderer _dateRenderer;
+        private readonly IFootnoteOrganiser _footnoteOrganiser;
         private readonly IFileNamer _fileNamer;
-
+        private FileStream _fs;
+        private TextWriter _writer;
+        
         public RenderIndividualAsMarkdownHandler(
             ILogger<RenderIndividualAsMarkdownHandler> logger,
             IDateRenderer dateRenderer,
+            IFootnoteOrganiser footnoteOrganiser,
             IFileNamer fileNamer)
         {
             _logger = logger;
             _dateRenderer = dateRenderer;
+            _footnoteOrganiser = footnoteOrganiser;
             _fileNamer = fileNamer;
         }
 
@@ -37,78 +39,80 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             _logger.LogInformation(
                 $"Render As Markdown {command.Individual.CrossReferenceId} : {command.Individual.Name}");
 
-            var fileName = _fileNamer.GetIndividualFile(command.Individual);
-            using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-            using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
-            WriteHeader(writer, command.Individual);
-            WriteNames(writer, command.Individual);
-            WriteTimeline(writer, command.Individual);
-            WriteNotes(writer, command.Individual);
-            WriteAssociations(writer, command.Individual);
-            WriteFooter(writer, command.Individual);
+            InitHandler(command);
+            WriteHeader(command.Individual);
+            WriteNames(command.Individual);
+            WriteTimeline(command.Individual);
+            WriteNotes(command.Individual);
+            WriteAssociations(command.Individual);
+            _footnoteOrganiser.WriteFootnotes(_writer);
+            WriteFooter(command.Individual);
             
             return base.Handle(command);
         }
 
-        private void WriteNames(TextWriter writer, GedcomIndividualRecord subject)
+        private void InitHandler(RenderIndividual command)
+        {
+            _footnoteOrganiser.InitFootnotes(command.AddSource, command.Individual);
+            var fileName = _fileNamer.GetIndividualFile(command.Individual);
+            _fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
+            _writer = new StreamWriter(_fs, Encoding.UTF8);
+        }
+
+        private void WriteNames(GedcomIndividualRecord subject)
         {
             if (subject.Names.Length > 1)
             {
-                writer.WriteLine("## Names");
-                writer.WriteLine();
+                _writer.WriteLine("## Names");
+                _writer.WriteLine();
                 foreach (var name in subject.Names)
                 {
-                    writer.Write($"* {name.WholeName.Trim()}");
+                    _writer.Write($"* {name.WholeName.Trim()}");
                     if (name.Type.HasContent())
                     {
                         switch (name.Type)
                         {
                             case "variation":
-                                writer.Write(" (variation)");
+                                _writer.Write(" (variation)");
                                 break;
                             case "married":
-                                writer.Write(" (married name)");
+                                _writer.Write(" (married name)");
                                 break;
                             case "nick":
-                                writer.Write(" (nickname)");
+                                _writer.Write(" (nickname)");
                                 break;
                             default:
-                                writer.Write($" ({name.Type})");
+                                _writer.Write($" ({name.Type})");
                                 break;
                         }
                     }
-                    writer.WriteLine();
+                    _writer.WriteLine();
                 }
-                writer.WriteLine();
+                _writer.WriteLine();
             }
         }
 
-        private void WriteNotes(TextWriter writer, GedcomIndividualRecord subject)
+        private void WriteNotes(GedcomIndividualRecord subject)
         {
             if (subject.Notes.Any())
             {
-                writer.WriteLine("## Notes");
+                _writer.WriteLine("## Notes");
                 for (int i = 0; i < subject.Notes.Length; i++)
                 {
                     if (subject.Notes.Length > 1)
                     {
-                        writer.WriteLine();
-                        writer.WriteLine($"### Note #{i+1}");
+                        _writer.WriteLine();
+                        _writer.WriteLine($"### Note #{i+1}");
                     }
-                    writer.WriteLine();
+                    _writer.WriteLine();
                     var note = subject.Notes[i];
-                    var lines = note.Text.Split(Environment.NewLine);
-                    foreach (string line in lines)
-                    {
-                        writer.Write("> ");
-                        writer.WriteLine(line);
-                    }
-                    writer.WriteLine();
+                    _writer.WriteMarkdownBlockQuote(note.Text);
+                    _writer.WriteLine();
                 }
             }
         }
 
-        private void WriteAssociations(TextWriter writer, GedcomIndividualRecord subject)
+        private void WriteAssociations(GedcomIndividualRecord subject)
         {
             List<GedcomIndividualRecord> parentsAndGuardians = new List<GedcomIndividualRecord>();
             List<GedcomIndividualRecord> siblings = new List<GedcomIndividualRecord>();
@@ -120,79 +124,53 @@ namespace Stravaig.FamilyTreeGenerator.Requests
             
         }
 
-        private void WriteHeader(TextWriter writer, GedcomIndividualRecord subject)
+        private void WriteHeader(GedcomIndividualRecord subject)
         {
             var name = subject.NameWithoutMarker;
-            writer.WriteLine($"# {name}");
+            _writer.WriteLine($"# {name}");
             var birthDate = subject.BirthEvent?.Date;
             var deathDate = subject.DeathEvent?.Date;
 
             if (birthDate != null || deathDate != null)
             {
-                writer.Write("(");
+                _writer.Write("(");
                 if (birthDate != null)
                 {
                     DateTime? exactDate = birthDate.ExactDate1;
                     if (exactDate.HasValue)
                     {
-                        writer.Write($"{exactDate:d MMMM, yyyy}");
+                        _writer.Write($"{exactDate:d MMMM, yyyy}");
                     }
                     else
                     {
-                        writer.Write(birthDate.RawDateValue);
+                        _writer.Write(birthDate.RawDateValue);
                     }
                 }
                 else
                 {
-                    writer.Write("?");
+                    _writer.Write("?");
                 }
-                writer.Write(" - ");
+                _writer.Write(" - ");
                 if (deathDate != null)
                 {
                     DateTime? exactDate = deathDate.ExactDate1;
                     if (exactDate.HasValue)
                     {
-                        writer.Write($"{exactDate:d MMMM, yyyy}");
+                        _writer.Write($"{exactDate:d MMMM, yyyy}");
                     }
                     else
                     {
-                        writer.Write(deathDate.RawDateValue);
+                        _writer.Write(deathDate.RawDateValue);
                     }
                 }
                 else
                 {
-                    writer.Write("?");
+                    _writer.Write("?");
                 }
-                writer.WriteLine(")");
+                _writer.WriteLine(")");
             }
 
-            writer.WriteLine();
-        }
-
-        private void WriteTimeline(TextWriter writer, GedcomIndividualRecord subject)
-        {
-            writer.WriteLine("## Timeline");
-
-            WriteTimeLineBirth(writer, subject);
-            WriteTimeLineDeath(writer, subject);
-            writer.WriteLine();
-        }
-
-        private void WriteTimeLineDeath(TextWriter writer, GedcomIndividualRecord subject)
-        {
-            writer.WriteLine();
-            var deathday = subject.DeathEvent?.Date;
-            writer.Write($"* **Died**");
-            if (deathday != null)
-            {
-                var date = _dateRenderer.RenderAsProse(deathday);
-                if (date.HasContent())
-                {
-                    writer.Write(" ");
-                    writer.Write(date);
-                }
-            }
-            writer.WriteLine(".");
+            _writer.WriteLine();
         }
 
         private void WriteTimeLineBirth(TextWriter writer, GedcomIndividualRecord subject)
@@ -231,15 +209,35 @@ namespace Stravaig.FamilyTreeGenerator.Requests
                 writer.WriteLine(".");
         }
 
-        private void WriteFooter(TextWriter writer, GedcomIndividualRecord subject)
+        private void WriteFooter(GedcomIndividualRecord subject)
         {
             var thisDirectory = new FileInfo(_fileNamer.GetIndividualFile(subject)).DirectoryName;
             var indexByNameFile = _fileNamer.GetByNameIndexFile(thisDirectory);
-            writer.WriteLine();
-            writer.WriteLine("## See also");
-            writer.WriteLine();
-            writer.WriteLine("- Indexes");
-            writer.WriteLine($"  - [By family name]({indexByNameFile})");
+            _writer.WriteLine();
+            _writer.WriteLine("## See also");
+            _writer.WriteLine();
+            _writer.WriteLine("- Indexes");
+            _writer.WriteLine($"  - [By family name]({indexByNameFile})");
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _writer?.Dispose();
+                _fs?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~RenderIndividualAsMarkdownHandler()
+        {
+            Dispose(false);
         }
     }
 }

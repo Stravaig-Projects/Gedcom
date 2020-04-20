@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Stravaig.FamilyTreeGenerator.Services;
 
-namespace Stravaig.FamilyTreeGenerator.Requests
+namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
     public class InitFileSystemForMarkdownHandler : RequestHandler<InitFileSystem>
     {

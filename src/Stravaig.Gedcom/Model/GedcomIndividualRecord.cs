@@ -6,22 +6,19 @@ using Stravaig.Gedcom.Settings;
 
 namespace Stravaig.Gedcom.Model
 {
-    public class GedcomIndividualRecord
+    public class GedcomIndividualRecord : Record
     {
         public static readonly GedcomTag Tag = "INDI".AsGedcomTag();
         public static readonly GedcomTag SexTag = "SEX".AsGedcomTag();
         
-        private readonly GedcomRecord _record;
-        private readonly GedcomDatabase _database;
         private readonly Lazy<GedcomNameRecord[]> _lazyNames;
         private readonly Lazy<GedcomIndividualEventRecord[]> _lazyEvents;
         private readonly Lazy<GedcomFamilyLinkRecord[]> _lazyFamilies;
         private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
 
         public GedcomIndividualRecord(GedcomRecord record, GedcomDatabase database)
+            : base(record, database)
         {
-            _record = record ?? throw new ArgumentNullException(nameof(record));
-            _database = database;
             if (record.Tag != Tag)
                 throw new ArgumentException($"Must be an \"INDIVIDUAL_RECORD\" ({Tag}) record, but was {record.Tag}.");
             if (!record.CrossReferenceId.HasValue)
@@ -45,13 +42,9 @@ namespace Stravaig.Gedcom.Model
                     .Select(r => new GedcomFamilyLinkRecord(r, _database))
                     .ToArray());
 
-            _lazyNotes = new Lazy<GedcomNoteRecord[]>(
-                () => _record.Children
-                    .Where(r => r.Tag == GedcomNoteRecord.NoteTag)
-                    .Select(r => new GedcomNoteRecord(r, _database))
-                    .ToArray());
+            _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
         }
-
+        
         // ReSharper disable once PossibleInvalidOperationException
         // Checked in the ctor.
         public GedcomPointer CrossReferenceId => _record.CrossReferenceId.Value;

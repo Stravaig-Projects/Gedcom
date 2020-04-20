@@ -12,6 +12,7 @@ namespace Stravaig.Gedcom.Model
         private readonly Dictionary<GedcomPointer, GedcomIndividualRecord> _individualRecords;
         private readonly Dictionary<GedcomPointer, GedcomFamilyRecord> _familyRecords;
         private readonly Dictionary<GedcomPointer, GedcomNoteRecord> _noteRecords;
+        private readonly Dictionary<GedcomPointer, GedcomSourceRecord> _sourceRecords;
         
         public GedcomDatabase()
         {
@@ -20,6 +21,7 @@ namespace Stravaig.Gedcom.Model
             _individualRecords = new Dictionary<GedcomPointer, GedcomIndividualRecord>();
             _familyRecords = new Dictionary<GedcomPointer, GedcomFamilyRecord>();
             _noteRecords = new Dictionary<GedcomPointer, GedcomNoteRecord>();
+            _sourceRecords = new Dictionary<GedcomPointer, GedcomSourceRecord>();
             Settings = new DatabaseSettings();
         }
         
@@ -54,23 +56,26 @@ namespace Stravaig.Gedcom.Model
         public IReadOnlyList<GedcomRecord> Records => _records;
 
         public IReadOnlyDictionary<GedcomPointer, GedcomRecord> CrossReferencedRecords => _crossReferencedRecords;
-
         public IReadOnlyDictionary<GedcomPointer, GedcomIndividualRecord> IndividualRecords => _individualRecords;
         public IReadOnlyDictionary<GedcomPointer, GedcomFamilyRecord> FamilyRecords => _familyRecords;
         public IReadOnlyDictionary<GedcomPointer, GedcomNoteRecord> NoteRecords => _noteRecords;
+        public IReadOnlyDictionary<GedcomPointer, GedcomSourceRecord> SourceRecords => _sourceRecords;
 
         private void ProcessRecord(GedcomRecord record)
         {
             _records.Add(record);
             if (record.CrossReferenceId.HasValue)
             {
-                _crossReferencedRecords.Add(record.CrossReferenceId.Value, record);
+                var pointer = record.CrossReferenceId.Value;
+                _crossReferencedRecords.Add(pointer, record);
                 if (record.Tag == GedcomIndividualRecord.Tag)
-                    _individualRecords.Add(record.CrossReferenceId.Value, new GedcomIndividualRecord(record, this));
+                    _individualRecords.Add(pointer, new GedcomIndividualRecord(record, this));
                 else if (record.Tag == GedcomFamilyRecord.FamilyTag)
-                    _familyRecords.Add(record.CrossReferenceId.Value, new GedcomFamilyRecord(record, this));
+                    _familyRecords.Add(pointer, new GedcomFamilyRecord(record, this));
                 else if (record.Tag == GedcomNoteRecord.NoteTag)
-                    _noteRecords.Add(record.CrossReferenceId.Value, new GedcomNoteRecord(record, this));
+                    _noteRecords.Add(pointer, new GedcomNoteRecord(record, this));
+                else if (record.Tag == GedcomSourceRecord.SourceTag)
+                    _sourceRecords.Add(pointer, new GedcomSourceRecord(record, this));
             }
             
         }

@@ -6,7 +6,7 @@ using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.Model
 {
-    public class GedcomFamilyLinkRecord
+    public class GedcomFamilyLinkRecord : Record
     {
         public static readonly GedcomTag ChildToFamilyTag = "FAMC".AsGedcomTag();
         public static readonly GedcomTag SpouseToFamilyTag = "FAMS".AsGedcomTag();
@@ -15,17 +15,15 @@ namespace Stravaig.Gedcom.Model
             ChildToFamilyTag, 
             SpouseToFamilyTag,
         };
-        
-        private readonly GedcomRecord _record;
-        private readonly GedcomDatabase _database;
+
+        private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
 
         public GedcomFamilyLinkRecord(GedcomRecord record, GedcomDatabase database)
+            : base(record, database)
         {
-            _record = record ?? throw new ArgumentNullException(nameof(record));
-            _database = database;
-            _record = record;
             if (!FamilyTags.Contains(record.Tag))
                 throw new ArgumentException($"The record must be a known family type. One of {string.Join(", ", FamilyTags.Select(ft=>ft.ToString()))}.");
+            _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
         }
 
         public GedcomFamilyType Type =>
@@ -36,5 +34,7 @@ namespace Stravaig.Gedcom.Model
         public GedcomPointer Link => new GedcomPointer(_record.Value);
         
         public GedcomFamilyRecord Family => _database.FamilyRecords[Link];
+
+        public GedcomNoteRecord[] Notes => _lazyNotes.Value;
     }
 }
