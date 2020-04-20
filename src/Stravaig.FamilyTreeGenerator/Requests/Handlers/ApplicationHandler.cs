@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
+using Stravaig.FamilyTreeGenerator.Extensions;
+using Stravaig.FamilyTreeGenerator.Requests.Models;
 using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
 using Stravaig.Gedcom.Model.Extensions;
@@ -10,18 +12,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
     public class ApplicationHandler : RequestHandler<Application>
     {
-        public class SourceEntry
-        {
-            public GedcomSourceRecord Source { get; }
-            public List<GedcomIndividualRecord> ReferencedByIndividuals { get; }
 
-            public SourceEntry(GedcomSourceRecord source, GedcomIndividualRecord individual)
-            {
-                Source = source;
-                ReferencedByIndividuals = new List<GedcomIndividualRecord>();
-                ReferencedByIndividuals.Add(individual);
-            }
-        }
         private readonly ILogger<ApplicationHandler> _logger;
         private readonly GedcomDatabase _database;
         private readonly CommandLineOptions _options;
@@ -56,7 +47,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 _logger.LogInformation($"Processing #{counter}: {individual.Name}...");
                 _commander.Publish(new RenderIndividual(individual, AddSource));
             } 
-            _commander.Publish(new RenderIndex(individuals));
+            _commander.Publish(new RenderPersonIndex(individuals));
+            _commander.Publish(new RenderSourceIndex(_sources.Values.ToArray()));
             _logger.LogInformation("Done!");
             return base.Handle(command);
         }
@@ -65,10 +57,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
             if (_sources.TryGetValue(source.CrossReferenceId, out var sourceEntry))
             {
-                if (!sourceEntry.ReferencedByIndividuals.Any(i => i.CrossReferenceId == individual.CrossReferenceId))
-                {
+                if (sourceEntry.ReferencedByIndividuals.NotAny(i => i.CrossReferenceId == individual.CrossReferenceId))
                     sourceEntry.ReferencedByIndividuals.Add(individual);
-                }
             }
             else
             {

@@ -8,6 +8,7 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="CommandLineOptions.cs" t="Include" />
         <e p="Extensions" t="Include">
+          <e p="LinqExtensions.cs" t="Include" />
           <e p="StringExtensions.cs" t="Include" />
           <e p="TextWriterExtensions.cs" t="Include" />
         </e>
@@ -27,17 +28,21 @@
           <e p="Handlers" t="Include">
             <e p="ApplicationHandler.cs" t="Include" />
             <e p="InitFileSystemForMarkdownHandler.cs" t="Include" />
-            <e p="RenderIndexByNameAsMarkdownHandler.cs" t="Include" />
             <e p="RenderIndividualAsMarkdownHandler-Timeline.cs" t="Include" />
             <e p="RenderIndividualAsMarkdownHandler.cs" t="Include" />
+            <e p="RenderPersonIndexByNameAsMarkdownHandler.cs" t="Include" />
             <e p="Services" t="Include">
               <e p="IFootnoteOrganiser.cs" t="Include" />
               <e p="MarkdownFootnoteOrganiser.cs" t="Include" />
             </e>
           </e>
           <e p="InitFileSystem.cs" t="Include" />
-          <e p="RenderIndex.cs" t="Include" />
+          <e p="Models" t="Include">
+            <e p="SourceEntry.cs" t="Include" />
+          </e>
           <e p="RenderIndividual.cs" t="Include" />
+          <e p="RenderPersonIndex.cs" t="Include" />
+          <e p="RenderSourceIndex.cs" t="Include" />
           <e p="Request.cs" t="Include" />
         </e>
         <e p="Services" t="Include">

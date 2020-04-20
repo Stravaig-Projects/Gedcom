@@ -3,11 +3,11 @@ using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests
 {
-    public class RenderIndex : Request
+    public class RenderPersonIndex : Request
     {
         public GedcomIndividualRecord[] Individuals { get; }
 
-        public RenderIndex(GedcomIndividualRecord[] individuals)
+        public RenderPersonIndex(GedcomIndividualRecord[] individuals)
         {
             Individuals = individuals;
         }

@@ -173,42 +173,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _writer.WriteLine();
         }
 
-        private void WriteTimeLineBirth(TextWriter writer, GedcomIndividualRecord subject)
-        {
-            writer.WriteLine();
-            var name = subject.NameWithoutMarker;
-            var birthday = subject.BirthEvent?.Date;
-            writer.Write($"* **Born**");
-            if (birthday != null)
-            {
-                var date = _dateRenderer.RenderAsProse(birthday);
-                if (date.HasContent())
-                {
-                    writer.Write(" ");
-                    writer.Write(date);
-                }
-                
-                var parentFamily = subject.ChildToFamilies.FirstOrDefault();
-                if (parentFamily != null)
-                {
-                    var parents = parentFamily.Spouses;
-                    if (parents.Any())
-                    {
-                        var link = _fileNamer.GetIndividualFile(parents[0], subject);
-                        writer.Write($" to [{parents[0].NameWithoutMarker}]({link})");
-                        if (parents.Length > 1)
-                        { 
-                            link = _fileNamer.GetIndividualFile(parents[1], subject);
-                            writer.Write($" and [{parents[1].NameWithoutMarker}]({link})");
-                        }
-                    }
-                }
-                writer.WriteLine(".");
-            }
-            else
-                writer.WriteLine(".");
-        }
-
         private void WriteFooter(GedcomIndividualRecord subject)
         {
             var thisDirectory = new FileInfo(_fileNamer.GetIndividualFile(subject)).DirectoryName;
@@ -231,6 +195,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         public void Dispose()
         {
+            _logger.LogInformation($"Disposing of {GetType().Name}.");
             Dispose(true);
             GC.SuppressFinalize(this);
         }

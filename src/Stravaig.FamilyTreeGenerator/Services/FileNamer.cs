@@ -10,7 +10,10 @@ namespace Stravaig.FamilyTreeGenerator.Services
     {
         string GetIndividualFile(GedcomIndividualRecord individual, string relativeTo = null);
         string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo);
+        string GetSourceFile(GedcomSourceRecord source, string relativeTo = null);
+        string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo);
         string GetByNameIndexFile(string relativeTo = null);
+        string GetSourceIndexFile(string relativeTo = null);
         IEnumerable<DirectoryInfo>  RequiredDirectories();
         DirectoryInfo BaseDirectory();
     }
@@ -48,6 +51,23 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return path;
         }
 
+        public string GetSourceFile(GedcomSourceRecord source, string relativeTo = null)
+        {
+            var sourceDir = SourceDirectory(relativeTo);
+            var title = source.Title.MakeFileNameSafe();
+            var fileName = $"{source.CrossReferenceId}-{title}.md";
+            var path = Path.Join(sourceDir, fileName);
+            path = path.Replace("\\", "/");
+            return path;
+        }
+
+        public string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo)
+        {
+            var thisDirectory = new FileInfo(GetIndividualFile(relativeTo)).DirectoryName;
+            return GetSourceFile(source, thisDirectory);
+        }
+
+
         public string GetByNameIndexFile(string relativeTo = null)
         {
             const string fileName = "Index-ByName.md";
@@ -59,6 +79,17 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return path;
         }
 
+        public string GetSourceIndexFile(string relativeTo = null)
+        {
+            const string fileName = "Index-Sources.md";
+            var baseDirectory = BaseDirectory();
+            var path = Path.Join(baseDirectory.FullName, fileName);
+            if (relativeTo != null)
+                path = Path.GetRelativePath(relativeTo, path);
+            path = path.Replace("\\", "/");
+            return path;
+        }
+        
         public IEnumerable<DirectoryInfo> RequiredDirectories()
         {
             yield return BaseDirectory();
@@ -77,6 +108,13 @@ namespace Stravaig.FamilyTreeGenerator.Services
             if (relativeTo != null)
                 peopleDirectory = Path.GetRelativePath(relativeTo, peopleDirectory);
             return peopleDirectory;
+        }
+        private string SourceDirectory(string relativeTo = null)
+        {
+            var sourceDirectory = Path.Join(BaseDirectory().FullName, "sources");
+            if (relativeTo != null)
+                sourceDirectory = Path.GetRelativePath(relativeTo, sourceDirectory);
+            return sourceDirectory;
         }
     }
 }

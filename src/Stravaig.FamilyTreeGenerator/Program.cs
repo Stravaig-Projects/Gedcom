@@ -48,12 +48,15 @@ namespace Stravaig.FamilyTreeGenerator
         
         private static void AddApplicationServices(ServiceCollection services, CommandLineOptions options)
         {
-            services.AddBrighter().Handlers(registry =>
+            services.AddBrighter(opts =>
+            {    
+            }).Handlers(registry =>
             {
                 registry.Register<Application, ApplicationHandler>();
                 registry.Register<InitFileSystem, InitFileSystemForMarkdownHandler>();
                 registry.Register<RenderIndividual, RenderIndividualAsMarkdownHandler>();
-                registry.Register<RenderIndex, RenderIndexByNameAsMarkdownHandler>();
+                registry.Register<RenderPersonIndex, RenderPersonIndexByNameAsMarkdownHandler>();
+                registry.Register<RenderSourceIndex, RenderSourceIndexAsMarkdownHandler>();
             });
             services.AddTransient<IFootnoteOrganiser, MarkdownFootnoteOrganiser>();
             
