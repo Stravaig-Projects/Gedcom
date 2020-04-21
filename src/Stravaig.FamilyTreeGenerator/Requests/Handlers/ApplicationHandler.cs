@@ -48,7 +48,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 _commander.Publish(new RenderIndividual(individual, AddSource));
             } 
             _commander.Publish(new RenderPersonIndex(individuals));
-            _commander.Publish(new RenderSourceIndex(_sources.Values.ToArray()));
+            
+            var sourceEntries = _sources.Values.ToArray();
+            _commander.Publish(new RenderSourceIndex(sourceEntries));
+            foreach(var sourceEntry in sourceEntries)
+                _commander.Publish(new RenderSource(sourceEntry));
+            
             _logger.LogInformation("Done!");
             return base.Handle(command);
         }

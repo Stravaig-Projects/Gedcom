@@ -4,85 +4,11 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
-using Stravaig.FamilyTreeGenerator.Requests.Models;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
-    public class RenderSourceIndexAsMarkdownHandler : RequestHandler<RenderSourceIndex>
-    {
-        private readonly ILogger<RenderSourceIndexAsMarkdownHandler> _logger;
-        private readonly IDateRenderer _dateRenderer;
-        private readonly IFileNamer _fileNamer;
-        
-
-        public RenderSourceIndexAsMarkdownHandler(
-            ILogger<RenderSourceIndexAsMarkdownHandler> logger,
-            IDateRenderer dateRenderer,
-            IFileNamer fileNamer)
-        {
-            _logger = logger;
-            _dateRenderer = dateRenderer;
-            _fileNamer = fileNamer;
-        }
-        public override RenderSourceIndex Handle(RenderSourceIndex command)
-        {
-            _logger.LogInformation("Rendering Source Index.");
-
-            var fileName = _fileNamer.GetSourceIndexFile();
-            using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-            using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
-            WriteHeader(writer);
-            WriteIndex(writer, command.SourceEntries);
-
-            return base.Handle(command);
-        }
-
-        private void WriteIndex(TextWriter writer, SourceEntry[] entries)
-        {
-            var orderedEntries = entries.OrderBy(s => s.Source.Title);
-            foreach (var entry in orderedEntries)
-            {
-                string basePath = _fileNamer.BaseDirectory().FullName;
-                string filePath = _fileNamer.GetSourceFile(entry.Source, basePath);
-                writer.WriteLine($"* [{entry.Source.Title}]({filePath})");
-                var references = entry.ReferencedByIndividuals
-                    .OrderBy(p => p.FamilyName)
-                    .ThenBy(p => p.NameWithoutMarker)
-                    .ThenBy(p => p.BirthEvent?.Date)
-                    .ToArray();
-                foreach (var person in references)
-                {
-                    filePath = _fileNamer.GetIndividualFile(person, basePath);
-                    writer.Write($"  * Referenced from entry about: [{person.NameWithoutMarker}]({filePath})");
-                    if (person.BirthEvent?.Date != null || person.DeathEvent?.Date != null)
-                    {
-                        writer.Write(" (");
-                        if (person.BirthEvent?.Date != null)
-                        {
-                            var birth = _dateRenderer.RenderAsShortDate(person.BirthEvent.Date);
-                            writer.Write($"{birth}");
-                        }
-                        writer.Write(" - ");
-                        if (person.DeathEvent?.Date != null)
-                        {
-                            var death = _dateRenderer.RenderAsShortDate(person.DeathEvent.Date);
-                            writer.Write($"{death}");
-                        }
-                        writer.Write(")");
-                    }
-                    writer.WriteLine();
-                }
-            }
-        }
-
-        private void WriteHeader(TextWriter writer)
-        {       
-            writer.WriteLine("# Index - Sources");
-            writer.WriteLine();
-        }
-    }
     public class RenderPersonIndexByNameAsMarkdownHandler : RequestHandler<RenderPersonIndex>
     {
         private readonly ILogger<RenderPersonIndexByNameAsMarkdownHandler> _logger;

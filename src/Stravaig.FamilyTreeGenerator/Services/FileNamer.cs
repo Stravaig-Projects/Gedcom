@@ -94,6 +94,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
         {
             yield return BaseDirectory();
             yield return new DirectoryInfo(PeopleDirectory());
+            yield return new DirectoryInfo(SourceDirectory());
         }
 
         public DirectoryInfo BaseDirectory()
