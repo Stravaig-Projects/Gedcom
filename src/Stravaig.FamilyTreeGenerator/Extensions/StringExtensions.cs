@@ -15,8 +15,16 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
                 .Replace("*", "-")
                 .Replace(":", "-")
                 .Replace("/", "-")
-                .Replace("\\", "-");
-            if (result.Length > 100)
+                .Replace("\\", "-")
+                .Replace(" ", "-");
+
+            int len;
+            do
+            {
+                len = result.Length;
+                result = result.Replace("--", "-");
+            } while (result.Length < len);
+            if (len > 100)
                 result = result.Substring(0, 99) + ellipsis;
             return result;
         }

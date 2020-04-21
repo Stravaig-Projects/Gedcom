@@ -37,10 +37,10 @@ namespace Stravaig.FamilyTreeGenerator.Services
             var peopleDir = PeopleDirectory(relativeTo);
             var personName = individual.NameWithoutMarker
                 .MakeFileNameSafe()
-                ?.Replace(" ", "-") ?? "X";
+                ?? "X";
             var birth = individual.BirthEvent?.Date?.RawDateValue
                 .MakeFileNameSafe()
-                ?.Replace(" ", "-") ?? "X";
+                ?? "X";
             var death = individual.DeathEvent?.Date?.RawDateValue
                 .MakeFileNameSafe()
                 ?.Replace(" ", "-") ?? "X";
