@@ -92,6 +92,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
             writer.WriteLine($"# {source.Title}");
             writer.WriteLine();
+
+            writer.WriteLine("Name | Value");
+            writer.WriteLine("---:|:---");
+            writer.WriteLine($"Responsible Agency | {source.ResponsibleAgency}");
+            writer.WriteLine($"Source Originator | {source.Originator}");
+            writer.WriteLine($"Source Publication Facts | {source.PublicationFacts}");
+            writer.WriteLine();
         }
     }
 }

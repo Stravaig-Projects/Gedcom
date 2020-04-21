@@ -119,7 +119,9 @@
           <e p="GedcomNameRecord.cs" t="Include" />
           <e p="GedcomNoteRecord.cs" t="Include" />
           <e p="GedcomSex.cs" t="Include" />
+          <e p="GedcomSourcePublicationFactsRecord.cs" t="Include" />
           <e p="GedcomSourceRecord.cs" t="Include" />
+          <e p="GedcomTextRecord.cs" t="Include" />
           <e p="GedcomTitleRecord.cs" t="Include" />
           <e p="MultiLineTextRecord.cs" t="Include" />
           <e p="Parsers" t="Include">
