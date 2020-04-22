@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Stravaig.Gedcom.Extensions;
 
@@ -103,6 +105,7 @@ namespace Stravaig.Gedcom.Model
         private static readonly GedcomTag DataTag = "DATA".AsGedcomTag();
         private static readonly GedcomTag AgencyTag = "AGNC".AsGedcomTag();
         private static readonly GedcomTag SourceOriginatorTag = "AUTH".AsGedcomTag();
+        private static readonly GedcomTag FiledByEntryTag = "ABBR".AsGedcomTag();
 
         private readonly Lazy<GedcomTitleRecord> _lazyTitle;
         private readonly Lazy<GedcomTextRecord> _lazyText;
@@ -110,6 +113,9 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<string> _lazyResponsibleAgency;
         private readonly Lazy<string> _lazyOriginator;
         private readonly Lazy<GedcomSourcePublicationFactsRecord> _lazyPublication;
+        private readonly Lazy<string> _lazyFiledByEntry;
+        private readonly Lazy<GedcomDateRecord> _lazyDate;
+        private readonly Lazy<GedcomUserReferenceNumberRecord[]> _lazyReferences;
         
         public GedcomSourceRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -126,6 +132,17 @@ namespace Stravaig.Gedcom.Model
             _lazyResponsibleAgency = new Lazy<string>(GetResponsibleAgency);
             _lazyOriginator = new Lazy<string>(GetSourceOriginator);
             _lazyPublication = new Lazy<GedcomSourcePublicationFactsRecord>(GetPublicationFactsRecord);
+            _lazyFiledByEntry = new Lazy<string>(GetFiledByEntry);
+            _lazyDate = new Lazy<GedcomDateRecord>(GetDateRecord);
+            _lazyReferences = new Lazy<GedcomUserReferenceNumberRecord[]>(GetReferences);
+        }
+
+        private GedcomUserReferenceNumberRecord[] GetReferences()
+        {
+            var result = _record.Children.Where(r => r.Tag == GedcomUserReferenceNumberRecord.ReferenceTag)
+                .Select(r => new GedcomUserReferenceNumberRecord(r, _database))
+                .ToArray();
+            return result;
         }
 
         private GedcomSourcePublicationFactsRecord GetPublicationFactsRecord()
@@ -152,6 +169,12 @@ namespace Stravaig.Gedcom.Model
             return null;
         }
 
+        private string GetFiledByEntry()
+        {
+            var record = _record.Children.FirstOrDefault(r => r.Tag == FiledByEntryTag);
+            return record?.Value;
+        }
+        
         private string GetResponsibleAgency()
         {
             // The Agency tag being directly under the Source record is
@@ -167,7 +190,7 @@ namespace Stravaig.Gedcom.Model
 
             return agencyRecord?.Value;
         }
-
+        
         private string GetSourceOriginator()
         {
             var record = _record.Children.FirstOrDefault(r => r.Tag == SourceOriginatorTag);
@@ -180,6 +203,7 @@ namespace Stravaig.Gedcom.Model
         public GedcomPointer CrossReferenceId => _record.CrossReferenceId.Value;
 
         public GedcomNoteRecord[] Notes => _lazyNotes.Value;
+        public GedcomDateRecord Date => _lazyDate.Value;
 
         public string Title => _lazyTitle.Value?.Text;
 
@@ -188,5 +212,7 @@ namespace Stravaig.Gedcom.Model
         public string ResponsibleAgency => _lazyResponsibleAgency.Value;
         public string Originator => _lazyOriginator.Value;
         public string PublicationFacts => _lazyPublication.Value?.Text;
+        public string FiledByEntry => _lazyFiledByEntry.Value;
+        public GedcomUserReferenceNumberRecord[] References => _lazyReferences.Value;
     }
 }

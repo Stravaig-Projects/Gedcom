@@ -123,6 +123,7 @@
           <e p="GedcomSourceRecord.cs" t="Include" />
           <e p="GedcomTextRecord.cs" t="Include" />
           <e p="GedcomTitleRecord.cs" t="Include" />
+          <e p="GedcomUserReferenceNumberRecord.cs" t="Include" />
           <e p="MultiLineTextRecord.cs" t="Include" />
           <e p="Parsers" t="Include">
             <e p="DateParser.cs" t="Include" />

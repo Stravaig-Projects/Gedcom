@@ -21,6 +21,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private readonly IFileNamer _fileNamer;
         private FileStream _fs;
         private TextWriter _writer;
+        private bool _hasSources;
         
         public RenderIndividualAsMarkdownHandler(
             ILogger<RenderIndividualAsMarkdownHandler> logger,
@@ -32,6 +33,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _dateRenderer = dateRenderer;
             _footnoteOrganiser = footnoteOrganiser;
             _fileNamer = fileNamer;
+            _hasSources = false;
         }
 
         public override RenderIndividual Handle(RenderIndividual command)
@@ -53,11 +55,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         private void InitHandler(RenderIndividual command)
         {
-            _footnoteOrganiser.InitFootnotes(command.AddSource, command.Individual);
+            void AddSource(GedcomSourceRecord record, GedcomIndividualRecord individualRecord)
+            {
+                _hasSources = true;
+                command.AddSource(record, individualRecord);
+            }
+
+            _footnoteOrganiser.InitFootnotes(AddSource, command.Individual);
             var fileName = _fileNamer.GetIndividualFile(command.Individual);
             _fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             _writer = new StreamWriter(_fs, Encoding.UTF8);
         }
+        
 
         private void WriteNames(GedcomIndividualRecord subject)
         {
@@ -177,11 +186,17 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
             var thisDirectory = new FileInfo(_fileNamer.GetIndividualFile(subject)).DirectoryName;
             var indexByNameFile = _fileNamer.GetByNameIndexFile(thisDirectory);
+            var indexSourcesFile = _fileNamer.GetSourceIndexFile(thisDirectory);
             _writer.WriteLine();
             _writer.WriteLine("## See also");
             _writer.WriteLine();
             _writer.WriteLine("- Indexes");
             _writer.WriteLine($"  - [By family name]({indexByNameFile})");
+            if (_hasSources)
+                _writer.WriteLine($"  - [Sources]({indexSourcesFile})");
+
+            if (subject.FamilySearchId.HasContent())
+                _writer.WriteLine($"- [Family Search Person Details](https://www.familysearch.org/tree/person/details/{subject.FamilySearchId})");
         }
 
         private void Dispose(bool disposing)

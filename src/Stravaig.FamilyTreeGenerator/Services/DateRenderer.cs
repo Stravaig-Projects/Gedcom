@@ -47,6 +47,9 @@ namespace Stravaig.FamilyTreeGenerator.Services
 
         public string RenderAsShortDate(GedcomDateRecord dateRecord)
         {
+            if (dateRecord == null)
+                return string.Empty;
+            
             StringBuilder sb = new StringBuilder();
             string prep = ShortInitialPreposition(dateRecord);
             if (prep != null)

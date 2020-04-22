@@ -16,15 +16,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
     {
         private readonly ILogger<RenderSourceIndexAsMarkdownHandler> _logger;
         private readonly IIndividualNameRenderer _nameRenderer;
+        private readonly IDateRenderer _dateRenderer;
         private readonly IFileNamer _fileNamer;
 
         public RenderSourceAsMarkdownHandler(
             ILogger<RenderSourceIndexAsMarkdownHandler> logger,
             IIndividualNameRenderer nameRenderer,
+            IDateRenderer dateRenderer,
             IFileNamer fileNamer)
         {
             _logger = logger;
             _nameRenderer = nameRenderer;
+            _dateRenderer = dateRenderer;
             _fileNamer = fileNamer;
         }
 
@@ -93,11 +96,26 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             writer.WriteLine($"# {source.Title}");
             writer.WriteLine();
 
-            writer.WriteLine("Name | Value");
+            writer.WriteLine("Field | Detail");
             writer.WriteLine("---:|:---");
+            writer.WriteLine($"Publication | {source.PublicationFacts}");
+            writer.WriteLine($"Originator / Author | {source.Originator}");
+            writer.WriteLine($"Date | {_dateRenderer.RenderAsShortDate(source.Date)}");
             writer.WriteLine($"Responsible Agency | {source.ResponsibleAgency}");
-            writer.WriteLine($"Source Originator | {source.Originator}");
-            writer.WriteLine($"Source Publication Facts | {source.PublicationFacts}");
+            writer.WriteLine($"Filed by Entry | {source.FiledByEntry}");
+
+            writer.Write("Reference");
+            if (source.References.Length > 1)
+                writer.Write("s");
+            writer.Write(" | ");
+            foreach (var reference in source.References)
+            {
+                if (source.References.Length > 1)
+                    writer.Write($"* ");
+                if (reference.Type.HasContent())
+                    writer.Write($"({reference.Type}) ");
+                writer.WriteLine(reference.Reference);
+            }
             writer.WriteLine();
         }
     }
