@@ -35,6 +35,5 @@ namespace Stravaig.Gedcom.Model
         }
 
         public GedcomPointer? CrossReferenceId => _record.CrossReferenceId;
-        public string Text => _noteText.Value;
     }
 }

@@ -25,6 +25,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
             switch (entry.Type)
             {
+                case TimelineEntry.EventType.SubjectAttribute:
                 case TimelineEntry.EventType.SubjectEvent:
                     WriteSubjectTimelineEntry(writer, entry);
                     break;
@@ -47,21 +48,22 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         private void WriteSubjectTimelineEntry(TextWriter writer, TimelineEntry entry)
         {
-            if (entry.IndividualEvent.Tag == GedcomIndividualEventRecord.BirthTag)
+            EventRecord eventRecord = (EventRecord)entry.IndividualEvent ?? entry.IndividualAttribute;
+            if (eventRecord.Tag == GedcomIndividualEventRecord.BirthTag)
                 WriteBirthEvent(writer, entry);
-            else if (entry.IndividualEvent.Tag == GedcomIndividualEventRecord.DeathTag)
+            else if (eventRecord.Tag == GedcomIndividualEventRecord.DeathTag)
                 WriteDeathEvent(writer, entry);
             else
             {
-                string type = $"{entry.IndividualEvent.Tag}" +
-                              (entry.IndividualEvent.Type.HasContent()
-                                  ? $":{entry.IndividualEvent.Type}"
+                string type = $"{eventRecord.Tag}" +
+                              (eventRecord.Type.HasContent()
+                                  ? $":{eventRecord.Type}"
                                   : string.Empty);
-                string date = _dateRenderer.RenderAsProse(entry.IndividualEvent.Date);
+                string date = _dateRenderer.RenderAsProse(eventRecord.Date);
                 writer.Write($"* **{type}** {date}.");
             }
 
-            var sources = entry.IndividualEvent.Sources;
+            var sources = eventRecord.Sources;
             int numSources = sources.Length;
             if (numSources > 0)
             {
@@ -79,7 +81,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 }
             }
 
-            var notes = entry.IndividualEvent.Notes;
+            var notes = eventRecord.Notes;
             var numNotes = notes.Length;
             if (numNotes > 0)
             {
@@ -112,7 +114,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             string date = _dateRenderer.RenderAsProse(entry.IndividualEvent.Date);
             if (date.HasContent())
                 writer.Write(" "+date);
-            writer.WriteLine(".");
+            writer.Write(".");
         }
 
         private void WriteBirthEvent(TextWriter writer, TimelineEntry entry)
@@ -138,7 +140,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                     }
                 }
             }
-            writer.WriteLine(".");
+            writer.Write(".");
         }
     }
 }

@@ -114,6 +114,7 @@
           <e p="GedcomFamilyLinkRecord.cs" t="Include" />
           <e p="GedcomFamilyRecord.cs" t="Include" />
           <e p="GedcomFamilyType.cs" t="Include" />
+          <e p="GedcomIndividualAttributeRecord.cs" t="Include" />
           <e p="GedcomIndividualEventRecord.cs" t="Include" />
           <e p="GedcomIndividualRecord.cs" t="Include" />
           <e p="GedcomNameRecord.cs" t="Include" />
@@ -127,6 +128,7 @@
           <e p="MultiLineTextRecord.cs" t="Include" />
           <e p="Parsers" t="Include">
             <e p="DateParser.cs" t="Include" />
+            <e p="MultilineTextParser.cs" t="Include" />
           </e>
           <e p="Record.cs" t="Include" />
           <e p="TimelineEntry.cs" t="Include" />

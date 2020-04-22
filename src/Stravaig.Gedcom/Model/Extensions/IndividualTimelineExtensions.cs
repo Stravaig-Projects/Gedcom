@@ -47,6 +47,12 @@ namespace Stravaig.Gedcom.Model.Extensions
                 yield return result;
             }
 
+            foreach (var individualAttribute in subject.Attributes)
+            {
+                var result = new TimelineEntry(subject, individualAttribute);
+                yield return result;
+            }
+
             individualsYielded.Add(subject.CrossReferenceId);
 
             foreach (var family in subject.ChildToFamilies)

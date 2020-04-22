@@ -17,6 +17,7 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<GedcomFamilyLinkRecord[]> _lazyFamilies;
         private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
         private readonly Lazy<string> _lazyFamilySearchId;
+        private readonly Lazy<GedcomIndividualAttributeRecord[]> _lazyAttributes;
 
         public GedcomIndividualRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -46,6 +47,7 @@ namespace Stravaig.Gedcom.Model
 
             _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
             _lazyFamilySearchId = new Lazy<string>(GetFamilySearchId);
+            _lazyAttributes = new Lazy<GedcomIndividualAttributeRecord[]>(GetAttributeRecords);
         }
 
         private string GetFamilySearchId()
@@ -53,6 +55,14 @@ namespace Stravaig.Gedcom.Model
             // This is a custom tag used by Synium Software GmbH Germany (syniumsoftware.com)
             var record = _record.Children.FirstOrDefault(r => r.Tag == FamilySearchIdTag);
             return record?.Value;
+        }
+
+        private GedcomIndividualAttributeRecord[] GetAttributeRecords()
+        {
+            return _record.Children
+                .Where(r => GedcomIndividualAttributeRecord.AttributeTags.Contains(r.Tag))
+                .Select(r => new GedcomIndividualAttributeRecord(r, _database))
+                .ToArray();
         }
 
         // ReSharper disable once PossibleInvalidOperationException
@@ -88,6 +98,7 @@ namespace Stravaig.Gedcom.Model
                 .ToArray();
         
         public GedcomIndividualEventRecord[] Events => _lazyEvents.Value;
+        public GedcomIndividualAttributeRecord[] Attributes => _lazyAttributes.Value;
         
         public GedcomIndividualEventRecord BirthEvent =>
             Events.FirstOrDefault(e => e.Tag == GedcomIndividualEventRecord.BirthTag);

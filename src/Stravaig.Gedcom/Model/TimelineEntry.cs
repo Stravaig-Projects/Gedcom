@@ -10,6 +10,7 @@ namespace Stravaig.Gedcom.Model
         public enum EventType
         {
             SubjectEvent,
+            SubjectAttribute,
             FamilyEvent,
             FamilyMemberEvent,
         }
@@ -18,6 +19,7 @@ namespace Stravaig.Gedcom.Model
         public GedcomIndividualRecord Subject { get; }
         public GedcomIndividualRecord OtherFamilyMember { get; }
         public GedcomIndividualEventRecord IndividualEvent { get; }
+        public GedcomIndividualAttributeRecord IndividualAttribute { get; }
         
         public GedcomFamilyRecord Family { get; }
         public GedcomFamilyEventRecord FamilyEvent { get; }
@@ -30,6 +32,14 @@ namespace Stravaig.Gedcom.Model
             IndividualEvent = individualEvent ?? throw new ArgumentNullException(nameof(individualEvent));
             _getDate = GetIndividualEventDate;
             Type = EventType.SubjectEvent;
+        }
+
+        public TimelineEntry(GedcomIndividualRecord subject, GedcomIndividualAttributeRecord individualAttribute)
+        {
+            Subject = subject ?? throw new ArgumentNullException(nameof(subject));
+            IndividualAttribute = individualAttribute ?? throw new ArgumentNullException(nameof(individualAttribute));
+            _getDate = GetIndividualAttributeDate;
+            Type = EventType.SubjectAttribute;
         }
 
         public TimelineEntry(GedcomIndividualRecord subject, GedcomIndividualRecord otherFamilyMember, GedcomIndividualEventRecord individualEvent)
@@ -53,7 +63,6 @@ namespace Stravaig.Gedcom.Model
 
         public override string ToString()
         {
-            //[DebuggerDisplay("{Type} {Subject.Name} {Date.RawDateValue} {IndividualEvent?.Tag}:{IndividualEvent?.Type} {FamilyEvent?.Tag}:{FamilyEvent?.Type} {OtherFamilyMember?.Name}")]
             StringBuilder sb = new StringBuilder();
             sb.Append($"Timeline:{Type} {Subject.Name} {Date.RawDateValue}");
             EventRecord @event = IndividualEvent ?? (EventRecord)FamilyEvent;
@@ -76,6 +85,11 @@ namespace Stravaig.Gedcom.Model
         private GedcomDateRecord GetIndividualEventDate()
         {
             return IndividualEvent.Date;
+        }
+
+        private GedcomDateRecord GetIndividualAttributeDate()
+        {
+            return IndividualAttribute.Date;
         }
 
         private GedcomDateRecord GetFamilyEventDate()

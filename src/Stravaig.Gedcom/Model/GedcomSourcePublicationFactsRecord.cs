@@ -6,8 +6,6 @@ namespace Stravaig.Gedcom.Model
     public class GedcomSourcePublicationFactsRecord : MultiLineTextRecord
     {
         public static readonly GedcomTag PublicationTag = "PUBL".AsGedcomTag();
-
-        private readonly Lazy<string> _lazyText;
         public GedcomSourcePublicationFactsRecord(GedcomRecord record, GedcomDatabase database)
             :base(record, database)
         {
