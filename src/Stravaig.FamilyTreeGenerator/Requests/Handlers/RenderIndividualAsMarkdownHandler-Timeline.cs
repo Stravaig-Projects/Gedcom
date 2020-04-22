@@ -61,13 +61,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.Write($"* **{type}** {date}.");
             }
 
-            int numSources = entry.IndividualEvent.Sources.Length;
+            var sources = entry.IndividualEvent.Sources;
+            int numSources = sources.Length;
             if (numSources > 0)
             {
                 string plural = numSources > 1 ? "s" : "";
                 writer.Write($" See source{plural}: ");
                 bool isFirst = true;
-                foreach (var source in entry.IndividualEvent.Sources)
+                foreach (var source in sources.OrderBy(s=>s.Title))
                 {
                     if (isFirst)
                         isFirst = false;
@@ -78,7 +79,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 }
             }
 
-            var numNotes = entry.IndividualEvent.Notes.Length;
+            var notes = entry.IndividualEvent.Notes;
+            var numNotes = notes.Length;
             if (numNotes > 0)
             {
                 string plural = numNotes > 1 ? "s" : "";
@@ -87,7 +89,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 else
                     writer.Write($" See note{plural}: ");
                 bool isFirst = true;
-                foreach (var note in entry.IndividualEvent.Notes)
+                foreach (var note in notes.OrderBy(n=>n.Text))
                 {
                     if (isFirst)
                         isFirst = false;

@@ -74,7 +74,10 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             {
                 _writer.WriteLine("## Names");
                 _writer.WriteLine();
-                foreach (var name in subject.Names)
+                var orderedNames = subject.Names
+                    .OrderBy(n=>n.Type??string.Empty)
+                    .ThenBy(n=>n.WholeName);
+                foreach (var name in orderedNames)
                 {
                     _writer.Write($"* {name.WholeName.Trim()}");
                     if (name.Type.HasContent())
