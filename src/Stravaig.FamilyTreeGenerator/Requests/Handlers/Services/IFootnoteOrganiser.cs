@@ -9,6 +9,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         void InitFootnotes(Action<GedcomSourceRecord, GedcomIndividualRecord> addSourceAction, GedcomIndividualRecord subject);
         int AddFootnote(GedcomSourceRecord source);
         int AddFootnote(GedcomNoteRecord note);
-        void WriteFootnotes(TextWriter writer);
+        void WriteFootnotes(TextWriter writer, string linkRelativeTo);
+        void WriteFootnotes(TextWriter writer, GedcomIndividualRecord linkRelativeTo);
     }
 }

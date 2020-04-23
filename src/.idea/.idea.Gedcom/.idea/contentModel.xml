@@ -35,6 +35,7 @@
             <e p="RenderSourceAsMarkdownHandler.cs" t="Include" />
             <e p="RenderSourceIndexAsMarkdownHandler.cs" t="Include" />
             <e p="Services" t="Include">
+              <e p="FootnoteOrganiser.cs" t="Include" />
               <e p="IFootnoteOrganiser.cs" t="Include" />
               <e p="IndividualNameMarkdownRenderer.cs" t="Include" />
               <e p="IndividualNameRenderer.cs" t="Include" />

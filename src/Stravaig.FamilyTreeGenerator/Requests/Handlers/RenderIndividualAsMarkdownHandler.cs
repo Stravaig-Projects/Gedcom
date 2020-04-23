@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
+using Paramore.Brighter.Eventsourcing.Exceptions;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
@@ -47,7 +48,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             WriteTimeline(command.Individual);
             WriteNotes(command.Individual);
             WriteAssociations(command.Individual);
-            _footnoteOrganiser.WriteFootnotes(_writer);
+            _footnoteOrganiser.WriteFootnotes(_writer, command.Individual);
             WriteFooter(command.Individual);
             
             return base.Handle(command);
