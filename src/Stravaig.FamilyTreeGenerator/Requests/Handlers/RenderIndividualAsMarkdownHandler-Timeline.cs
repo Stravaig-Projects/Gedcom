@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Stravaig.Gedcom.Extensions;
@@ -11,7 +12,10 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private void WriteTimeline(GedcomIndividualRecord subject)
         {
             _writer.WriteLine("## Timeline");
-
+            
+            if (subject.CrossReferenceId == "@I48241984@".AsGedcomPointer() || subject.CrossReferenceId == "@I9383584@".AsGedcomPointer())
+                Debugger.Break();
+            
             var timeline = subject.GetTimeline(false);
             foreach (var entry in timeline)
             {
@@ -53,6 +57,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 WriteBirthEvent(writer, entry);
             else if (eventRecord.Tag == GedcomIndividualEventRecord.DeathTag)
                 WriteDeathEvent(writer, entry);
+            else if (eventRecord.Tag == GedcomIndividualAttributeRecord.OccupationTag)
+                WriteOccupation(writer, entry);            
             else
             {
                 string type = $"{eventRecord.Tag}" +
@@ -108,10 +114,23 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             writer.WriteLine();
         }
 
+        private void WriteOccupation(TextWriter writer, TimelineEntry entry)
+        {
+            writer.Write("* **Occupation**");
+            string date = _dateRenderer.RenderAsProse(entry.Date);
+            if (date.HasContent())
+                writer.Write(" "+date);
+            
+            var occupation = entry.IndividualAttribute.Text;
+            if (occupation.HasContent())
+                writer.Write($" as \"{occupation}\"");
+            writer.Write(".");
+        }
+
         private void WriteDeathEvent(TextWriter writer, TimelineEntry entry)
         {
             writer.Write("* **Died**");
-            string date = _dateRenderer.RenderAsProse(entry.IndividualEvent.Date);
+            string date = _dateRenderer.RenderAsProse(entry.Date);
             if (date.HasContent())
                 writer.Write(" "+date);
             writer.Write(".");
@@ -120,7 +139,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private void WriteBirthEvent(TextWriter writer, TimelineEntry entry)
         {
             writer.Write("* **Born**");
-            string date = _dateRenderer.RenderAsProse(entry.IndividualEvent.Date);
+            string date = _dateRenderer.RenderAsProse(entry.Date);
             if (date.HasContent())
                 writer.Write(" "+date);
 

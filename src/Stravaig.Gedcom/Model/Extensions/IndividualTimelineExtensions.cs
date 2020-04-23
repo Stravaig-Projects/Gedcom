@@ -11,23 +11,28 @@ namespace Stravaig.Gedcom.Model.Extensions
             if (!extendBeyondLife)
             {
                 // Don't know when life is, so can't return anything.
-                if (subject.BirthEvent?.Date?.BeginningOfExtent == null || 
-                    subject.DeathEvent?.Date?.EndOfExtent == null)
+                if (!subject.IsLifespanKnown())
                 {
                     return GetBirthAndDeathOnly(subject).ToArray();
                 }
             }
             
             var events = GetAllEvents(subject);
+#if DEBUG
+            events = events.ToArray();
+#endif
             if (!extendBeyondLife)
             {
                 events = events.Where(te => te.Date != null &&
                                            te.Date.IsBetween(subject.BirthEvent.Date, subject.DeathEvent.Date));
             }
+#if DEBUG
+            events = events.ToArray();
+#endif
 
             events = events.OrderBy(te => te.Date);
-            
-            return events.ToArray();
+            var result = events.ToArray();
+            return result;
         }
 
         private static IEnumerable<TimelineEntry> GetBirthAndDeathOnly(GedcomIndividualRecord subject)
