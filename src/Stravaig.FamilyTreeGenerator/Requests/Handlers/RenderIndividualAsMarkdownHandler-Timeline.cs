@@ -58,7 +58,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             else if (eventRecord.Tag == GedcomIndividualEventRecord.DeathTag)
                 WriteDeathEvent(writer, entry);
             else if (eventRecord.Tag == GedcomIndividualAttributeRecord.OccupationTag)
-                WriteOccupation(writer, entry);            
+                WriteOccupation(writer, entry);
+            else if (eventRecord.Tag == GedcomIndividualAttributeRecord.ResidenceTag)
+                WriteResidence(writer, entry);
             else
             {
                 string type = $"{eventRecord.Tag}" +
@@ -112,6 +114,29 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.Write(".");
 
             writer.WriteLine();
+        }
+
+        private void WriteResidence(TextWriter writer, TimelineEntry entry)
+        {
+            var attr = entry.IndividualAttribute;
+            writer.Write("* **Resided** at ");
+            if ((attr.Address?.Text).HasContent())
+                writer.Write(attr.Address.Text);
+            else if (attr.Text.HasContent())
+                writer.Write(attr.Text);
+            else if ((attr.Place?.Name).HasContent())
+                writer.Write(attr.Place.Name);
+            else
+                writer.Write("Unkown");
+
+            if (attr.Date?.HasCoherentDate ?? false)
+            {
+                writer.Write(" ");
+                string date = _dateRenderer.RenderAsProse(attr.Date);
+                writer.Write(date);
+            }
+            
+            writer.Write(".");
         }
 
         private void WriteOccupation(TextWriter writer, TimelineEntry entry)

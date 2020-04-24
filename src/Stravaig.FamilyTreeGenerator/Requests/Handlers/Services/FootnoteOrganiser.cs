@@ -40,7 +40,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 return existing.Id;
 
             int newId = _footnotes
-                .Where(f => f.Source != null)
                 .DefaultIfEmpty(Footnote.Null)
                 .Max(f => f.Id) + 1;
 
@@ -64,7 +63,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 return existing.Id;
             
             int newId = _footnotes
-                .Where(f => f.Note != null)
                 .DefaultIfEmpty(Footnote.Null)
                 .Max(f => f.Id) + 1;
 

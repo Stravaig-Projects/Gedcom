@@ -1,7 +1,4 @@
 using System;
-using System.Linq;
-using System.Text;
-using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model.Parsers;
 
 namespace Stravaig.Gedcom.Model

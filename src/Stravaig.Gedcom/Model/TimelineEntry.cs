@@ -65,7 +65,7 @@ namespace Stravaig.Gedcom.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append($"Timeline:{Type} {Subject.Name} {Date.RawDateValue}");
-            EventRecord @event = IndividualEvent ?? (EventRecord)FamilyEvent;
+            EventRecord @event = IndividualEvent ?? IndividualAttribute ?? (EventRecord)FamilyEvent;
             if (@event != null)
             {
                 sb.Append(" ");

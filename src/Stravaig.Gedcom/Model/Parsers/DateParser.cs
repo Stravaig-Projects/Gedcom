@@ -129,9 +129,12 @@ namespace Stravaig.Gedcom.Model.Parsers
     {
         private const string SymbolAbout = "ABT";
         private const string SymbolAfter = "AFT";
+        private const string SymbolAfterAlt = "AFTER";
         private const string SymbolAnd = "AND";
         private const string SymbolBefore = "BEF";
+        private const string SymbolBeforeAlt = "BEFORE";
         private const string SymbolBetween = "BET";
+        private const string SymbolBetweenAlt = "BETWEEN";
         private const string SymbolCalculated = "CAL";
         private const string SymbolEstimated = "EST";
         private const string SymbolFrom = "FROM";
@@ -249,7 +252,7 @@ namespace Stravaig.Gedcom.Model.Parsers
                 return;
             }
 
-            if (IsCurrentTokenOneOf(SymbolBefore, SymbolAfter, SymbolBetween))
+            if (IsCurrentTokenOneOf(SymbolBefore, SymbolAfter, SymbolBetween, SymbolBeforeAlt, SymbolAfterAlt, SymbolBetweenAlt))
             {
                 ParseDateRange();
                 return;
@@ -350,21 +353,21 @@ namespace Stravaig.Gedcom.Model.Parsers
         private void ParseDateRange()
         {
             Type = DateType.Range;
-            if (IsCurrentToken(SymbolBefore))
+            if (IsCurrentTokenOneOf(SymbolBefore, SymbolBeforeAlt))
             {
                 _state = State.SecondDate;
                 MoveNext();
                 ParseDate();
                 MoveNext();
             }
-            else if (IsCurrentToken(SymbolAfter))
+            else if (IsCurrentTokenOneOf(SymbolAfter, SymbolAfterAlt))
             {
                 _state = State.FirstDate;
                 MoveNext();
                 ParseDate();
                 MoveNext();
             }
-            else if (IsCurrentToken(SymbolBetween))
+            else if (IsCurrentTokenOneOf(SymbolBetween, SymbolBetweenAlt))
             {
                 _state = State.FirstDate;
                 MoveNext();

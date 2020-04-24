@@ -108,6 +108,7 @@
             <e p="IndividualAlivenessExtensions.cs" t="Include" />
             <e p="IndividualTimelineExtensions.cs" t="Include" />
           </e>
+          <e p="GedcomAddressRecord.cs" t="Include" />
           <e p="GedcomDatabase.cs" t="Include" />
           <e p="GedcomDateApproximationType.cs" t="Include" />
           <e p="GedcomDateRecord.cs" t="Include" />
@@ -118,8 +119,10 @@
           <e p="GedcomIndividualAttributeRecord.cs" t="Include" />
           <e p="GedcomIndividualEventRecord.cs" t="Include" />
           <e p="GedcomIndividualRecord.cs" t="Include" />
+          <e p="GedcomMapRecord.cs" t="Include" />
           <e p="GedcomNameRecord.cs" t="Include" />
           <e p="GedcomNoteRecord.cs" t="Include" />
+          <e p="GedcomPlaceRecord.cs" t="Include" />
           <e p="GedcomSex.cs" t="Include" />
           <e p="GedcomSourcePublicationFactsRecord.cs" t="Include" />
           <e p="GedcomSourceRecord.cs" t="Include" />

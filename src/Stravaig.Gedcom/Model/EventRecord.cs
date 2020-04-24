@@ -25,14 +25,32 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<GedcomDateRecord> _lazyDate;
         private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
         private readonly Lazy<GedcomSourceRecord[]> _lazySources;
+        private readonly Lazy<GedcomAddressRecord> _lazyAddress;
+        private readonly Lazy<GedcomPlaceRecord> _lazyPlace;
         protected EventRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
         {
             _lazyDate = new Lazy<GedcomDateRecord>(GetDateRecord);
             _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
             _lazySources = new Lazy<GedcomSourceRecord[]>(GetSourceRecords);
+            _lazyAddress = new Lazy<GedcomAddressRecord>(GetAddressRecord);
+            _lazyPlace = new Lazy<GedcomPlaceRecord>(GetPlaceRecord);
         }
-        
+
+        private GedcomPlaceRecord GetPlaceRecord()
+        {
+            return MapChild(GedcomPlaceRecord.PlaceTag, GedcomPlaceRecord.Factory);
+        }
+
+        private GedcomAddressRecord GetAddressRecord()
+        {
+            var record = _record.Children.FirstOrDefault(r => r.Tag == GedcomAddressRecord.AddressTag);
+            if (record != null)
+                return new GedcomAddressRecord(record, _database);
+
+            return null;
+        }
+
         public GedcomTag Tag => _record.Tag;
 
         public GedcomDateRecord Date => _lazyDate.Value;
@@ -42,5 +60,7 @@ namespace Stravaig.Gedcom.Model
 
         public GedcomNoteRecord[] Notes => _lazyNotes.Value;
         public GedcomSourceRecord[] Sources => _lazySources.Value;
+        public GedcomAddressRecord Address => _lazyAddress.Value;
+        public GedcomPlaceRecord Place => _lazyPlace.Value;
     }
 }

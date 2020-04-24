@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.Model
@@ -17,8 +19,7 @@ namespace Stravaig.Gedcom.Model
 
         protected GedcomDateRecord GetDateRecord()
         {
-            var record = _record.Children
-                .FirstOrDefault(r => r.Tag == GedcomDateRecord.DateTag);
+            var record = GetChild(GedcomDateRecord.DateTag);
             if (record != null)
                 return new GedcomDateRecord(record, _database);
             return null;
@@ -26,8 +27,7 @@ namespace Stravaig.Gedcom.Model
         
         protected GedcomNoteRecord[] GetNoteRecords()
         {
-            return _record.Children
-                .Where(r => r.Tag == GedcomNoteRecord.NoteTag)
+            return GetChildren(GedcomNoteRecord.NoteTag)
                 .Select(r => r.Value.IsGedcomPointer() 
                     ? _database.NoteRecords[r.Value.AsGedcomPointer()] 
                     : new GedcomNoteRecord(r, _database))
@@ -36,11 +36,33 @@ namespace Stravaig.Gedcom.Model
         
         protected GedcomSourceRecord[] GetSourceRecords()
         {
-            return _record.Children
-                .Where(r => r.Tag == GedcomSourceRecord.SourceTag)
+            return GetChildren(GedcomSourceRecord.SourceTag)
                 .Where(r => r.Value.IsGedcomPointer())
                 .Select(r => _database.SourceRecords[r.Value.AsGedcomPointer()])
                 .ToArray();
+        }
+        
+        protected GedcomRecord GetChild(GedcomTag tag)
+        {
+            return GetChildren(tag).FirstOrDefault();
+        }
+
+        protected T MapChild<T>(GedcomTag tag, Func<GedcomRecord, GedcomDatabase, T> factory) where T : Record
+        {
+            var record = GetChild(tag);
+            if (record != null)
+                return factory(record, _database);
+            return null;
+        }
+
+        protected IEnumerable<GedcomRecord> GetChildren(GedcomTag tag)
+        {
+            return _record.Children.Where(r => r.Tag == tag);
+        }
+
+        protected IEnumerable<GedcomRecord> GetChildren(IEnumerable<GedcomTag> tags)
+        {
+            return _record.Children.Where(r => tags.Contains(r.Tag));
         }
     }
 }
