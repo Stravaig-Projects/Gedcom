@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Paramore.Brighter;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Extensions;
@@ -139,8 +140,28 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
         private (string, string) WriteMarriageEvent(TextWriter writer, TimelineEntry entry)
         {
+            var spouse = entry.Family.Spouses.FirstOrDefault(s => s != entry.Subject);
+            var sb = new StringBuilder();
+            if (spouse != null)
+            {
+                var link = _fileNamer.GetIndividualFile(spouse);
+                sb.Append($"Married to [{spouse.NameWithoutMarker}]({link}) ");
+            }
+
+            if (entry.FamilyEvent.Address != null)
+            {
+                sb.Append("at ");
+                sb.Append(entry.FamilyEvent.Address.Text);
+            }
+            else if (entry.FamilyEvent.Place != null)
+            {
+                sb.Append("in ");
+                sb.Append(entry.FamilyEvent.Place.Name);
+            }
+
+                
             var @event = entry.FamilyEvent;
-            return ("Married", @event.Address?.Text ?? @event.Place?.Name);
+            return ("Married", sb.ToString());
         }
 
         private void WriteSubjectTimelineEntry(TextWriter writer, TimelineEntry entry)
