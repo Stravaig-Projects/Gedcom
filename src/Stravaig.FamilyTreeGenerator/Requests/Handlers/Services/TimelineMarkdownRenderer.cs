@@ -144,7 +144,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             var sb = new StringBuilder();
             if (spouse != null)
             {
-                var link = _fileNamer.GetIndividualFile(spouse);
+                var link = _fileNamer.GetIndividualFile(spouse, entry.Subject);
                 sb.Append($"Married to [{spouse.NameWithoutMarker}]({link}) ");
             }
 
