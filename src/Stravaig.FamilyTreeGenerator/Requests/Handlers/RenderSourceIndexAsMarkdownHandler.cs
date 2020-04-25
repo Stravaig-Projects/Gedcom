@@ -52,9 +52,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                     .ToArray();
                 foreach (var person in references)
                 {
-                    filePath = _fileNamer.GetIndividualFile(person, basePath);
                     writer.Write("  * Referenced from entry about: ");
-                    string name = _nameRenderer.RenderLinkedNameWithLifespan(person, entry.Source);
+                    string name = _nameRenderer.RenderLinkedNameWithLifespan(person);
                     writer.WriteLine(name);
                 }
             }
