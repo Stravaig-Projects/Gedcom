@@ -29,7 +29,6 @@
           <e p="Handlers" t="Include">
             <e p="ApplicationHandler.cs" t="Include" />
             <e p="InitFileSystemForMarkdownHandler.cs" t="Include" />
-            <e p="RenderIndividualAsMarkdownHandler-Timeline.cs" t="Include" />
             <e p="RenderIndividualAsMarkdownHandler.cs" t="Include" />
             <e p="RenderPersonIndexByNameAsMarkdownHandler.cs" t="Include" />
             <e p="RenderSourceAsMarkdownHandler.cs" t="Include" />
@@ -39,7 +38,9 @@
               <e p="IFootnoteOrganiser.cs" t="Include" />
               <e p="IndividualNameMarkdownRenderer.cs" t="Include" />
               <e p="IndividualNameRenderer.cs" t="Include" />
+              <e p="ITimelineRenderer.cs" t="Include" />
               <e p="MarkdownFootnoteOrganiser.cs" t="Include" />
+              <e p="TimelineMarkdownRenderer.cs" t="Include" />
             </e>
           </e>
           <e p="InitFileSystem.cs" t="Include" />

@@ -132,7 +132,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
                     }
 
                     if (dateRecord.Year2.HasValue)
-                        return "before";
+                        return "before ";
                     return null;
             }
 

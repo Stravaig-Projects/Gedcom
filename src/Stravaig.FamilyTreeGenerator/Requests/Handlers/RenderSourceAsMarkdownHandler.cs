@@ -73,8 +73,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.WriteLine();
                 for(int i = 0; i < source.Notes.Length; i++)
                 {
-                    writer.WriteLine($"### Note #{i}");
-                    writer.WriteLine();
+                    if (source.Notes.Length > 1)
+                    {
+                        writer.WriteLine($"### Note #{i+1}");
+                        writer.WriteLine();
+                    }
                     writer.WriteMarkdownBlockQuote(source.Notes[i].Text);
                     writer.WriteLine();
                 }

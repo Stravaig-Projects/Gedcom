@@ -19,6 +19,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private readonly ILogger<RenderIndividualAsMarkdownHandler> _logger;
         private readonly IDateRenderer _dateRenderer;
         private readonly IFootnoteOrganiser _footnoteOrganiser;
+        private readonly ITimelineRenderer _timelineRenderer;
         private readonly IFileNamer _fileNamer;
         private FileStream _fs;
         private TextWriter _writer;
@@ -28,11 +29,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             ILogger<RenderIndividualAsMarkdownHandler> logger,
             IDateRenderer dateRenderer,
             IFootnoteOrganiser footnoteOrganiser,
+            ITimelineRenderer timelineRenderer,
             IFileNamer fileNamer)
         {
             _logger = logger;
             _dateRenderer = dateRenderer;
             _footnoteOrganiser = footnoteOrganiser;
+            _timelineRenderer = timelineRenderer;
             _fileNamer = fileNamer;
             _hasSources = false;
         }
@@ -45,7 +48,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             InitHandler(command);
             WriteHeader(command.Individual);
             WriteNames(command.Individual);
-            WriteTimeline(command.Individual);
+            _timelineRenderer.WriteTimeline(_writer, _footnoteOrganiser, command.Individual);
             WriteNotes(command.Individual);
             WriteAssociations(command.Individual);
             _footnoteOrganiser.WriteFootnotes(_writer, command.Individual);

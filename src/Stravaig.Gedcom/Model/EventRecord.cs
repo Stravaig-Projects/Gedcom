@@ -52,6 +52,7 @@ namespace Stravaig.Gedcom.Model
         }
 
         public GedcomTag Tag => _record.Tag;
+        public string RawValue => _record.Value;
 
         public GedcomDateRecord Date => _lazyDate.Value;
 

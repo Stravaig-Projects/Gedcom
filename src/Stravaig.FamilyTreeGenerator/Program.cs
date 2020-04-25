@@ -61,6 +61,7 @@ namespace Stravaig.FamilyTreeGenerator
             });
             services.AddTransient<IFootnoteOrganiser, MarkdownFootnoteOrganiser>();
             services.AddTransient<IIndividualNameRenderer, IndividualNameMarkdownRenderer>();
+            services.AddTransient<ITimelineRenderer, TimelineMarkdownRenderer>();
             
             GedcomDatabase database = GetDatabase(options.SourceFile);
             services.AddSingleton<CommandLineOptions>(options);
