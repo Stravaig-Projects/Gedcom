@@ -248,8 +248,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             string item = "Died";
             if (entry.OtherFamilyMember != null)
             {
-                // if (entry.OtherFamilyMember.CrossReferenceId == "@I24651580@".AsGedcomPointer())
-                //     Debugger.Break();
                 var relation = entry.Subject.GetRelationshipTo(entry.OtherFamilyMember);
                 var relationName = relation.IsNotRelated 
                     ? entry.OtherFamilyMember.NameWithoutMarker
@@ -284,12 +282,26 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 var parents = parentFamily.Spouses;
                 if (parents.Any())
                 {
-                    var link = _fileNamer.GetIndividualFile(parents[0], subject);
-                    sb.Append($" to [{parents[0].NameWithoutMarker}]({link})");
+                    var parent = parents[0];
+                    if (parent.IsAlive())
+                        sb.Append(" to X");
+                    else
+                    {
+                        var link = _fileNamer.GetIndividualFile(parents[0], subject);
+                        sb.Append($" to [{parent.NameWithoutMarker}]({link})");
+                    }
                     if (parents.Length > 1)
                     {
-                        link = _fileNamer.GetIndividualFile(parents[1], subject);
-                        sb.Append($" and [{parents[1].NameWithoutMarker}]({link})");
+                        parent = parents[1];
+                        if (parent.IsAlive())
+                        {
+                            sb.Append(" and X");
+                        }
+                        else
+                        {
+                            var link = _fileNamer.GetIndividualFile(parents[1], subject);
+                            sb.Append($" and [{parent.NameWithoutMarker}]({link})");
+                        }
                     }
                 }
             }
@@ -304,8 +316,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             string item = "Born";
             if (entry.OtherFamilyMember != null)
             {
-                // if (entry.OtherFamilyMember.CrossReferenceId == "@I24651580@".AsGedcomPointer())
-                //     Debugger.Break();
                 var relation = entry.Subject.GetRelationshipTo(entry.OtherFamilyMember);
                 var relationName = relation.IsNotRelated 
                     ? entry.OtherFamilyMember.IsAlive() 

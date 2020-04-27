@@ -216,11 +216,11 @@
         <e p="Stravaig.Gedcom.UnitTests.csproj" t="IncludeRecursive" />
       </e>
     </e>
-    <e p="C:\Users\colin\.nuget\packages\microsoft.net.test.sdk\16.6.0\build\netcoreapp2.1" t="Include">
+    <e p="C:\Users\colin\.nuget\packages\microsoft.net.test.sdk\16.6.1\build\netcoreapp2.1" t="Include">
       <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
     </e>
-    <e p="C:\Users\colin\.nuget\packages\microsoft.testplatform.testhost\16.6.0\build\netcoreapp2.1\x64\testhost.dll" t="Include" />
-    <e p="C:\Users\colin\.nuget\packages\microsoft.testplatform.testhost\16.6.0\build\netcoreapp2.1\x64\testhost.exe" t="Include" />
+    <e p="C:\Users\colin\.nuget\packages\microsoft.testplatform.testhost\16.6.1\build\netcoreapp2.1\x64\testhost.dll" t="Include" />
+    <e p="C:\Users\colin\.nuget\packages\microsoft.testplatform.testhost\16.6.1\build\netcoreapp2.1\x64\testhost.exe" t="Include" />
     <e p="C:\Users\colin\.nuget\packages\nunit3testadapter\3.15.1\build\netcoreapp2.0\nunit.engine.api.dll" t="Include" />
     <e p="C:\Users\colin\.nuget\packages\nunit3testadapter\3.15.1\build\netcoreapp2.0\nunit.engine.dll" t="Include" />
     <e p="C:\Users\colin\.nuget\packages\nunit3testadapter\3.15.1\build\netcoreapp2.0\NUnit3.TestAdapter.dll" t="Include" />
