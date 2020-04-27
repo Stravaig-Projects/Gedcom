@@ -18,6 +18,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         private readonly IFileNamer _fileNamer;
         private TextWriter _writer;
         private IFootnoteOrganiser _footnoteOrganiser;
+        private IAssociatesOrganiser _associatesOrganiser;
 
         public TimelineMarkdownRenderer(
             IDateRenderer dateRenderer,
@@ -29,11 +30,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             _fileNamer = fileNamer;
         }
 
-        public void WriteTimeline(TextWriter writer, IFootnoteOrganiser footnoteOrganiser,
-            GedcomIndividualRecord subject)
+        public void WriteTimeline(TextWriter writer,
+            GedcomIndividualRecord subject, 
+            IFootnoteOrganiser footnoteOrganiser,
+            IAssociatesOrganiser associatesOrganiser)
         {
             _writer = writer;
             _footnoteOrganiser = footnoteOrganiser;
+            _associatesOrganiser = associatesOrganiser;
             var timeline = subject.GetTimeline(false);
             if (timeline.NotAny())
                 return;
@@ -124,11 +128,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteDeathEvent(entry);
             else
             {
+                Relationship relationship = entry.Subject.GetRelationshipTo(entry.OtherFamilyMember);
+                string relationshipName = _relationshipRenderer.HumanReadable(relationship, true);
+                if (relationship.IsNotRelated)
+                    relationshipName = "someone";
                 item = $"{eventRecord.Tag}" +
                        (eventRecord.Type.HasContent()
                            ? $":{eventRecord.Type}"
-                           : string.Empty) + " of " + entry.OtherFamilyMember.NameWithoutMarker;
+                           : string.Empty) + " of " + relationshipName;
+                
                 description = eventRecord.RawValue;
+                if (eventRecord.Place != null)
+                    description += " at " + eventRecord.Place.Name;
             }
             var sources = GetSourceFootnotes(eventRecord);
             var notes = GetNoteFootnotes(eventRecord);
@@ -234,6 +245,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 sb.Append("Died");
             else
             {
+                _associatesOrganiser.AddAssociate(subject);
                 var link = _fileNamer.GetIndividualFile(entry.OtherFamilyMember, entry.Subject);
                 sb.Append($"[{subject.NameWithoutMarker}]({link}) died");
             }
@@ -271,11 +283,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                     sb.Append("X born");
                 else
                 {
+                    _associatesOrganiser.AddAssociate(subject);
                     var link = _fileNamer.GetIndividualFile(entry.OtherFamilyMember, entry.Subject);
                     sb.Append($"[{subject.NameWithoutMarker}]({link}) born");
                 }
             }
-            
+
             var parentFamily = subject.ChildToFamilies.FirstOrDefault(); // TODO: Fix this assumption
             if (parentFamily != null)
             {
@@ -287,6 +300,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                         sb.Append(" to X");
                     else
                     {
+                        _associatesOrganiser.AddAssociate(parent);
                         var link = _fileNamer.GetIndividualFile(parents[0], subject);
                         sb.Append($" to [{parent.NameWithoutMarker}]({link})");
                     }
@@ -299,6 +313,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                         }
                         else
                         {
+                            _associatesOrganiser.AddAssociate(parent);
                             var link = _fileNamer.GetIndividualFile(parents[1], subject);
                             sb.Append($" and [{parent.NameWithoutMarker}]({link})");
                         }

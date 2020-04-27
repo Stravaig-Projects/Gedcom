@@ -5,6 +5,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 {
     public interface ITimelineRenderer
     {
-        void WriteTimeline(TextWriter writer, IFootnoteOrganiser footnoteOrganiser, GedcomIndividualRecord subject);
+        void WriteTimeline(TextWriter writer, GedcomIndividualRecord subject, IFootnoteOrganiser footnoteOrganiser,
+            IAssociatesOrganiser associatesOrganiser);
     }
 }

@@ -23,7 +23,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 new FileInfo(_fileNamer.GetSourceFile(inRelationToSource)).Directory?.FullName ?? string.Empty;
             return RenderLinkedNameWithLifespan(subject, sourceLoction);
         }
-        
+
+        public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, GedcomIndividualRecord inRelationToPerson)
+        {
+            string sourceLoction =
+                new FileInfo(_fileNamer.GetIndividualFile(inRelationToPerson)).Directory?.FullName ?? string.Empty;
+            return RenderLinkedNameWithLifespan(subject, sourceLoction);
+        }
+
         public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, string linkLocationInRelationTo = null)
         {
             if (linkLocationInRelationTo == null)

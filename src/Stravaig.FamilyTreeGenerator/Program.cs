@@ -60,9 +60,11 @@ namespace Stravaig.FamilyTreeGenerator
                 registry.Register<RenderSource, RenderSourceAsMarkdownHandler>();
             });
             services.AddTransient<IFootnoteOrganiser, MarkdownFootnoteOrganiser>();
+            services.AddTransient<IAssociatesOrganiser, AssociatesOrganiser>();
             services.AddTransient<IIndividualNameRenderer, IndividualNameMarkdownRenderer>();
             services.AddTransient<ITimelineRenderer, TimelineMarkdownRenderer>();
             services.AddTransient<IRelationshipRenderer, RelationshipRenderer>();
+            
             
             GedcomDatabase database = GetDatabase(options.SourceFile);
             services.AddSingleton<CommandLineOptions>(options);

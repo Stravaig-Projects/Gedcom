@@ -7,5 +7,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
     {
         string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, string linkLocationInRelationTo = null);
         string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, GedcomSourceRecord inRelationToSource);
+        string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, GedcomIndividualRecord inRelationToPerson);
     }
 }

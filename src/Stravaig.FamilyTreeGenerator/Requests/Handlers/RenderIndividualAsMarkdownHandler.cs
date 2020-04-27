@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
-using Paramore.Brighter.Eventsourcing.Exceptions;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
@@ -14,12 +13,14 @@ using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
-    public partial class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual>, IDisposable
+    public class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual>, IDisposable
     {
         private readonly ILogger<RenderIndividualAsMarkdownHandler> _logger;
         private readonly IDateRenderer _dateRenderer;
         private readonly IFootnoteOrganiser _footnoteOrganiser;
+        private readonly IAssociatesOrganiser _associatesOrganiser;
         private readonly ITimelineRenderer _timelineRenderer;
+        private readonly IIndividualNameRenderer _nameRenderer;
         private readonly IFileNamer _fileNamer;
         private FileStream _fs;
         private TextWriter _writer;
@@ -29,13 +30,17 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             ILogger<RenderIndividualAsMarkdownHandler> logger,
             IDateRenderer dateRenderer,
             IFootnoteOrganiser footnoteOrganiser,
+            IAssociatesOrganiser associatesOrganiser,
             ITimelineRenderer timelineRenderer,
+            IIndividualNameRenderer nameRenderer,
             IFileNamer fileNamer)
         {
             _logger = logger;
             _dateRenderer = dateRenderer;
             _footnoteOrganiser = footnoteOrganiser;
+            _associatesOrganiser = associatesOrganiser;
             _timelineRenderer = timelineRenderer;
+            _nameRenderer = nameRenderer;
             _fileNamer = fileNamer;
             _hasSources = false;
         }
@@ -48,7 +53,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             InitHandler(command);
             WriteHeader(command.Individual);
             WriteNames(command.Individual);
-            _timelineRenderer.WriteTimeline(_writer, _footnoteOrganiser, command.Individual);
+            _timelineRenderer.WriteTimeline(_writer, command.Individual, _footnoteOrganiser, _associatesOrganiser);
             WriteNotes(command.Individual);
             WriteAssociations(command.Individual);
             _footnoteOrganiser.WriteFootnotes(_writer, command.Individual);
@@ -197,6 +202,16 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _writer.WriteLine();
             _writer.WriteLine("## See also");
             _writer.WriteLine();
+            var associates = _associatesOrganiser.Associates;
+            if (associates.Any())
+            {
+                _writer.WriteLine("- People Mentioned");
+                foreach (var person in associates.OrderByStandardSort())
+                {
+                    var linkedName = _nameRenderer.RenderLinkedNameWithLifespan(person, subject);
+                    _writer.WriteLine($"  - {linkedName}");
+                }
+            }
             _writer.WriteLine("- Indexes");
             _writer.WriteLine($"  - [By family name]({indexByNameFile})");
             if (_hasSources)
