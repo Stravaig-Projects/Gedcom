@@ -38,8 +38,10 @@
               <e p="IFootnoteOrganiser.cs" t="Include" />
               <e p="IndividualNameMarkdownRenderer.cs" t="Include" />
               <e p="IndividualNameRenderer.cs" t="Include" />
+              <e p="IRelationshipRenderer.cs" t="Include" />
               <e p="ITimelineRenderer.cs" t="Include" />
               <e p="MarkdownFootnoteOrganiser.cs" t="Include" />
+              <e p="RelationshipRenderer.cs" t="Include" />
               <e p="TimelineMarkdownRenderer.cs" t="Include" />
             </e>
           </e>
@@ -106,8 +108,10 @@
           <e p="DateType.cs" t="Include" />
           <e p="EventRecord.cs" t="Include" />
           <e p="Extensions" t="Include">
+            <e p="GedcomSexExtensions.cs" t="Include" />
             <e p="IndividualAlivenessExtensions.cs" t="Include" />
             <e p="IndividualTimelineExtensions.cs" t="Include" />
+            <e p="RelationshipExtensions.cs" t="Include" />
           </e>
           <e p="GedcomAddressRecord.cs" t="Include" />
           <e p="GedcomDatabase.cs" t="Include" />
@@ -136,6 +140,7 @@
             <e p="MultilineTextParser.cs" t="Include" />
           </e>
           <e p="Record.cs" t="Include" />
+          <e p="Relationship.cs" t="Include" />
           <e p="TimelineEntry.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">

@@ -46,12 +46,15 @@ namespace Stravaig.Gedcom.Model.Extensions
         private static IEnumerable<TimelineEntry> GetAllEvents(GedcomIndividualRecord subject)
         {
             HashSet<GedcomPointer> individualsYielded = new HashSet<GedcomPointer>();
+            
+            // The subject's own events
             foreach (var individualEvent in subject.Events)
             {
                 var result = new TimelineEntry(subject, individualEvent);
                 yield return result;
             }
 
+            // The subject's own attributes
             foreach (var individualAttribute in subject.Attributes)
             {
                 var result = new TimelineEntry(subject, individualAttribute);
@@ -60,6 +63,7 @@ namespace Stravaig.Gedcom.Model.Extensions
 
             individualsYielded.Add(subject.CrossReferenceId);
 
+            // Events for which the subject is a child of the family.
             foreach (var family in subject.ChildToFamilies)
             {
                 foreach (var familyEvent in family.Events)
@@ -68,34 +72,34 @@ namespace Stravaig.Gedcom.Model.Extensions
                     yield return result;
                 }
 
-                foreach (var spouse in family.Spouses)
+                foreach (var parent in family.Spouses)
                 {
-                    if (!individualsYielded.Contains(spouse.CrossReferenceId))
+                    if (!individualsYielded.Contains(parent.CrossReferenceId))
                     {
-                        foreach (var individualEvent in spouse.Events)
+                        foreach (var parentEvent in parent.Events.Where(e => e.IsInterestingParentEvent()))
                         {
-                            var result = new TimelineEntry(subject, spouse, individualEvent);
+                            var result = new TimelineEntry(subject, parent, parentEvent);
                             yield return result;
                         }
-                        individualsYielded.Add(spouse.CrossReferenceId);
+                        individualsYielded.Add(parent.CrossReferenceId);
                     }
                 }
                 
-                foreach (var child in family.Children)
+                foreach (var sibling in family.Children)
                 {
-                    if (!individualsYielded.Contains(child.CrossReferenceId))
+                    if (!individualsYielded.Contains(sibling.CrossReferenceId))
                     {
-                        foreach (var individualEvent in child.Events)
+                        foreach (var siblingEvent in sibling.Events.Where(e => e.IsInterestingSiblingEvent()))
                         {
-                            var result = new TimelineEntry(subject, child, individualEvent);
+                            var result = new TimelineEntry(subject, sibling, siblingEvent);
                             yield return result;
                         }
-                        individualsYielded.Add(child.CrossReferenceId);
+                        individualsYielded.Add(sibling.CrossReferenceId);
                     }
                 }
-                
             }
             
+            // Events for which the subject is a spouse
             foreach (var family in subject.SpouseToFamilies)
             {
                 foreach (var familyEvent in family.Events)
@@ -108,7 +112,7 @@ namespace Stravaig.Gedcom.Model.Extensions
                 {
                     if (!individualsYielded.Contains(spouse.CrossReferenceId))
                     {
-                        foreach (var individualEvent in spouse.Events)
+                        foreach (var individualEvent in spouse.Events.Where(e => e.IsInterestingSpouseEvent()))
                         {
                             var result = new TimelineEntry(subject, spouse, individualEvent);
                             yield return result;
@@ -121,7 +125,7 @@ namespace Stravaig.Gedcom.Model.Extensions
                 {
                     if (!individualsYielded.Contains(child.CrossReferenceId))
                     {
-                        foreach (var individualEvent in child.Events)
+                        foreach (var individualEvent in child.Events.Where(e => e.IsInterestingChildEvent()))
                         {
                             var result = new TimelineEntry(subject, child, individualEvent);
                             yield return result;
@@ -131,6 +135,56 @@ namespace Stravaig.Gedcom.Model.Extensions
                 }
             }
 
+        }
+
+        private static readonly GedcomTag[] InterestingSpouseEvents =
+        {
+            GedcomIndividualEventRecord.DeathTag,
+            GedcomIndividualEventRecord.BuriedTag,
+            GedcomIndividualEventRecord.CrematedTag,
+        };
+        private static bool IsInterestingSpouseEvent(this EventRecord @event)
+        {
+            return InterestingSpouseEvents.Contains(@event.Tag);
+        }
+
+        private static readonly GedcomTag[] InterestingParentEvents =
+        {
+            GedcomIndividualEventRecord.DeathTag,
+            GedcomIndividualEventRecord.BuriedTag,
+            GedcomIndividualEventRecord.CrematedTag,
+        };
+
+        private static bool IsInterestingParentEvent(this EventRecord @event)
+        {
+            return InterestingParentEvents.Contains(@event.Tag);
+        }
+
+        private static readonly GedcomTag[] InterestingSiblingEvents =
+        {
+            GedcomIndividualEventRecord.BirthTag,
+            GedcomIndividualEventRecord.DeathTag,
+            GedcomIndividualEventRecord.BuriedTag,
+            GedcomIndividualEventRecord.CrematedTag,
+        };
+
+        private static bool IsInterestingSiblingEvent(this EventRecord @event)
+        {
+            return InterestingSiblingEvents.Contains(@event.Tag);
+        }
+
+        private static readonly GedcomTag[] InterestingChildEvents =
+        {
+            GedcomIndividualEventRecord.BirthTag,
+            GedcomIndividualEventRecord.AdoptionTag,
+            GedcomIndividualEventRecord.DeathTag,
+            GedcomIndividualEventRecord.BuriedTag,
+            GedcomIndividualEventRecord.CrematedTag,
+        };
+
+        private static bool IsInterestingChildEvent(this EventRecord @event)
+        {
+            return InterestingChildEvents.Contains(@event.Tag);
         }
     }
 }
