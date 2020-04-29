@@ -128,6 +128,7 @@ namespace Stravaig.Gedcom.Model.Parsers
     public class DateParser
     {
         private const string SymbolAbout = "ABT";
+        private const string SymbolAboutAlt = "ABOUT";
         private const string SymbolAfter = "AFT";
         private const string SymbolAfterAlt = "AFTER";
         private const string SymbolAnd = "AND";
@@ -258,7 +259,7 @@ namespace Stravaig.Gedcom.Model.Parsers
                 return;
             }
 
-            if (IsCurrentTokenOneOf(SymbolAbout, SymbolCalculated, SymbolEstimated))
+            if (IsCurrentTokenOneOf(SymbolAbout, SymbolCalculated, SymbolEstimated, SymbolAboutAlt))
             {
                 ParseDateApproximated();
                 return;
@@ -339,7 +340,7 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseDateApproximated()
         {
-            if (IsCurrentToken(SymbolAbout))
+            if (IsCurrentTokenOneOf(SymbolAbout, SymbolAboutAlt))
                 Type = DateType.ApproximatedAbout;
             else if (IsCurrentToken(SymbolCalculated))
                 Type = DateType.ApproximatedCalculated;
