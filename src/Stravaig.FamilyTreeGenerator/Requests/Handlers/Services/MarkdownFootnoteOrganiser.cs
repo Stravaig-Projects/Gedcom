@@ -37,9 +37,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                     if (footnote.Note != null)
                         writer.WriteMarkdownBlockQuote(footnote.Note.Text);
                     else
-                    {
                         WriteSource(writer, footnote, linkRelativeTo);
-                    }
+                    writer.WriteLine();
                 }
             }
         }
@@ -64,6 +63,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
                 if (source.PublicationFacts.HasContent())
                     writer.WriteLine($"* Publication: {source.PublicationFacts}");
+                
                 if (source.Originator.HasContent())
                     writer.WriteLine($"* Originator / Author: {source.Originator}");
 
