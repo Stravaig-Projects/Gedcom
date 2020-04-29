@@ -35,7 +35,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         }
 
         private void WriteHeader(TextWriter writer)
-        {       
+        {
+            writer.WriteLine("---");
+            writer.WriteLine("layout: page");
+            writer.WriteLine("permalink: /indexes/by-person-family-name");
+            writer.WriteLine("---");
+            writer.WriteLine();
+
             writer.WriteLine("# Index - By Family Name");
         }
 

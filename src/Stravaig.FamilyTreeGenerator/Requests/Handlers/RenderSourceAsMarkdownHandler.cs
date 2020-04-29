@@ -97,6 +97,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         private void WriteHeader(TextWriter writer, GedcomSourceRecord source)
         {
+            writer.WriteLine("---");
+            writer.WriteLine("layout: page");
+            writer.WriteLine($"permalink: /sources/{source.CrossReferenceId.ToString().Trim('@').ToLowerInvariant()}");
+            writer.WriteLine("---");
+            writer.WriteLine();
+            
             writer.WriteLine($"# {source.Title}");
             writer.WriteLine();
 

@@ -60,7 +60,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         }
 
         private void WriteHeader(TextWriter writer)
-        {       
+        {
+            writer.WriteLine("---");
+            writer.WriteLine("layout: page");
+            writer.WriteLine("permalink: /indexes/by-source-title");
+            writer.WriteLine("---");
+            writer.WriteLine();
             writer.WriteLine("# Index - Sources");
             writer.WriteLine();
         }

@@ -71,6 +71,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
         private void WriteTableHeader()
         {
+            _writer.WriteLine();
             _writer.WriteLine("Date | Item | Description | Sources | Notes");
             _writer.WriteLine("---|---|---|---|---");
         }

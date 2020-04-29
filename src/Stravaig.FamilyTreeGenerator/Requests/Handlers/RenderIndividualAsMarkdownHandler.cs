@@ -148,6 +148,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         private void WriteHeader(GedcomIndividualRecord subject)
         {
+            _writer.WriteLine("---");
+            _writer.WriteLine("layout: page");
+            _writer.WriteLine($"permalink: /people/{subject.CrossReferenceId.ToString().Trim('@').ToLowerInvariant()}");
+            _writer.WriteLine("---");
+            _writer.WriteLine();
+
+            
             var name = subject.NameWithoutMarker;
             _writer.WriteLine($"# {name}");
             var birthDate = subject.BirthEvent?.Date;
