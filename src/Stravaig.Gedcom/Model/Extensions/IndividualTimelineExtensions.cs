@@ -1,30 +1,33 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.Model.Extensions
 {
     public static class IndividualTimelineExtensions
     {
-        public static TimelineEntry[] GetTimeline(this GedcomIndividualRecord subject, bool extendBeyondLife)
+        public static TimelineEntry[] GetTimeline(this GedcomIndividualRecord subject, bool includeNonSubjectEventsBeyondSubjectLife)
         {
-            if (!extendBeyondLife)
-            {
-                // Don't know when life is, so can't return anything.
-                if (!subject.IsLifespanKnown())
-                {
-                    return GetBirthAndDeathOnly(subject).ToArray();
-                }
-            }
-            
             var events = GetAllEvents(subject);
 #if DEBUG
             events = events.ToArray();
 #endif
-            if (!extendBeyondLife)
+
+            // If the timeline entry has no date then it can't be positioned in
+            // the timeline.
+            events = events.Where(te => te.Date != null);
+#if DEBUG
+            events = events.ToArray();
+#endif
+            
+            
+            if (!includeNonSubjectEventsBeyondSubjectLife)
             {
-                events = events.Where(te => te.Date != null &&
-                                           te.Date.IsBetween(subject.BirthEvent.Date, subject.DeathEvent.Date));
+                if (subject.CrossReferenceId == "@I51252926@".AsGedcomPointer())
+                    Debugger.Break();
+                events = events.Where(te => IsSubjectEntryOrIsInSubjectLifetime(subject, te));
             }
 #if DEBUG
             events = events.ToArray();
@@ -33,6 +36,18 @@ namespace Stravaig.Gedcom.Model.Extensions
             events = events.OrderBy(te => te.Date);
             var result = events.ToArray();
             return result;
+        }
+
+        private static bool IsSubjectEntryOrIsInSubjectLifetime(GedcomIndividualRecord subject, TimelineEntry te)
+        {
+            if (te.Type == TimelineEntry.EventType.SubjectEvent)
+                return true;
+            if (te.Type == TimelineEntry.EventType.SubjectAttribute)
+                return true;
+
+            var birthDate = subject.BirthEvent?.Date;
+            var deathDate = subject.DeathEvent?.Date;
+            return te.Date.IsBetween(birthDate, deathDate);
         }
 
         private static IEnumerable<TimelineEntry> GetBirthAndDeathOnly(GedcomIndividualRecord subject)

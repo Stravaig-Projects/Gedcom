@@ -150,8 +150,8 @@ namespace Stravaig.Gedcom.Model
 
         public bool IsBetween(GedcomDateRecord start, GedcomDateRecord end, bool inclusive = true)
         {
-            if (start == null) throw new ArgumentNullException(nameof(start));
-            if (end == null) throw new ArgumentNullException(nameof(end));
+            if (start == null) return false;
+            if (end == null) return false;
             
             int startComparison = DateComparer.CompareDate(start, this);
             if (startComparison == Order.XIsLessThanY || 
