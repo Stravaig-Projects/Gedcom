@@ -38,13 +38,9 @@ namespace Stravaig.FamilyTreeGenerator.Services
             var personName = individual.NameWithoutMarker
                 .MakeFileNameSafe()
                 ?? "X";
-            var birth = individual.BirthEvent?.Date?.RawDateValue
-                .MakeFileNameSafe()
-                ?? "X";
-            var death = individual.DeathEvent?.Date?.RawDateValue
-                .MakeFileNameSafe()
-                ?.Replace(" ", "-") ?? "X";
-            var fileName = $"{individual.CrossReferenceId}-{personName}-b{birth}-d{death}.md";
+            var birth = individual.BirthEvent?.Date.ForFileName();
+            var death = individual.DeathEvent?.Date.ForFileName();
+            var fileName = $"{individual.CrossReferenceId}-{personName}-b{birth}-d{death}.md".ToLowerInvariant();
             var path = Path.Join(peopleDir, fileName);
             path = path.Replace("\\", "/");
             
@@ -55,7 +51,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
         {
             var sourceDir = SourceDirectory(relativeTo);
             var title = source.Title.MakeFileNameSafe();
-            var fileName = $"{source.CrossReferenceId}-{title}.md";
+            var fileName = $"{source.CrossReferenceId}-{title}.md".ToLowerInvariant();
             var path = Path.Join(sourceDir, fileName);
             path = path.Replace("\\", "/");
             return path;
@@ -70,7 +66,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
 
         public string GetByNameIndexFile(string relativeTo = null)
         {
-            const string fileName = "Index-ByName.md";
+            const string fileName = "index-by-family-name.md";
             var baseDirectory = BaseDirectory();
             var path = Path.Join(baseDirectory.FullName, fileName);
             if (relativeTo != null)
@@ -81,7 +77,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
 
         public string GetSourceIndexFile(string relativeTo = null)
         {
-            const string fileName = "Index-Sources.md";
+            const string fileName = "index-of-sources-by-title.md";
             var baseDirectory = BaseDirectory();
             var path = Path.Join(baseDirectory.FullName, fileName);
             if (relativeTo != null)

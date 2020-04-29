@@ -72,6 +72,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
             _footnoteOrganiser.InitFootnotes(AddSource, command.Individual);
             var fileName = _fileNamer.GetIndividualFile(command.Individual);
+            _logger.LogInformation($"Writing to file: {fileName}");
             _fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             _writer = new StreamWriter(_fs, Encoding.UTF8);
         }
@@ -232,7 +233,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         public void Dispose()
         {
-            _logger.LogInformation($"Disposing of {GetType().Name}.");
             Dispose(true);
             GC.SuppressFinalize(this);
         }

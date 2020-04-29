@@ -39,6 +39,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _logger.LogInformation($"Rendering Source: {source.Title}.");
 
             var fileName = _fileNamer.GetSourceFile(source);
+            _logger.LogInformation($"Writing file to: {fileName}");
             using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
 

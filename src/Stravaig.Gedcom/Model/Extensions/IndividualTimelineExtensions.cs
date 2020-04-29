@@ -25,8 +25,6 @@ namespace Stravaig.Gedcom.Model.Extensions
             
             if (!includeNonSubjectEventsBeyondSubjectLife)
             {
-                if (subject.CrossReferenceId == "@I51252926@".AsGedcomPointer())
-                    Debugger.Break();
                 events = events.Where(te => IsSubjectEntryOrIsInSubjectLifetime(subject, te));
             }
 #if DEBUG
