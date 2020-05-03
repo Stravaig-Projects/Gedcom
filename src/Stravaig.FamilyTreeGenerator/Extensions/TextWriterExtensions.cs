@@ -14,10 +14,13 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
                 foreach (string line in lines)
                 {
                     string escapedLine = line.Replace("~", "\\~");
+                    if (string.IsNullOrWhiteSpace(escapedLine))
+                        escapedLine = "<br/>";
                     writer.Write("> ");
                     writer.WriteLine(escapedLine);
                     writer.WriteLine(">");
                 }
+                writer.WriteLine();
             }
         }
     }

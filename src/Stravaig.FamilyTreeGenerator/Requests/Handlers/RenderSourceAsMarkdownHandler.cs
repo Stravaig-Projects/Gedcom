@@ -114,19 +114,31 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             writer.WriteLine($"Responsible Agency | {source.ResponsibleAgency}");
             writer.WriteLine($"Filed by Entry | {source.FiledByEntry}");
 
-            writer.Write("Reference");
+            writer.Write("References | ");
             if (source.References.Length > 1)
-                writer.Write("s");
-            writer.Write(" | ");
-            foreach (var reference in source.References)
             {
-                if (source.References.Length > 1)
-                    writer.Write($"* ");
-                if (reference.Type.HasContent())
-                    writer.Write($"({reference.Type}) ");
-                writer.WriteLine(reference.Reference);
+                writer.Write("<ul>");
+                foreach (var reference in source.References)
+                {
+                    writer.Write("<li>");
+                    WriteReference(writer, reference);
+                    writer.Write("</li>");
+                }
+                writer.Write("</ul>");
+            }
+            else if (source.References.Length == 1)
+            {
+                WriteReference(writer, source.References[0]);                
             }
             writer.WriteLine();
+            writer.WriteLine();
+        }
+
+        private static void WriteReference(TextWriter writer, GedcomUserReferenceNumberRecord reference)
+        {
+            if (reference.Type.HasContent())
+                writer.Write($"({reference.Type}) ");
+            writer.Write(reference.Reference);
         }
     }
 }

@@ -12,11 +12,13 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
                 return string.Empty;
 
             string result = target.Replace("?", "-")
-                .Replace("*", "-")
-                .Replace(":", "-")
-                .Replace("/", "-")
-                .Replace("\\", "-")
-                .Replace(" ", "-");
+                .Replace('*', '-')
+                .Replace(':', '-')
+                .Replace('/', '-')
+                .Replace('\\', '-')
+                .Replace('(', '-')
+                .Replace(')', '-')
+                .Replace(' ', '-');
 
             int len;
             do

@@ -170,8 +170,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             var sb = new StringBuilder();
             if (spouse != null)
             {
-                var link = _fileNamer.GetIndividualFile(spouse, entry.Subject);
-                sb.Append($"Married to [{spouse.NameWithoutMarker}]({link}) ");
+                sb.Append("Married to ");
+                if (spouse.IsAlive())
+                {
+                    sb.Append("X");
+                }
+                else
+                {
+                    var link = _fileNamer.GetIndividualFile(spouse, entry.Subject);
+                    sb.Append($"[{spouse.NameWithoutMarker}]({link})");
+                }
+
+                sb.Append(" ");
             }
 
             if (entry.FamilyEvent.Address != null)
