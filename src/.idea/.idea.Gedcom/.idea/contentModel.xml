@@ -112,6 +112,7 @@
           <e p="EventRecord.cs" t="Include" />
           <e p="Extensions" t="Include">
             <e p="GedcomSexExtensions.cs" t="Include" />
+            <e p="GedcomSourceRecordExtensions.cs" t="Include" />
             <e p="IndividualAlivenessExtensions.cs" t="Include" />
             <e p="IndividualTimelineExtensions.cs" t="Include" />
             <e p="RelationshipExtensions.cs" t="Include" />
@@ -137,6 +138,7 @@
           <e p="GedcomTextRecord.cs" t="Include" />
           <e p="GedcomTitleRecord.cs" t="Include" />
           <e p="GedcomUserReferenceNumberRecord.cs" t="Include" />
+          <e p="ISubject.cs" t="Include" />
           <e p="MultiLineTextRecord.cs" t="Include" />
           <e p="Parsers" t="Include">
             <e p="DateParser.cs" t="Include" />

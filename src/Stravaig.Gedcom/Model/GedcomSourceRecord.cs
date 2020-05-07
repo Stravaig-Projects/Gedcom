@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -116,6 +117,7 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<string> _lazyFiledByEntry;
         private readonly Lazy<GedcomDateRecord> _lazyDate;
         private readonly Lazy<GedcomUserReferenceNumberRecord[]> _lazyReferences;
+        private readonly Lazy<Record[]> _lazyReferencedRecords;
         
         public GedcomSourceRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -135,6 +137,7 @@ namespace Stravaig.Gedcom.Model
             _lazyFiledByEntry = new Lazy<string>(GetFiledByEntry);
             _lazyDate = new Lazy<GedcomDateRecord>(GetDateRecord);
             _lazyReferences = new Lazy<GedcomUserReferenceNumberRecord[]>(GetReferences);
+            _lazyReferencedRecords = new Lazy<Record[]>(GetReferencedRecords);
         }
 
         private GedcomUserReferenceNumberRecord[] GetReferences()
@@ -173,6 +176,35 @@ namespace Stravaig.Gedcom.Model
         {
             var record = _record.Children.FirstOrDefault(r => r.Tag == FiledByEntryTag);
             return record?.Value;
+        }
+
+        public Record[] GetReferencedRecords()
+        {
+            return GetReferencedByRecordsImpl().ToArray();
+        }
+
+        private IEnumerable<Record> GetReferencedByRecordsImpl()
+        {
+            foreach (var individual in _database.IndividualRecords.Values)
+            {
+                if (individual.Sources.Contains(this))
+                    yield return individual;
+
+                foreach (var @event in individual.Events.Where(e => e.Sources.Contains(this)))
+                    yield return @event;
+
+                foreach (var attr in individual.Attributes.Where(a => a.Sources.Contains(this)))
+                    yield return attr;
+            }
+
+            foreach (var family in _database.FamilyRecords.Values)
+            {
+                if (family.Sources.Contains(this))
+                    yield return family;
+                foreach (var @event in family.Events.Where(e => e.Sources.Contains(this)))
+                    yield return @event;
+            }
+
         }
         
         private string GetResponsibleAgency()
@@ -214,5 +246,7 @@ namespace Stravaig.Gedcom.Model
         public string PublicationFacts => _lazyPublication.Value?.Text;
         public string FiledByEntry => _lazyFiledByEntry.Value;
         public GedcomUserReferenceNumberRecord[] References => _lazyReferences.Value;
+
+        public Record[] ReferencedBy => _lazyReferencedRecords.Value;
     }
 }

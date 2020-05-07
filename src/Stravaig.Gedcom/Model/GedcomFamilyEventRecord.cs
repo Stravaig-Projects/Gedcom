@@ -73,7 +73,7 @@ using Stravaig.Gedcom.Extensions;
 namespace Stravaig.Gedcom.Model
 {
     [DebuggerDisplay("{Tag}:{Type}")]
-    public class GedcomFamilyEventRecord : EventRecord
+    public class GedcomFamilyEventRecord : EventRecord, ISubjects
     {
         private static readonly GedcomTag AnnulmentTag = "ANUL".AsGedcomTag();
         private static readonly GedcomTag CensusTag = "CENS".AsGedcomTag();
@@ -108,11 +108,17 @@ namespace Stravaig.Gedcom.Model
             EventTag,
         };
         
-        public GedcomFamilyEventRecord(GedcomRecord record, GedcomDatabase database) 
+        public GedcomFamilyEventRecord(GedcomRecord record, GedcomDatabase database, GedcomFamilyRecord family) 
             : base(record, database)
         {
             if (!FamilyEventTags.Contains(record.Tag))
                 throw new ArgumentException($"The record must be a known family event type. One of {string.Join(", ", FamilyEventTags.Select(ft=>ft.ToString()))}.");
+            Family = family;
         }
+        
+        public GedcomFamilyRecord Family { get; }
+
+
+        GedcomIndividualRecord[] ISubjects.Subjects => Family.Spouses;
     }
 }

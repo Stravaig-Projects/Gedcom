@@ -118,7 +118,7 @@ using Stravaig.Gedcom.Model.Parsers;
 namespace Stravaig.Gedcom.Model
 {
     [DebuggerDisplay("{Tag}:{Type}")]
-    public class GedcomIndividualAttributeRecord : EventRecord
+    public class GedcomIndividualAttributeRecord : EventRecord, ISubject
     {
         public static readonly GedcomTag CasteTag = "CAST".AsGedcomTag();
         public static readonly GedcomTag DescriptionTag = "DESC".AsGedcomTag();
@@ -155,12 +155,13 @@ namespace Stravaig.Gedcom.Model
 
         private readonly Lazy<string> _lazyGetText;
         
-        public GedcomIndividualAttributeRecord(GedcomRecord record, GedcomDatabase database)
+        public GedcomIndividualAttributeRecord(GedcomRecord record, GedcomDatabase database, GedcomIndividualRecord subject)
             : base(record, database)
         {
             if (!AttributeTags.Contains(record.Tag))
                 throw new ArgumentException($"The record must be a known event type. One of {string.Join(", ", AttributeTags.Select(et=>et.ToString()))}.");
 
+            Subject = subject;
             _lazyGetText = new Lazy<string>(GetText);
         }
 
@@ -172,5 +173,6 @@ namespace Stravaig.Gedcom.Model
         }
 
         public string Text => _lazyGetText.Value;
+        public GedcomIndividualRecord Subject { get; }
     }
 }

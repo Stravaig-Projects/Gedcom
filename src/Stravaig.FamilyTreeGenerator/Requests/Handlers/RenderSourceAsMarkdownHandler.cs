@@ -9,6 +9,7 @@ using Stravaig.FamilyTreeGenerator.Requests.Models;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model;
+using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
@@ -91,7 +92,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             {
                 writer.WriteLine("## Text");
                 writer.WriteLine();
-                writer.WriteMarkdownBlockQuote(source.Text);
+                if (source.IsReferencedByLivingPerson())
+                {
+                    writer.WriteLine(
+                        "_Redacted because this source is referenced by a (potentially) living person and may contain personally identifiable information._");
+                    writer.WriteLine();                    
+                }
+                else
+                    writer.WriteMarkdownBlockQuote(source.Text);
             }
         }
 

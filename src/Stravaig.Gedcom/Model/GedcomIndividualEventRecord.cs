@@ -127,7 +127,7 @@ using Stravaig.Gedcom.Extensions;
 namespace Stravaig.Gedcom.Model
 {
     [DebuggerDisplay("{Tag}:{Type}")]
-    public class GedcomIndividualEventRecord : EventRecord
+    public class GedcomIndividualEventRecord : EventRecord, ISubject
     {
         public static readonly GedcomTag AgeTag = "AGE".AsGedcomTag();
         
@@ -192,14 +192,16 @@ namespace Stravaig.Gedcom.Model
             EventTag,
         };
         
-        public GedcomIndividualEventRecord(GedcomRecord record, GedcomDatabase database)
+        public GedcomIndividualEventRecord(GedcomRecord record, GedcomDatabase database, GedcomIndividualRecord subject)
             : base(record, database)
         {
-            if (!EventTags.Contains(record.Tag))
+            Subject = subject ?? throw new ArgumentNullException(nameof(subject));
+                               if (!EventTags.Contains(record.Tag))
                 throw new ArgumentException($"The record must be a known event type. One of {string.Join(", ", EventTags.Select(et=>et.ToString()))}.");
         }
-
-
+        
+        public GedcomIndividualRecord Subject { get; }
+        
         public int? Age
         {
             get

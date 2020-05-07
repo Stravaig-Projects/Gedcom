@@ -4,7 +4,7 @@ using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.Model
 {
-    public class GedcomFamilyRecord : Record
+    public class GedcomFamilyRecord : Record, ISubjects
     {
         public static readonly GedcomTag FamilyTag = "FAM".AsGedcomTag();
         public static readonly GedcomTag HusbandTag = "HUSB".AsGedcomTag();
@@ -19,6 +19,7 @@ namespace Stravaig.Gedcom.Model
 
         private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
         private readonly Lazy<GedcomFamilyEventRecord[]> _lazyFamilyEvents;
+        private readonly Lazy<GedcomSourceRecord[]> _lazySources;
         
         public GedcomFamilyRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -31,19 +32,21 @@ namespace Stravaig.Gedcom.Model
             
             _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
             _lazyFamilyEvents = new Lazy<GedcomFamilyEventRecord[]>(GetFamilyEvents);
+            _lazySources = new Lazy<GedcomSourceRecord[]>(GetSourceRecords);
         }
 
         private GedcomFamilyEventRecord[] GetFamilyEvents()
         {
             return _record.Children
                 .Where(r => GedcomFamilyEventRecord.FamilyEventTags.Contains(r.Tag))
-                .Select(r => new GedcomFamilyEventRecord(r, _database))
+                .Select(r => new GedcomFamilyEventRecord(r, _database, this))
                 .ToArray();
         }
 
         // ReSharper disable once PossibleInvalidOperationException
         // Checked in the ctor.
         public GedcomPointer CrossReferenceId => _record.CrossReferenceId.Value;
+        public GedcomSourceRecord[] Sources => _lazySources.Value;
 
         public GedcomIndividualRecord[] Spouses => _record.Children
             .Where(r => SpouseTags.Contains(r.Tag))
@@ -57,5 +60,6 @@ namespace Stravaig.Gedcom.Model
 
         public GedcomNoteRecord[] Notes => _lazyNotes.Value;
         public GedcomFamilyEventRecord[] Events => _lazyFamilyEvents.Value;
+        GedcomIndividualRecord[] ISubjects.Subjects => Spouses;
     }
 }

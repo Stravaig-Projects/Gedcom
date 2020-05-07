@@ -1,12 +1,10 @@
 using System;
 using System.Linq;
-using System.Threading;
 using Stravaig.Gedcom.Extensions;
-using Stravaig.Gedcom.Settings;
 
 namespace Stravaig.Gedcom.Model
 {
-    public class GedcomIndividualRecord : Record
+    public class GedcomIndividualRecord : Record, ISubject
     {
         public static readonly GedcomTag Tag = "INDI".AsGedcomTag();
         public static readonly GedcomTag SexTag = "SEX".AsGedcomTag();
@@ -18,6 +16,7 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
         private readonly Lazy<string> _lazyFamilySearchId;
         private readonly Lazy<GedcomIndividualAttributeRecord[]> _lazyAttributes;
+        private readonly Lazy<GedcomSourceRecord[]> _lazySources;
 
         public GedcomIndividualRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -36,7 +35,7 @@ namespace Stravaig.Gedcom.Model
             _lazyEvents = new Lazy<GedcomIndividualEventRecord[]>(
                 () => _record.Children
                     .Where(r => GedcomIndividualEventRecord.EventTags.Contains(r.Tag))
-                    .Select(r => new GedcomIndividualEventRecord(r, _database))
+                    .Select(r => new GedcomIndividualEventRecord(r, _database, this))
                     .ToArray());
 
             _lazyFamilies = new Lazy<GedcomFamilyLinkRecord[]>(
@@ -48,6 +47,7 @@ namespace Stravaig.Gedcom.Model
             _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
             _lazyFamilySearchId = new Lazy<string>(GetFamilySearchId);
             _lazyAttributes = new Lazy<GedcomIndividualAttributeRecord[]>(GetAttributeRecords);
+            _lazySources = new Lazy<GedcomSourceRecord[]>(GetSourceRecords);
         }
 
         private string GetFamilySearchId()
@@ -61,7 +61,7 @@ namespace Stravaig.Gedcom.Model
         {
             return _record.Children
                 .Where(r => GedcomIndividualAttributeRecord.AttributeTags.Contains(r.Tag))
-                .Select(r => new GedcomIndividualAttributeRecord(r, _database))
+                .Select(r => new GedcomIndividualAttributeRecord(r, _database, this))
                 .ToArray();
         }
 
@@ -99,6 +99,7 @@ namespace Stravaig.Gedcom.Model
         
         public GedcomIndividualEventRecord[] Events => _lazyEvents.Value;
         public GedcomIndividualAttributeRecord[] Attributes => _lazyAttributes.Value;
+        public GedcomSourceRecord[] Sources => _lazySources.Value;
         
         public GedcomIndividualEventRecord BirthEvent =>
             Events.FirstOrDefault(e => e.Tag == GedcomIndividualEventRecord.BirthTag);
@@ -109,5 +110,6 @@ namespace Stravaig.Gedcom.Model
         public GedcomNoteRecord[] Notes => _lazyNotes.Value;
 
         public string FamilySearchId => _lazyFamilySearchId.Value;
+        public GedcomIndividualRecord Subject => this;
     }
 }
