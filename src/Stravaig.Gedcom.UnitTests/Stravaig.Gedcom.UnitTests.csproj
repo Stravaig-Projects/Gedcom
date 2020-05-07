@@ -28,6 +28,8 @@
       <EmbeddedResource Include="_resources\GedcomRecordReaderTests\two-record-file.ged" />
       <None Remove="_resources\GedcomIndividualRecordTests\IndividualOne.ged" />
       <EmbeddedResource Include="_resources\GedcomIndividualRecordTests\IndividualOne.ged" />
+      <None Remove="_resources\Model\Extensions\RelationshipExtensions\Relationships.ged" />
+      <EmbeddedResource Include="_resources\Model\Extensions\RelationshipExtensions\Relationships.ged" />
     </ItemGroup>
 
 </Project>

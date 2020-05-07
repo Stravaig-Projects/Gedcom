@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace Stravaig.Gedcom.Model.Extensions
 {
@@ -48,6 +50,44 @@ namespace Stravaig.Gedcom.Model.Extensions
             }
 
             return Relationship.NotRelated;
+        }
+
+        public static ImmediateRelative[] GetImmediateRelatives(this GedcomIndividualRecord subject)
+        {
+            var relatives = GetAllImmediateRelatives(subject).GroupBy(ir => ir.Relative);
+            
+        }
+
+        private static IEnumerable<ImmediateRelative> GetAllImmediateRelatives(GedcomIndividualRecord subject)
+        {
+            foreach (var link in subject.FamilyLinks)
+            {
+                var family = link.Family;
+                if (link.Type == GedcomFamilyType.SpouseToFamily)
+                {
+                    foreach (var spouse in family.Spouses.Where(s => s != subject))
+                    {
+                        yield return new ImmediateRelative(subject, spouse, new Relationship(spouse.Sex.ToGender(), GenerationZeroRelationships.Spouse));
+                    }
+
+                    foreach (var child in family.Children)
+                    {
+                        yield return new ImmediateRelative(subject, child, new Relationship(child.Sex.ToGender(), 1, Direction.Descendent));
+                    }
+                }
+                else if (link.Type == GedcomFamilyType.ChildToFamily)
+                {
+                    foreach (var parent in family.Spouses)
+                    {
+                        yield return new ImmediateRelative(subject, parent, new Relationship(parent.Sex.ToGender(), 1, Direction.Ancestor));
+                    }
+
+                    foreach (var sibling in family.Children)
+                    {
+                        yield return new ImmediateRelative(subject, sibling, new Relationship(sibling.Sex.ToGender(), GenerationZeroRelationships.Sibling));
+                    }
+                }
+            }
         }
     }
 }

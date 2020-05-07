@@ -1,4 +1,5 @@
 using System;
+using System.Data.Common;
 using System.Linq;
 using Stravaig.Gedcom.Extensions;
 
@@ -111,5 +112,28 @@ namespace Stravaig.Gedcom.Model
 
         public string FamilySearchId => _lazyFamilySearchId.Value;
         public GedcomIndividualRecord Subject => this;
+
+        public override int GetHashCode()
+        {
+            return CrossReferenceId.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is GedcomIndividualRecord other)
+                return (this == other);
+            return false;
+        }
+
+        public static bool operator ==(GedcomIndividualRecord a, GedcomIndividualRecord b) =>
+            ((object) a == null && (object) b == null) ||
+            (
+                !((object) a == null || (object) b == null) &&
+                a.CrossReferenceId == b.CrossReferenceId
+            );
+
+        public static bool operator !=(GedcomIndividualRecord a, GedcomIndividualRecord b) => !(a == b);
     }
 }
