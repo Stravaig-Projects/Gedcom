@@ -210,6 +210,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteOccupation(entry);
             else if (eventRecord.Tag == GedcomIndividualAttributeRecord.ResidenceTag)
                 (item, description) = WriteResidence(entry);
+            else if (eventRecord.Tag == GedcomIndividualEventRecord.BaptismTag)
+                (item, description) = WriteBaptism(entry);
             else
             {
                 item = $"{eventRecord.Tag}" +
@@ -223,6 +225,16 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             var notes = GetNoteFootnotes(eventRecord);
 
             WriteTableRow(entry.Date, item, description, sources, notes);
+        }
+
+        private (string, string) WriteBaptism(TimelineEntry entry)
+        {
+            string description = "Baptised";
+            if (entry.IndividualEvent?.Address != null)
+                description += " at " + entry.IndividualEvent.Address.Text;
+            else if (entry.IndividualEvent?.Place != null)
+                description += " in " + entry.IndividualEvent.Place.Name;
+            return ("Baptism", description);
         }
 
         private (string, string) WriteResidence(TimelineEntry entry)

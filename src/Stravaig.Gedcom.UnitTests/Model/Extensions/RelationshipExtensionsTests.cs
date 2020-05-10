@@ -9,7 +9,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Extensions
     [TestFixture]
     public class RelationshipExtensionsTests
     {
-        private static readonly GedcomPointer AliceId = "@I93585620@".AsGedcomPointer()
+        private static readonly GedcomPointer AliceId = "@I93585620@".AsGedcomPointer();
         [SetUp]
         public void SetUp()
         {
@@ -22,7 +22,7 @@ namespace Stravaig.Gedcom.UnitTests.Model.Extensions
             
             var alice = db.IndividualRecords[AliceId];
 
-            alice.GetParents();
+            //alice.GetParents();
         }
 
         private GedcomDatabase GetDatabase(string resourceName)

@@ -1,19 +1,33 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Stravaig.FamilyTreeGenerator.Extensions;
-using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Services
 {
+    public enum FileType
+    {
+        Document,
+        Graphic
+    }
+    
     public interface IFileNamer
     {
         string GetIndividualFile(GedcomIndividualRecord individual, string relativeTo = null);
-        string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo);
+        string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo, FileType type = FileType.Document);
+
+        string GetIndividualFamilyTreeFile(GedcomIndividualRecord individual, string relativeTo = null);
+        string GetIndividualFamilyTreeFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo, FileType type = FileType.Document);
+
+        
         string GetSourceFile(GedcomSourceRecord source, string relativeTo = null);
-        string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo);
+        string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo, FileType type = FileType.Document);
+        
         string GetByNameIndexFile(string relativeTo = null);
+        
         string GetSourceIndexFile(string relativeTo = null);
+        
         IEnumerable<DirectoryInfo>  RequiredDirectories();
         DirectoryInfo BaseDirectory();
     }
@@ -27,9 +41,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
             _options = options;
         }
         
-        public string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo)
+        public string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo, FileType type = FileType.Document)
         {
-            var thisDirectory = new FileInfo(GetIndividualFile(relativeTo)).DirectoryName;
+            var individualFile = type == FileType.Document
+                ? GetIndividualFile(relativeTo)
+                : GetIndividualFamilyTreeFile(relativeTo);
+            var thisDirectory = new FileInfo(individualFile).DirectoryName;
             return GetIndividualFile(individual, thisDirectory);
         }
         public string GetIndividualFile(GedcomIndividualRecord individual, string relativeTo = null)
@@ -47,6 +64,17 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return path;
         }
 
+        public string GetIndividualFamilyTreeFile(GedcomIndividualRecord individual, string relativeTo = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetIndividualFamilyTreeFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo,
+            FileType type = FileType.Document)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetSourceFile(GedcomSourceRecord source, string relativeTo = null)
         {
             var sourceDir = SourceDirectory(relativeTo);
@@ -57,7 +85,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return path;
         }
 
-        public string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo)
+        public string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo, FileType type = FileType.Document)
         {
             var thisDirectory = new FileInfo(GetIndividualFile(relativeTo)).DirectoryName;
             return GetSourceFile(source, thisDirectory);
