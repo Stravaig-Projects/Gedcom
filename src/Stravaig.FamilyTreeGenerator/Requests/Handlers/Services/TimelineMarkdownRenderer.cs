@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,15 +19,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         private TextWriter _writer;
         private IFootnoteOrganiser _footnoteOrganiser;
         private IAssociatesOrganiser _associatesOrganiser;
+        private IIndividualNameRenderer _nameRenderer;
 
         public TimelineMarkdownRenderer(
             IDateRenderer dateRenderer,
             IRelationshipRenderer relationshipRenderer,
+            IIndividualNameRenderer nameRenderer,
             IFileNamer fileNamer)
         {
             _dateRenderer = dateRenderer;
             _relationshipRenderer = relationshipRenderer;
             _fileNamer = fileNamer;
+            _nameRenderer = nameRenderer;
         }
 
         public void WriteTimeline(TextWriter writer,
@@ -139,7 +143,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 
                 description = eventRecord.RawValue;
                 if (eventRecord.Place != null)
-                    description += " at " + eventRecord.Place.Name;
+                    description += " at " + eventRecord.NormalisedPlaceName();
             }
             var sources = GetSourceFootnotes(eventRecord);
             var notes = GetNoteFootnotes(eventRecord);
@@ -153,6 +157,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
             if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageTag)
                 (item, description) = WriteMarriageEvent(entry);
+            else if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.DivorceTag)
+                (item, description) = WriteDivorceEvent(entry);
             else
             {
                 item = entry.FamilyEvent.Tag.ToString();
@@ -164,6 +170,72 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             WriteTableRow(entry.Date, item, description, sources, notes);
         }
 
+        private (string, string) WriteDivorceEvent(TimelineEntry entry)
+        {
+            string item = "Divorced";
+            var sb = new StringBuilder();
+            if (entry.Family.IsSpouse(entry.Subject))
+            {
+                var spouse = entry.Family.OtherSpouse(entry.Subject);
+                sb.Append("Divorced from ");
+                if (spouse.IsAlive())
+                {
+                    sb.Append("X");
+                }
+                else
+                {
+                    var link = _fileNamer.GetIndividualFile(spouse, entry.Subject);
+                    sb.Append($"[{spouse.NameWithoutMarker}]({link})");
+                }
+            }
+            else if (entry.Family.IsChild(entry.Subject))
+            {
+                item = "Divorce of parents";
+                if (entry.Family.Spouses.Length >= 1)
+                {
+                    var parent = entry.Family.Spouses[0];
+                    if (parent.IsAlive())
+                        sb.Append("X");
+                    else
+                    {
+                        string renderedName = _nameRenderer.RenderLinkedNameWithLifespan(parent, entry.Subject);
+                        sb.Append(renderedName);
+                    }
+                    sb.Append(" got divorced");
+
+                    if (entry.Family.Spouses.Length == 2)
+                    {
+                        parent = entry.Family.Spouses[1];
+                        sb.Append(" from ");
+                        if (parent.IsAlive())
+                            sb.Append("X");
+                        else
+                        {
+                            string renderedName = _nameRenderer.RenderLinkedNameWithLifespan(parent, entry.Subject);
+                            sb.Append(renderedName);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                sb.Append("Divorced");
+            }
+
+            sb.Append(" ");
+            if (entry.FamilyEvent.Address != null)
+            {
+                sb.Append("at ");
+                sb.Append(entry.FamilyEvent.Address.Text);
+            }
+            else if (entry.FamilyEvent.Place != null)
+            {
+                sb.Append("in ");
+                sb.Append(entry.FamilyEvent.NormalisedPlaceName());
+            }
+            return (item, sb.ToString());
+            
+        }
         private (string, string) WriteMarriageEvent(TimelineEntry entry)
         {
             var spouse = entry.Family.Spouses.FirstOrDefault(s => s != entry.Subject);
@@ -192,7 +264,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             else if (entry.FamilyEvent.Place != null)
             {
                 sb.Append("in ");
-                sb.Append(entry.FamilyEvent.Place.Name);
+                sb.Append(entry.FamilyEvent.NormalisedPlaceName());
             }
             return ("Married", sb.ToString());
         }
@@ -233,7 +305,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             if (entry.IndividualEvent?.Address != null)
                 description += " at " + entry.IndividualEvent.Address.Text;
             else if (entry.IndividualEvent?.Place != null)
-                description += " in " + entry.IndividualEvent.Place.Name;
+                description += " in " + entry.IndividualEvent.NormalisedPlaceName();
             return ("Baptism", description);
         }
 
@@ -246,7 +318,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             else if (attr.Text.HasContent())
                 description = attr.Text;
             else if ((attr.Place?.Name).HasContent())
-                description = attr.Place.Name;
+                description = attr.NormalisedPlaceName();
             else
                 description = "Unknown";
 
@@ -345,7 +417,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
             if (entry.IndividualEvent.Place != null)
             {
-                sb.Append($" in {entry.IndividualEvent.Place.Name}");
+                sb.Append($" in {entry.IndividualEvent.NormalisedPlaceName()}");
             }
 
             sb.Append(".");

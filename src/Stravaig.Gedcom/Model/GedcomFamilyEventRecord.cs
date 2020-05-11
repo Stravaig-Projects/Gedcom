@@ -73,12 +73,12 @@ using Stravaig.Gedcom.Extensions;
 namespace Stravaig.Gedcom.Model
 {
     [DebuggerDisplay("{Tag}:{Type}")]
-    public class GedcomFamilyEventRecord : EventRecord, ISubjects
+    public class GedcomFamilyEventRecord : EventRecord, ISubjects, IPlace
     {
-        private static readonly GedcomTag AnnulmentTag = "ANUL".AsGedcomTag();
-        private static readonly GedcomTag CensusTag = "CENS".AsGedcomTag();
-        private static readonly GedcomTag DivorceTag = "DIV".AsGedcomTag();
-        private static readonly GedcomTag DivorceFiledTag = "DIVF".AsGedcomTag();
+        public static readonly GedcomTag AnnulmentTag = "ANUL".AsGedcomTag();
+        public static readonly GedcomTag CensusTag = "CENS".AsGedcomTag();
+        public static readonly GedcomTag DivorceTag = "DIV".AsGedcomTag();
+        public static readonly GedcomTag DivorceFiledTag = "DIVF".AsGedcomTag();
 
         private static readonly GedcomTag EngagementTag = "ENGA".AsGedcomTag();
         private static readonly GedcomTag MarriageBannTag = "MARB".AsGedcomTag();

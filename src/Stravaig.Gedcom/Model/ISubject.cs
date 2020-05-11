@@ -4,9 +4,4 @@ namespace Stravaig.Gedcom.Model
     {
         GedcomIndividualRecord Subject { get; }
     }
-
-    public interface ISubjects
-    {
-        GedcomIndividualRecord[] Subjects { get; }
-    }
 }

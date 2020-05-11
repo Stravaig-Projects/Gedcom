@@ -118,7 +118,7 @@ using Stravaig.Gedcom.Model.Parsers;
 namespace Stravaig.Gedcom.Model
 {
     [DebuggerDisplay("{Tag}:{Type}")]
-    public class GedcomIndividualAttributeRecord : EventRecord, ISubject
+    public class GedcomIndividualAttributeRecord : EventRecord, ISubject, IPlace
     {
         public static readonly GedcomTag CasteTag = "CAST".AsGedcomTag();
         public static readonly GedcomTag DescriptionTag = "DESC".AsGedcomTag();

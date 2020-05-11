@@ -127,7 +127,7 @@ using Stravaig.Gedcom.Extensions;
 namespace Stravaig.Gedcom.Model
 {
     [DebuggerDisplay("{Tag}:{Type}")]
-    public class GedcomIndividualEventRecord : EventRecord, ISubject
+    public class GedcomIndividualEventRecord : EventRecord, ISubject, IPlace
     {
         public static readonly GedcomTag AgeTag = "AGE".AsGedcomTag();
         
