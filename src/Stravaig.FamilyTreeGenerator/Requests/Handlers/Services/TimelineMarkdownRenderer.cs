@@ -274,19 +274,24 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             EventRecord eventRecord = (EventRecord) entry.IndividualEvent ?? entry.IndividualAttribute;
             string item, description;
 
-            if (eventRecord.Tag == GedcomIndividualEventRecord.BirthTag)
+            var tag = eventRecord.Tag;
+            if (tag == GedcomIndividualEventRecord.BirthTag)
                 (item, description) = WriteBirthEvent(entry);
-            else if (eventRecord.Tag == GedcomIndividualEventRecord.DeathTag)
+            else if (tag == GedcomIndividualEventRecord.DeathTag)
                 (item, description) = WriteDeathEvent(entry);
-            else if (eventRecord.Tag == GedcomIndividualAttributeRecord.OccupationTag)
+            else if (tag == GedcomIndividualAttributeRecord.OccupationTag)
                 (item, description) = WriteOccupation(entry);
-            else if (eventRecord.Tag == GedcomIndividualAttributeRecord.ResidenceTag)
+            else if (tag == GedcomIndividualAttributeRecord.ResidenceTag)
                 (item, description) = WriteResidence(entry);
-            else if (eventRecord.Tag == GedcomIndividualEventRecord.BaptismTag)
+            else if (tag == GedcomIndividualEventRecord.BaptismTag)
                 (item, description) = WriteBaptism(entry);
+            else if (tag == GedcomIndividualEventRecord.ImmigrationTag)
+                (item, description) = WriteImmigration(entry);
+            else if (tag == GedcomIndividualEventRecord.NaturalisationTag)
+                (item, description) = WriteNaturalisation(entry);
             else
             {
-                item = $"{eventRecord.Tag}" +
+                item = $"{tag}" +
                        (eventRecord.Type.HasContent()
                            ? $":{eventRecord.Type}"
                            : string.Empty);
@@ -297,6 +302,38 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             var notes = GetNoteFootnotes(eventRecord);
 
             WriteTableRow(entry.Date, item, description, sources, notes);
+        }
+
+        private (string item, string description) WriteImmigration(TimelineEntry entry)
+        {
+            string description = "Immigrated";
+            var @event = entry.IndividualEvent;
+
+            if (@event.Place != null)
+                description += " to " + @event.NormalisedPlaceName();
+            if (@event.Address != null)
+                description += ", and then residing at " + @event.Address.Text;
+            description += ".";
+
+            if (@event.RawValue.HasContent())
+                description += $" ({@event.RawValue})";
+
+            return ("Immigrated", description);
+        }
+        
+        private (string item, string description) WriteNaturalisation(TimelineEntry entry)
+        {
+            string description = "Naturalised";
+            var @event = entry.IndividualEvent;
+
+            if (@event.Place != null)
+                description += " in " + @event.NormalisedPlaceName();
+            description += ".";
+
+            if (@event.RawValue.HasContent())
+                description += $" ({@event.RawValue})";
+
+            return ("Naturalised", description);
         }
 
         private (string, string) WriteBaptism(TimelineEntry entry)
@@ -346,7 +383,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
             if (entry.IndividualEvent.Place != null)
             {
-                sb.Append($" in {entry.IndividualEvent.Place.Name}");
+                sb.Append($" in {entry.IndividualEvent.NormalisedPlaceName()}");
             }
 
             sb.Append(".");
