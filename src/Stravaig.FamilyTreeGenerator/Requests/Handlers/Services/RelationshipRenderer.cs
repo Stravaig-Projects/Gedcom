@@ -14,63 +14,87 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             if (relationship.IsSpouse)
                 return "spouse";
             if (relationship.IsSibling)
-                return RenderSibling(relationship.Gender, includeGenderWherePossible);
+                return RenderSibling(relationship, includeGenderWherePossible);
             if (relationship.IsParent)
-                return RenderParent(relationship.Gender, includeGenderWherePossible);
+                return RenderParent(relationship, includeGenderWherePossible);
             if (relationship.IsChild)
-                return RenderChild(relationship.Gender, includeGenderWherePossible);
+                return RenderChild(relationship, includeGenderWherePossible);
 
             return "unrelated";
         }
 
-        private string RenderChild(Gender gender, in bool includeGenderWherePossible)
+        private string RenderChild(Relationship relationship, bool includeGenderWherePossible)
         {
+            var pedigree = GetPedigree(relationship);
+
             if (includeGenderWherePossible)
             {
-                switch (gender)
+                switch (relationship.Gender)
                 {
                     case Gender.Female:
-                        return "daughter";
+                        return $"{pedigree}daughter";
                     case Gender.Male:
-                        return "son";
+                        return $"{pedigree}son";
                 }
             }
 
-            return "child";
+            return $"{pedigree}child";
         }
 
-        private string RenderParent(Gender gender, in bool includeGenderWherePossible)
+        private static string GetPedigree(Relationship relationship)
         {
+            string pedigree = string.Empty;
+            switch (relationship.Pedigree)
+            {
+                case Pedigree.Adopted:
+                    pedigree = "adopted-";
+                    break;
+                case Pedigree.Fostered:
+                    pedigree = "foster-";
+                    break;
+                case Pedigree.Step:
+                    pedigree = "step-";
+                    break;
+            }
+
+            return pedigree;
+        }
+
+        private string RenderParent(Relationship relationship, in bool includeGenderWherePossible)
+        {
+            string pedigree = GetPedigree(relationship);
+            
             if (includeGenderWherePossible)
             {
-                switch (gender)
+                switch (relationship.Gender)
                 {
                     case Gender.Female:
-                        return "mother";
+                        return $"{pedigree}mother";
                     case Gender.Male:
-                        return "father";
+                        return $"{pedigree}father";
                 }
             }
 
-            return "parent";
+            return $"{pedigree}parent";
         }
 
-        private string RenderSibling(Gender gender, bool includeGenderWherePossible)
+        private string RenderSibling(Relationship relationship, bool includeGenderWherePossible)
         {
+            string pedigree = GetPedigree(relationship);
             if (includeGenderWherePossible)
             {
-                switch (gender)
+                switch (relationship.Gender)
                 {
                     case Gender.Female:
-                        return "sister";
+                        return $"{pedigree}sister";
                     case Gender.Male:
-                        return "brother";
+                        return $"{pedigree}brother";
                     case Gender.NonBinary:
-                        return "emmer";
+                        return $"{pedigree}emmer";
                 }
             }
 
-            return "sibling";
+            return $"{pedigree}sibling";
         }
     }
 }

@@ -67,6 +67,7 @@ namespace Stravaig.Gedcom.Model.Extensions
         public static ImmediateRelative[] GetImmediateRelatives(this GedcomIndividualRecord subject)
         {
             var relatives = GetAllImmediateRelatives(subject)
+                .Where(r => r.Relative != subject)
                 .GroupBy(ir => ir.Relative)
                 .Select(g => g.First())
                 .ToArray();

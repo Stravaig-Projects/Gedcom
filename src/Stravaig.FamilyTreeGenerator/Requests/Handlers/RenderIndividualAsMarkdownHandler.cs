@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Humanizer;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Stravaig.FamilyTreeGenerator.Extensions;
@@ -10,6 +11,7 @@ using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model;
+using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
@@ -42,6 +44,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private readonly ITimelineRenderer _timelineRenderer;
         private readonly IIndividualNameRenderer _nameRenderer;
         private readonly IFileNamer _fileNamer;
+        private readonly IRelationshipRenderer _relationshipRenderer;
         private FileStream _fs;
         private TextWriter _writer;
         private bool _hasSources;
@@ -53,6 +56,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             IAssociatesOrganiser associatesOrganiser,
             ITimelineRenderer timelineRenderer,
             IIndividualNameRenderer nameRenderer,
+            IRelationshipRenderer relationshipRenderer,
             IFileNamer fileNamer)
         {
             _logger = logger;
@@ -62,6 +66,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _timelineRenderer = timelineRenderer;
             _nameRenderer = nameRenderer;
             _fileNamer = fileNamer;
+            _relationshipRenderer = relationshipRenderer;
             _hasSources = false;
         }
 
@@ -73,6 +78,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             InitHandler(command);
             WriteHeader(command.Individual);
             WriteNames(command.Individual);
+            WriteImmediateFamily(command.Individual);
             _timelineRenderer.WriteTimeline(_writer, command.Individual, _footnoteOrganiser, _associatesOrganiser);
             WriteNotes(command.Individual);
             WriteAssociations(command.Individual);
@@ -97,7 +103,28 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _writer = new StreamWriter(_fs, Encoding.UTF8);
         }
         
+        private void WriteImmediateFamily(GedcomIndividualRecord subject)
+        {
+            if (subject.FamilyLinks.NotAny())
+                return;
+            
+            _writer.WriteLine("## Immediate Family");
+            _writer.WriteLine();
 
+            var immediateRelatives = subject.GetImmediateRelatives()
+                .OrderBy(r => r.Relative.BirthEvent?.Date);
+
+            foreach (var relative in immediateRelatives)
+            {
+                string relationship = _relationshipRenderer.HumanReadable(relative.TypeOfRelationship, true).Titleize();
+                string name = relative.Relative.IsAlive()
+                    ? "X"
+                    : _nameRenderer.RenderLinkedNameWithLifespan(relative.Relative, subject);
+                _writer.WriteLine($"* {relationship}: {name}");
+            }
+            _writer.WriteLine();
+        }
+        
         private void WriteNames(GedcomIndividualRecord subject)
         {
             if (subject.Names.Length > 1)
