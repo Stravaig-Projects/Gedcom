@@ -52,6 +52,18 @@ namespace Stravaig.Gedcom.Model.Extensions
             return Relationship.NotRelated;
         }
 
+        public static Pedigree? GetPedigree(this GedcomIndividualRecord child, GedcomIndividualRecord parent)
+        {
+            // If there is no child/parent relationship this will return null
+            var pedigree = child.FamilyLinks
+                .Where(fl => fl.Type == GedcomFamilyType.ChildToFamily)
+                .Where(fl => fl.Family.Spouses.Any(s => s == parent))
+                .Select(fl => fl.Pedigree)
+                .OrderBy(p => p)
+                .FirstOrDefault();
+            return pedigree;
+        }
+        
         public static ImmediateRelative[] GetImmediateRelatives(this GedcomIndividualRecord subject)
         {
             var relatives = GetAllImmediateRelatives(subject)
@@ -75,14 +87,16 @@ namespace Stravaig.Gedcom.Model.Extensions
 
                     foreach (var child in family.Children)
                     {
-                        yield return new ImmediateRelative(subject, child, new Relationship(child.Sex.ToGender(), 1, Direction.Descendent));
+                        Pedigree pedigree = child.GetPedigree(subject) ?? Pedigree.Unknown;
+                        yield return new ImmediateRelative(subject, child, new Relationship(child.Sex.ToGender(), 1, Direction.Descendent, pedigree));
                     }
                 }
                 else if (link.Type == GedcomFamilyType.ChildToFamily)
                 {
                     foreach (var parent in family.Spouses)
                     {
-                        yield return new ImmediateRelative(subject, parent, new Relationship(parent.Sex.ToGender(), 1, Direction.Ancestor));
+                        Pedigree pedigree = subject.GetPedigree(parent) ?? Pedigree.Unknown;
+                        yield return new ImmediateRelative(subject, parent, new Relationship(parent.Sex.ToGender(), 1, Direction.Ancestor, pedigree));
                     }
 
                     foreach (var sibling in family.Children)

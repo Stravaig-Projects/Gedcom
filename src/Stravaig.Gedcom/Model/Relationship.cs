@@ -2,15 +2,6 @@ using System;
 
 namespace Stravaig.Gedcom.Model
 {
-    public enum Pedigree
-    {
-        Biological,
-        Adopted,
-        Fostered,
-        Sealed,
-        HalfSibling,
-    }
-    
     public enum GenerationZeroRelationships
     {
         NotGenZero = 0,

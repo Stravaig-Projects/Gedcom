@@ -149,6 +149,7 @@
             <e p="DateParser.cs" t="Include" />
             <e p="MultilineTextParser.cs" t="Include" />
           </e>
+          <e p="Pedigree.cs" t="Include" />
           <e p="Record.cs" t="Include" />
           <e p="Relationship.cs" t="Include" />
           <e p="TimelineEntry.cs" t="Include" />
