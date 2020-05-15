@@ -1,3 +1,6 @@
+using System;
+using System.Text;
+
 namespace Stravaig.FamilyTreeGenerator.Extensions
 {
     public static class StringExtensions
@@ -29,6 +32,44 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
             if (len > 100)
                 result = result.Substring(0, 99) + ellipsis;
             return result;
+        }
+        
+        public static string RenderLinksAsMarkdown(this string source)
+        {
+            if (string.IsNullOrWhiteSpace(source))
+                return source;
+            
+            StringBuilder sb = new StringBuilder(source.Length);
+            string[] lines = source.Split(Environment.NewLine);
+
+            foreach (string line in lines)
+            {
+                string[] words = line.Split((char[])null, StringSplitOptions.None);
+                bool isFirst = true;
+                foreach (string word in words)
+                {
+                    if (isFirst)
+                        isFirst = false;
+                    else
+                        sb.Append(" ");
+                    if (word.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) ||
+                        word.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sb.Append($"[{word}]({word})");
+                    }
+                    else
+                    {
+                        sb.Append(word);
+                    }
+
+                }
+
+                sb.AppendLine();
+            }
+
+            sb.Remove(sb.Length - Environment.NewLine.Length, Environment.NewLine.Length);
+            
+            return sb.ToString();
         }
     }
 }

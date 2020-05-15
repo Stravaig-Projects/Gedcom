@@ -62,7 +62,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 }
 
                 if (source.PublicationFacts.HasContent())
-                    writer.WriteLine($"* Publication: {source.PublicationFacts}");
+                    writer.WriteLine($"* Publication: {source.PublicationFacts.RenderLinksAsMarkdown()}");
                 
                 if (source.Originator.HasContent())
                     writer.WriteLine($"* Originator / Author: {source.Originator}");

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Extensions
@@ -10,6 +11,7 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
         {
             if (text.HasContent())
             {
+                text = text.Trim().RenderLinksAsMarkdown();
                 string[] lines = text.Split(Environment.NewLine);
                 foreach (string line in lines)
                 {

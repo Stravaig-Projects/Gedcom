@@ -116,7 +116,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
             writer.WriteLine("Field | Detail");
             writer.WriteLine("---:|:---");
-            writer.WriteLine($"Publication | {source.PublicationFacts}");
+            writer.WriteLine($"Publication | {source.PublicationFacts.RenderLinksAsMarkdown()}");
             writer.WriteLine($"Originator / Author | {source.Originator}");
             writer.WriteLine($"Date | {_dateRenderer.RenderAsShortDate(source.Date)}");
             writer.WriteLine($"Responsible Agency | {source.ResponsibleAgency}");
