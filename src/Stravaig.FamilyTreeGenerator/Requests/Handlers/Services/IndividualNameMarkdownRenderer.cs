@@ -17,21 +17,24 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         }
 
         public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject,
-            GedcomSourceRecord inRelationToSource)
+            GedcomSourceRecord inRelationToSource,
+            bool boldName = false)
         {
             string sourceLoction =
                 new FileInfo(_fileNamer.GetSourceFile(inRelationToSource)).Directory?.FullName ?? string.Empty;
-            return RenderLinkedNameWithLifespan(subject, sourceLoction);
+            return RenderLinkedNameWithLifespan(subject, sourceLoction, boldName);
         }
 
-        public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, GedcomIndividualRecord inRelationToPerson)
+        public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, GedcomIndividualRecord inRelationToPerson, bool boldName = false)
         {
-            string sourceLoction =
+            string sourceLocation =
                 new FileInfo(_fileNamer.GetIndividualFile(inRelationToPerson)).Directory?.FullName ?? string.Empty;
-            return RenderLinkedNameWithLifespan(subject, sourceLoction);
+            return RenderLinkedNameWithLifespan(subject, sourceLocation, boldName);
         }
 
-        public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, string linkLocationInRelationTo = null)
+        public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, 
+            string linkLocationInRelationTo = null,
+            bool boldName = false)
         {
             if (linkLocationInRelationTo == null)
                 linkLocationInRelationTo = _fileNamer.BaseDirectory().FullName;
@@ -39,7 +42,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             var filePath = _fileNamer.GetIndividualFile(subject, linkLocationInRelationTo);
             
             StringBuilder sb = new StringBuilder();
+            Bold(sb, boldName);
             sb.Append($"[{subject.NameWithoutMarker}]({filePath})");
+            Bold(sb, boldName);
             
             if (subject.BirthEvent?.Date != null || subject.DeathEvent?.Date != null)
             {
@@ -59,6 +64,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             }
 
             return sb.ToString();
+        }
+
+        private void Bold(StringBuilder sb, in bool isBold)
+        {
+            if (isBold)
+                sb.Append("**");
         }
     }
 }

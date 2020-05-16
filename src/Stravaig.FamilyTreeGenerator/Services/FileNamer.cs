@@ -25,7 +25,8 @@ namespace Stravaig.FamilyTreeGenerator.Services
         string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo, FileType type = FileType.Document);
         
         string GetByNameIndexFile(string relativeTo = null);
-        
+        string GetByDateOfBirthIndexFile(string relativeTo = null);
+
         string GetSourceIndexFile(string relativeTo = null);
         
         IEnumerable<DirectoryInfo>  RequiredDirectories();
@@ -95,6 +96,17 @@ namespace Stravaig.FamilyTreeGenerator.Services
         public string GetByNameIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-family-name.md";
+            var baseDirectory = BaseDirectory();
+            var path = Path.Join(baseDirectory.FullName, fileName);
+            if (relativeTo != null)
+                path = Path.GetRelativePath(relativeTo, path);
+            path = path.Replace("\\", "/");
+            return path;
+        }
+
+        public string GetByDateOfBirthIndexFile(string relativeTo = null)
+        {
+            const string fileName = "index-by-date-of-birth.md";
             var baseDirectory = BaseDirectory();
             var path = Path.Join(baseDirectory.FullName, fileName);
             if (relativeTo != null)
