@@ -51,7 +51,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 _addSource(source, _subject);
                 if (source.Title.HasContent())
                 {
-                    writer.WriteLine($"**{source.Title}**");
+                    writer.WriteLine($"**{source.Title.RemoveNamesOfTheLiving(source.ReferencedBy)}**");
                     writer.WriteLine();
                 }
 

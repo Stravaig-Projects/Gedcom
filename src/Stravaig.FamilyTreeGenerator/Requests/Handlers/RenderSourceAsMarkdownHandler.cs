@@ -111,7 +111,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             writer.WriteLine("---");
             writer.WriteLine();
             
-            writer.WriteLine($"# {source.Title}");
+            writer.WriteLine($"# {source.Title.RemoveNamesOfTheLiving(source.ReferencedBy)}");
             writer.WriteLine();
 
             writer.WriteLine("Field | Detail");

@@ -1,5 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using Stravaig.Gedcom.Extensions;
+using Stravaig.Gedcom.Model;
+using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Extensions
 {
@@ -70,6 +76,44 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
             sb.Remove(sb.Length - Environment.NewLine.Length, Environment.NewLine.Length);
             
             return sb.ToString();
+        }
+
+        public static string RemoveNamesOfTheLiving(this string text, IEnumerable<Record> references)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+            
+            HashSet<string> names = new HashSet<string>();
+            var dataSubjects = references
+                .SelectMany(GetSubjects)
+                .Distinct()
+                .Where(s => s.IsAlive());
+            foreach (var subject in dataSubjects)
+            {
+                var nameParts = subject.Names
+                    .SelectMany(n => n.Name.Split(' ', '/'))
+                    .Where(n => n.HasContent());
+                foreach (string name in nameParts)
+                    names.Add(name);
+            }
+
+            string result = text;
+            foreach (string name in names)
+            {
+                result = result.Replace(name, "X", StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            return result;
+        }
+
+        private static IEnumerable<GedcomIndividualRecord> GetSubjects(Record record)
+        {
+            return record switch
+            {
+                ISubject subject => new[] {subject.Subject},
+                ISubjects subjects => subjects.Subjects,
+                _ => Array.Empty<GedcomIndividualRecord>()
+            };
         }
     }
 }

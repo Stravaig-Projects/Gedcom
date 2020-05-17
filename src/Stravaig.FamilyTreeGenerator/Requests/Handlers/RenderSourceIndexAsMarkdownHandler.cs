@@ -46,7 +46,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             {
                 string basePath = _fileNamer.BaseDirectory().FullName;
                 string filePath = _fileNamer.GetSourceFile(entry.Source, basePath);
-                writer.WriteLine($"* [{entry.Source.Title}]({filePath})");
+                writer.WriteLine($"* [{entry.Source.Title.RemoveNamesOfTheLiving(entry.Source.ReferencedBy)}]({filePath})");
                 var references = entry.ReferencedByIndividuals
                     .OrderByStandardSort()
                     .ToArray();
