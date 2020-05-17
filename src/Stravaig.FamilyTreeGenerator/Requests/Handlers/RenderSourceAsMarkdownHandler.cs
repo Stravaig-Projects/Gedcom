@@ -80,9 +80,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                         writer.WriteLine($"### Note #{i+1}");
                         writer.WriteLine();
                     }
-                    writer.WriteMarkdownBlockQuote(source.Notes[i].Text);
+                    writer.WriteMarkdownBlockQuote(source.Notes[i].Text.RemoveNamesOfTheLiving(source.ReferencedBy));
                     writer.WriteLine();
-                }
+                } 
             }
         }
 

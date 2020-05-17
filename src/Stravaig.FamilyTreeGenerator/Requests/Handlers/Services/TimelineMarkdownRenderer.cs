@@ -117,6 +117,15 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
         private IEnumerable<int> GetNoteFootnotes(EventRecord eventRecord)
         {
+            var subjects = eventRecord switch
+            {
+                ISubject single => new[] {single.Subject},
+                ISubjects multiple => multiple.Subjects,
+                _ => Array.Empty<GedcomIndividualRecord>(),
+            };
+            if (subjects.Any(s => s.IsAlive()))
+                return Array.Empty<int>();
+            
             return eventRecord.Notes
                 .OrderBy(n => n.Text)
                 .Select(n => _footnoteOrganiser.AddFootnote(n));
