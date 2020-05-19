@@ -31,6 +31,7 @@
             <e p="ApplicationHandler.cs" t="Include" />
             <e p="InitFileSystemForMarkdownHandler.cs" t="Include" />
             <e p="RenderIndividualAsMarkdownHandler.cs" t="Include" />
+            <e p="RenderPersonIndexByDateOfBirthAsMarkdownHandler.cs" t="Include" />
             <e p="RenderPersonIndexByNameAsMarkdownHandler.cs" t="Include" />
             <e p="RenderSourceAsMarkdownHandler.cs" t="Include" />
             <e p="RenderSourceIndexAsMarkdownHandler.cs" t="Include" />
