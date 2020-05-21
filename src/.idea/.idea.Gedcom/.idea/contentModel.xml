@@ -33,6 +33,8 @@
             <e p="InitFileSystemForMarkdownHandler.cs" t="Include" />
             <e p="RenderIndividualAsMarkdownHandler.cs" t="Include" />
             <e p="RenderPersonAncestorsAsJsonHandler.cs" t="Include" />
+            <e p="RenderPersonAsJsonHandlerBase.cs" t="Include" />
+            <e p="RenderPersonDescendantsAsJsonHandler.cs" t="Include" />
             <e p="RenderPersonIndexByDateOfBirthAsMarkdownHandler.cs" t="Include" />
             <e p="RenderPersonIndexByNameAsMarkdownHandler.cs" t="Include" />
             <e p="RenderSourceAsMarkdownHandler.cs" t="Include" />

@@ -8,7 +8,7 @@ using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
-    public class RenderPersonAncestorsAsJsonHandler : RenderPersonAsJsonHandlerBase
+    public class RenderPersonDescendantsAsJsonHandler : RenderPersonAsJsonHandlerBase
     {
         private class PersonModel
         {
@@ -18,13 +18,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             public string Relationship { get; set; }
             public string DateOfBirth { get; set; }
             public string DateOfDeath { get; set; }
-            public PersonModel[] Parents { get; set; }
+            public PersonModel[] Children { get; set; }
         }
         
         private readonly IRelationshipRenderer _relationshipRenderer;
         private readonly IDateRenderer _dateRenderer;
 
-        public RenderPersonAncestorsAsJsonHandler(ILogger<RenderPersonAncestorsAsJsonHandler> logger,
+        public RenderPersonDescendantsAsJsonHandler(ILogger<RenderPersonAncestorsAsJsonHandler> logger,
             IRelationshipRenderer relationshipRenderer,
             IFileNamer fileNamer,
             IDateRenderer dateRenderer)
@@ -34,10 +34,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _dateRenderer = dateRenderer;
         }
 
-        protected override string FileType => "ancestors";
+        protected override string FileType => "descendants";
 
-
-        
         protected override object MapIndividual(GedcomIndividualRecord subject)
         {
             var result = CreatePersonModel(subject);
@@ -54,10 +52,10 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 Gender = subject.Sex.ToString(),
                 DateOfBirth = _dateRenderer.RenderAsShortDate(subject.BirthEvent?.Date),
                 DateOfDeath = _dateRenderer.RenderAsShortDate(subject.DeathEvent?.Date),
-                Parents = subject.Parents().Select(MapRelative).ToArray(),
+                Children = subject.Children().Select(MapRelative).ToArray(),
             };
         }
-        
+
         private PersonModel MapRelative(ImmediateRelative relative)
         {
             var result = CreatePersonModel(relative.Relative);

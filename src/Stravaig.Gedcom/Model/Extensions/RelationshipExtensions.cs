@@ -80,6 +80,13 @@ namespace Stravaig.Gedcom.Model.Extensions
                 .Where(ir => ir.TypeOfRelationship.IsParent)
                 .ToArray();
         }
+        
+        public static ImmediateRelative[] Children(this GedcomIndividualRecord subject)
+        {
+            return GetImmediateRelatives(subject)
+                .Where(ir => ir.TypeOfRelationship.IsChild)
+                .ToArray();
+        }
 
         private static IEnumerable<ImmediateRelative> GetAllImmediateRelatives(GedcomIndividualRecord subject)
         {
