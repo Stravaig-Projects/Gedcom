@@ -196,7 +196,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private void WriteHeader(GedcomIndividualRecord subject)
         {
             _writer.WriteLine("---");
-            _writer.WriteLine("layout: page");
+            _writer.WriteLine("layout: person");
+            _writer.WriteLine($"subject_key: {subject.CrossReferenceId.ToString().Trim('@').ToLowerInvariant()}");
             _writer.WriteLine($"permalink: /people/{subject.CrossReferenceId.ToString().Trim('@').ToLowerInvariant()}");
             _writer.WriteLine("---");
             _writer.WriteLine();

@@ -6,23 +6,16 @@ using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Services
 {
-    public enum FileType
-    {
-        Document,
-        Graphic
-    }
-    
     public interface IFileNamer
     {
         string GetIndividualFile(GedcomIndividualRecord individual, string relativeTo = null);
-        string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo, FileType type = FileType.Document);
+        string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo);
 
-        string GetIndividualFamilyTreeFile(GedcomIndividualRecord individual, string relativeTo = null);
-        string GetIndividualFamilyTreeFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo, FileType type = FileType.Document);
+        string GetDataFile(GedcomIndividualRecord individual, string filename);
 
         
         string GetSourceFile(GedcomSourceRecord source, string relativeTo = null);
-        string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo, FileType type = FileType.Document);
+        string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo);
         
         string GetByNameIndexFile(string relativeTo = null);
         string GetByDateOfBirthIndexFile(string relativeTo = null);
@@ -42,11 +35,9 @@ namespace Stravaig.FamilyTreeGenerator.Services
             _options = options;
         }
         
-        public string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo, FileType type = FileType.Document)
+        public string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo)
         {
-            var individualFile = type == FileType.Document
-                ? GetIndividualFile(relativeTo)
-                : GetIndividualFamilyTreeFile(relativeTo);
+            var individualFile = GetIndividualFile(relativeTo);
             var thisDirectory = new FileInfo(individualFile).DirectoryName;
             return GetIndividualFile(individual, thisDirectory);
         }
@@ -65,17 +56,14 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return path;
         }
 
-        public string GetIndividualFamilyTreeFile(GedcomIndividualRecord individual, string relativeTo = null)
+        public string GetDataFile(GedcomIndividualRecord individual, string filename)
         {
-            throw new NotImplementedException();
+            string id = individual.CrossReferenceId.ToString().Trim('@').ToLowerInvariant();
+            string dir = GetDataDirectory(id);
+            var path = Path.Join(dir, filename);
+            return path;
         }
-
-        public string GetIndividualFamilyTreeFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo,
-            FileType type = FileType.Document)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public string GetSourceFile(GedcomSourceRecord source, string relativeTo = null)
         {
             var sourceDir = SourceDirectory(relativeTo);
@@ -86,7 +74,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return path;
         }
 
-        public string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo, FileType type = FileType.Document)
+        public string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo)
         {
             var thisDirectory = new FileInfo(GetIndividualFile(relativeTo)).DirectoryName;
             return GetSourceFile(source, thisDirectory);
@@ -152,6 +140,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
             if (relativeTo != null)
                 sourceDirectory = Path.GetRelativePath(relativeTo, sourceDirectory);
             return sourceDirectory;
+        }
+
+        private string GetDataDirectory(string id)
+        {
+            var dataDirectory = Path.Join(BaseDirectory().FullName, $"data/{id}");
+            return dataDirectory;
         }
     }
 }

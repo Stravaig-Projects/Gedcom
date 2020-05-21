@@ -1,8 +1,10 @@
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
+using Paramore.Brighter.Logging;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;

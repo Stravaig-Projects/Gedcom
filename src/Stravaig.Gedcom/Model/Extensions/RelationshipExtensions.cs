@@ -74,6 +74,13 @@ namespace Stravaig.Gedcom.Model.Extensions
             return relatives;
          }
 
+        public static ImmediateRelative[] Parents(this GedcomIndividualRecord subject)
+        {
+            return GetImmediateRelatives(subject)
+                .Where(ir => ir.TypeOfRelationship.IsParent)
+                .ToArray();
+        }
+
         private static IEnumerable<ImmediateRelative> GetAllImmediateRelatives(GedcomIndividualRecord subject)
         {
             foreach (var link in subject.FamilyLinks)
