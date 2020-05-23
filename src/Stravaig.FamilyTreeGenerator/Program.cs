@@ -57,6 +57,7 @@ namespace Stravaig.FamilyTreeGenerator
                 registry.Register<RenderIndividual, RenderIndividualAsMarkdownHandler>();
                 registry.Register<RenderIndividual, RenderPersonAncestorsAsJsonHandler>();
                 registry.Register<RenderIndividual, RenderPersonDescendantsAsJsonHandler>();
+                registry.Register<RenderIndividual, RenderPersonFamilyTreeAsJsonHandler>();
                 registry.Register<RenderPersonIndex, RenderPersonIndexByNameAsMarkdownHandler>();
                 registry.Register<RenderPersonIndex, RenderPersonIndexByDateOfBirthAsMarkdownHandler>();
                 registry.Register<RenderSourceIndex, RenderSourceIndexAsMarkdownHandler>();
