@@ -1,11 +1,13 @@
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
+using Paramore.Brighter.Policies.Attributes;
 using Stravaig.FamilyTreeGenerator.Services;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
     public class InitFileSystemForMarkdownHandler : RequestHandler<InitFileSystem>
     {
+        public const string InitFileStstemRetryPolicy = nameof(InitFileStstemRetryPolicy);
         private readonly IFileNamer _namer;
         private readonly ILogger<InitFileSystemForMarkdownHandler> _logger;
 
@@ -15,6 +17,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _logger = logger;
         }
 
+        [UsePolicy(policy:InitFileStstemRetryPolicy, step: 1)]
         public override InitFileSystem Handle(InitFileSystem command)
         {
             ResetFileSystem();

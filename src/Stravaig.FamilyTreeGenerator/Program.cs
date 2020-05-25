@@ -1,10 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using CommandLine;
+using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Paramore.Brighter.Extensions.DependencyInjection;
+using Paramore.Brighter.Policies.Handlers;
+using Polly;
+using Polly.Registry;
 using Stravaig.FamilyTreeGenerator.Requests;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
@@ -16,6 +21,7 @@ namespace Stravaig.FamilyTreeGenerator
 {
     class Program
     {
+        private static ILogger<Program> _logger;
         static void Main(string[] args)
         {
             var options = ExtractCommandLineInfo(args);
@@ -23,6 +29,7 @@ namespace Stravaig.FamilyTreeGenerator
                 return;
             
             using var provider = BuildServiceProvider(options);
+            _logger = provider.GetService<ILogger<Program>>();
             var commander = provider.GetRequiredService<IAmACommandProcessor>();
             commander.Send(new Application());
         }
@@ -49,7 +56,20 @@ namespace Stravaig.FamilyTreeGenerator
         private static void AddApplicationServices(ServiceCollection services, CommandLineOptions options)
         {
             services.AddBrighter(opts =>
-            {    
+            {
+                var policy = Policy
+                    .Handle<Exception>()
+                    .WaitAndRetry(new[]
+                    {
+                        1.Seconds(),
+                        2.Seconds(),
+                        3.Seconds()
+                    }, (exception, timeSpan) =>
+                    {
+                        _logger.LogWarning(exception, $"Operation failed. Will retry in {timeSpan.Humanize()}.");
+                    });
+
+                opts.PolicyRegistry.Add(InitFileSystemForMarkdownHandler.InitFileStstemRetryPolicy, policy);
             }).Handlers(registry =>
             {
                 registry.Register<Application, ApplicationHandler>();
@@ -63,6 +83,8 @@ namespace Stravaig.FamilyTreeGenerator
                 registry.Register<RenderSourceIndex, RenderSourceIndexAsMarkdownHandler>();
                 registry.Register<RenderSource, RenderSourceAsMarkdownHandler>();
             });
+            services.AddTransient(typeof(ExceptionPolicyHandler<>));
+            
             services.AddTransient<IFootnoteOrganiser, MarkdownFootnoteOrganiser>();
             services.AddTransient<IAssociatesOrganiser, AssociatesOrganiser>();
             services.AddTransient<IIndividualNameRenderer, IndividualNameMarkdownRenderer>();
