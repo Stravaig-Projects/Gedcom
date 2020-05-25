@@ -10,14 +10,6 @@ namespace Stravaig.Gedcom.Model
         Spouse,
     }
 
-    public enum Gender
-     {
-         Unknown = 0,
-         Male,
-         Female,
-         NonBinary,
-     }
-
     public enum Direction
     {
         Ancestor = -1,

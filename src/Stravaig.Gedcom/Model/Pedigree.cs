@@ -15,6 +15,8 @@ namespace Stravaig.Gedcom.Model
         Fostered,
         Sealed,
         Step, // Non-standard. Used by MobileFamilyTree
+        Married, // Non-standard. Used to note spousal relationships.
+        Ex, // Non-standard. Used to note spousal relationships that have ended.
         Unknown, // Non-standard. Not biological, but relationship exists.
     }
 }

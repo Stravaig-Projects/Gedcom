@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 
@@ -97,7 +98,16 @@ namespace Stravaig.Gedcom.Model.Extensions
                 {
                     foreach (var spouse in family.Spouses.Where(s => s != subject))
                     {
-                        yield return new ImmediateRelative(subject, spouse, new Relationship(spouse.Sex.ToGender(), GenerationZeroRelationships.Spouse));
+                        bool isMarried = family.Events.Any(fe => fe.Tag == GedcomFamilyEventRecord.MarriageTag);
+                        bool isDivorced = family.Events.Any(fe =>
+                            fe.Tag == GedcomFamilyEventRecord.AnnulmentTag ||
+                            fe.Tag == GedcomFamilyEventRecord.DivorceTag);
+                        Pedigree spousalRelationship = isMarried
+                            ? isDivorced
+                                ? Pedigree.Ex
+                                : Pedigree.Married
+                            : Pedigree.Unknown;
+                        yield return new ImmediateRelative(subject, spouse, new Relationship(spouse.Sex.ToGender(), GenerationZeroRelationships.Spouse, spousalRelationship));
                     }
 
                     foreach (var child in family.Children)

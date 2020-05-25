@@ -12,7 +12,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             if (relationship.IsSelf)
                 return "self";
             if (relationship.IsSpouse)
-                return "spouse";
+                return RenderSpouse(relationship, includeGenderWherePossible);
             if (relationship.IsSibling)
                 return RenderSibling(relationship, includeGenderWherePossible);
             if (relationship.IsParent)
@@ -21,6 +21,30 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 return RenderChild(relationship, includeGenderWherePossible);
 
             return "unrelated";
+        }
+
+        private string RenderSpouse(Relationship relationship, bool includeGenderWherePossible)
+        {
+            switch (relationship.Pedigree)
+            {
+                case Pedigree.Married:
+                case Pedigree.Ex:
+                    string prefix = relationship.Pedigree == Pedigree.Ex ? "ex-" : string.Empty;
+                    if (includeGenderWherePossible)
+                    {
+                        switch (relationship.Gender)
+                        {
+                            case Gender.Female:
+                                return $"{prefix}wife";
+                            case Gender.Male:
+                                return $"{prefix}husband";
+                        }
+                    }
+
+                    return $"{prefix}spouse";
+                default:
+                    return "partner";
+            }
         }
 
         private string RenderChild(Relationship relationship, bool includeGenderWherePossible)
