@@ -1,6 +1,6 @@
 namespace Stravaig.Gedcom.Model
 {
-    public enum Pedigree
+    public enum Qualification
     {
         // These are ordered with the most prominent at the top in case a
         // person finds themselves in multiple families with the same parent.

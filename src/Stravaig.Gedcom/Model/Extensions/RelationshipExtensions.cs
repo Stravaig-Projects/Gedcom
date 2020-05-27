@@ -53,13 +53,13 @@ namespace Stravaig.Gedcom.Model.Extensions
             return Relationship.NotRelated;
         }
 
-        public static Pedigree? GetPedigree(this GedcomIndividualRecord child, GedcomIndividualRecord parent)
+        public static Qualification? GetPedigree(this GedcomIndividualRecord child, GedcomIndividualRecord parent)
         {
             // If there is no child/parent relationship this will return null
             var pedigree = child.FamilyLinks
                 .Where(fl => fl.Type == GedcomFamilyType.ChildToFamily)
                 .Where(fl => fl.Family.Spouses.Any(s => s == parent))
-                .Select(fl => fl.Pedigree)
+                .Select(fl => fl.Qualification)
                 .OrderBy(p => p)
                 .FirstOrDefault();
             return pedigree;
@@ -102,26 +102,26 @@ namespace Stravaig.Gedcom.Model.Extensions
                         bool isDivorced = family.Events.Any(fe =>
                             fe.Tag == GedcomFamilyEventRecord.AnnulmentTag ||
                             fe.Tag == GedcomFamilyEventRecord.DivorceTag);
-                        Pedigree spousalRelationship = isMarried
+                        Qualification spousalRelationship = isMarried
                             ? isDivorced
-                                ? Pedigree.Ex
-                                : Pedigree.Married
-                            : Pedigree.Unknown;
+                                ? Qualification.Ex
+                                : Qualification.Married
+                            : Qualification.Unknown;
                         yield return new ImmediateRelative(subject, spouse, new Relationship(spouse.Sex.ToGender(), GenerationZeroRelationships.Spouse, spousalRelationship));
                     }
 
                     foreach (var child in family.Children)
                     {
-                        Pedigree pedigree = child.GetPedigree(subject) ?? Pedigree.Unknown;
-                        yield return new ImmediateRelative(subject, child, new Relationship(child.Sex.ToGender(), 1, Direction.Descendent, pedigree));
+                        Qualification qualification = child.GetPedigree(subject) ?? Qualification.Unknown;
+                        yield return new ImmediateRelative(subject, child, new Relationship(child.Sex.ToGender(), 1, Direction.Descendent, qualification));
                     }
                 }
                 else if (link.Type == GedcomFamilyType.ChildToFamily)
                 {
                     foreach (var parent in family.Spouses)
                     {
-                        Pedigree pedigree = subject.GetPedigree(parent) ?? Pedigree.Unknown;
-                        yield return new ImmediateRelative(subject, parent, new Relationship(parent.Sex.ToGender(), 1, Direction.Ancestor, pedigree));
+                        Qualification qualification = subject.GetPedigree(parent) ?? Qualification.Unknown;
+                        yield return new ImmediateRelative(subject, parent, new Relationship(parent.Sex.ToGender(), 1, Direction.Ancestor, qualification));
                     }
 
                     foreach (var sibling in family.Children)

@@ -78,16 +78,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             public string RelationToSubject { get; set; }
             
             [JsonProperty(Order = 2)]
-            public string[] ParentIds { get; set; }
+            public string[][] ParentGroupIds { get; set; }
 
             public SiblingModel FromRelative(ImmediateRelative relative,
                 IDateRenderer dateRenderer, IRelationshipRenderer relationshipRenderer)
             {
                 FromSubject(relative.Relative, dateRenderer);
                 RelationToSubject = relationshipRenderer.HumanReadable(relative.TypeOfRelationship, true);
-                ParentIds = relative.Subject
-                    .Parents()
-                    .Select(p => GedcomPointerExtensions.ToSimpleId(p.Relative.CrossReferenceId))
+                ParentGroupIds = relative.Relative.ChildToFamilies
+                    .Select(f => f.Spouses
+                        .Select(s => s.CrossReferenceId.ToSimpleId())
+                        .OrderBy(id => id)
+                        .ToArray())
                     .ToArray();
                 return this;
             }
@@ -136,7 +138,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             {
                 FromSubject(relative.Relative, dateRenderer);
                 RelationToSubject = relationshipRenderer.HumanReadable(relative.TypeOfRelationship, true);
-                ParentIds = relative.Subject
+                ParentIds = relative.Relative
                     .Parents()
                     .Select(p => p.Relative.CrossReferenceId.ToSimpleId())
                     .ToArray();

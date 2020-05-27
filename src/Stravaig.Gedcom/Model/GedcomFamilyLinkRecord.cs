@@ -1,8 +1,5 @@
 using System;
-using System.Diagnostics;
-using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.Model
@@ -19,7 +16,7 @@ namespace Stravaig.Gedcom.Model
         };
 
         private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
-        private readonly Lazy<Pedigree> _lazyPedigree;
+        private readonly Lazy<Qualification> _lazyQualification;
 
         public GedcomFamilyLinkRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -27,26 +24,26 @@ namespace Stravaig.Gedcom.Model
             if (!FamilyTags.Contains(record.Tag))
                 throw new ArgumentException($"The record must be a known family type. One of {string.Join(", ", FamilyTags.Select(ft=>ft.ToString()))}.");
             _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
-            _lazyPedigree = new Lazy<Pedigree>(GetPedigree);
+            _lazyQualification = new Lazy<Qualification>(GetQualification);
         }
 
-        private Pedigree GetPedigree()
+        private Qualification GetQualification()
         {
             var pedigreeRecord = _record.Children.FirstOrDefault(r => r.Tag == PedigreeTag);
             switch (pedigreeRecord?.Value.ToLowerInvariant())
             {
                 case "adopted":
-                    return Pedigree.Adopted;
+                    return Qualification.Adopted;
                 case "birth":
-                    return Pedigree.Biological;
+                    return Qualification.Biological;
                 case "foster":
-                    return Pedigree.Fostered;
+                    return Qualification.Fostered;
                 case "sealing":
-                    return Pedigree.Sealed;
+                    return Qualification.Sealed;
                 case "step": // Non-standard: Used by MobileFamilyTree.
-                    return Pedigree.Step;
+                    return Qualification.Step;
                 default:
-                    return Pedigree.Biological;
+                    return Qualification.Biological;
             }
         }
 
@@ -59,7 +56,7 @@ namespace Stravaig.Gedcom.Model
         
         public GedcomFamilyRecord Family => _database.FamilyRecords[Link];
 
-        public Pedigree Pedigree => _lazyPedigree.Value;
+        public Qualification Qualification => _lazyQualification.Value;
 
         public GedcomNoteRecord[] Notes => _lazyNotes.Value;
     }

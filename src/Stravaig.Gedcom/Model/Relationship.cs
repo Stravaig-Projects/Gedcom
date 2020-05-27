@@ -22,23 +22,23 @@ namespace Stravaig.Gedcom.Model
         public static readonly Relationship NotRelated = new Relationship(Model.Gender.Unknown, GenerationZeroRelationships.NotGenZero);
         private readonly GenerationZeroRelationships _generationZero;
         
-        public Relationship(Gender gender, int directedGenerationsRemoved, Pedigree pedigree = Pedigree.Biological)
+        public Relationship(Gender gender, int directedGenerationsRemoved, Qualification qualification = Qualification.Biological)
         {
             _generationZero = directedGenerationsRemoved == 0 
                 ? GenerationZeroRelationships.Sibling 
                 : GenerationZeroRelationships.NotGenZero;
             Gender = gender;
             DirectedGenerationsRemoved = directedGenerationsRemoved;
-            Pedigree = pedigree;
+            Qualification = qualification;
         }
         
-        public Relationship(Gender gender, int generationsRemoved, Direction direction, Pedigree pedigree = Pedigree.Biological)
-            : this(gender, Math.Abs(generationsRemoved) * (int)direction, pedigree)
+        public Relationship(Gender gender, int generationsRemoved, Direction direction, Qualification qualification = Qualification.Biological)
+            : this(gender, Math.Abs(generationsRemoved) * (int)direction, qualification)
         {
         }
 
-        public Relationship(Gender gender, GenerationZeroRelationships relationship, Pedigree pedigree = Pedigree.Biological)
-            : this(gender, 0, pedigree)
+        public Relationship(Gender gender, GenerationZeroRelationships relationship, Qualification qualification = Qualification.Biological)
+            : this(gender, 0, qualification)
         {
             _generationZero = relationship;
         }
@@ -51,7 +51,7 @@ namespace Stravaig.Gedcom.Model
         public bool IsChild => DirectedGenerationsRemoved == 1;
         
         public Gender Gender { get; }
-        public Pedigree Pedigree { get; }
+        public Qualification Qualification { get; }
         public int DirectedGenerationsRemoved { get; }
 
         public int GenerationsRemoved => Math.Abs(DirectedGenerationsRemoved);
@@ -65,7 +65,7 @@ namespace Stravaig.Gedcom.Model
         {
             return DirectedGenerationsRemoved
                    + ((int) Gender * 32)
-                   + ((int) Pedigree * 256)
+                   + ((int) Qualification * 256)
                    + ((int) _generationZero * 2048);
         }
 
@@ -83,7 +83,7 @@ namespace Stravaig.Gedcom.Model
         public static bool operator ==(Relationship a, Relationship b) =>
             a.DirectedGenerationsRemoved == b.DirectedGenerationsRemoved
             && a.Gender == b.Gender
-            && a.Pedigree == b.Pedigree
+            && a.Qualification == b.Qualification
             && a._generationZero == b._generationZero;
         public static bool operator !=(Relationship a, Relationship b) => !(a == b);
     }

@@ -25,11 +25,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
         private string RenderSpouse(Relationship relationship, bool includeGenderWherePossible)
         {
-            switch (relationship.Pedigree)
+            switch (relationship.Qualification)
             {
-                case Pedigree.Married:
-                case Pedigree.Ex:
-                    string prefix = relationship.Pedigree == Pedigree.Ex ? "ex-" : string.Empty;
+                case Qualification.Married:
+                case Qualification.Ex:
+                    string prefix = relationship.Qualification == Qualification.Ex ? "ex-" : string.Empty;
                     if (includeGenderWherePossible)
                     {
                         switch (relationship.Gender)
@@ -68,15 +68,15 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         private static string GetPedigree(Relationship relationship)
         {
             string pedigree = string.Empty;
-            switch (relationship.Pedigree)
+            switch (relationship.Qualification)
             {
-                case Pedigree.Adopted:
+                case Qualification.Adopted:
                     pedigree = "adopted-";
                     break;
-                case Pedigree.Fostered:
+                case Qualification.Fostered:
                     pedigree = "foster-";
                     break;
-                case Pedigree.Step:
+                case Qualification.Step:
                     pedigree = "step-";
                     break;
             }
