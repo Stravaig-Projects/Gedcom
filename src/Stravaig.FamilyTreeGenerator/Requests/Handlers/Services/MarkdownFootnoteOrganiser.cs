@@ -65,7 +65,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                     writer.WriteLine($"* Publication: {source.PublicationFacts.RenderLinksAsMarkdown()}");
                 
                 if (source.Originator.HasContent())
-                    writer.WriteLine($"* Originator / Author: {source.Originator}");
+                    writer.WriteLine($"* Originator / Author: {source.Originator.RemoveNamesOfTheLiving(source.ReferencedBy)}");
 
                 if (source.Date != null)
                     writer.WriteLine($"* Date: {_dateRenderer.RenderAsShortDate(source.Date)}");
