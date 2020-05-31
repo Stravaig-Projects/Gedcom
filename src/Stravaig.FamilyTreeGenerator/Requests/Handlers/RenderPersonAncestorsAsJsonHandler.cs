@@ -54,7 +54,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 Gender = subject.Sex.ToString(),
                 DateOfBirth = _dateRenderer.RenderAsShortDate(subject.BirthEvent?.Date),
                 DateOfDeath = _dateRenderer.RenderAsShortDate(subject.DeathEvent?.Date),
-                Parents = subject.Parents().Select(MapRelative).ToArray(),
+                Parents = subject.Parents()
+                    .OrderBy(r => r.Relative.BirthEvent?.Date)
+                    .ThenBy(r => r.Relative.Name)
+                    .Select(MapRelative)
+                    .ToArray(),
             };
         }
         
