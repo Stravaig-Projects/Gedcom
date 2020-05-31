@@ -136,6 +136,7 @@
           <e p="GedcomIndividualAttributeRecord.cs" t="Include" />
           <e p="GedcomIndividualEventRecord.cs" t="Include" />
           <e p="GedcomIndividualRecord.cs" t="Include" />
+          <e p="GedcomLabelRecord.cs" t="Include" />
           <e p="GedcomMapRecord.cs" t="Include" />
           <e p="GedcomNameRecord.cs" t="Include" />
           <e p="GedcomNoteRecord.cs" t="Include" />

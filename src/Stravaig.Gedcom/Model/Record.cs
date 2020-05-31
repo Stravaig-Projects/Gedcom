@@ -41,6 +41,14 @@ namespace Stravaig.Gedcom.Model
                 .Select(r => _database.SourceRecords[r.Value.AsGedcomPointer()])
                 .ToArray();
         }
+
+        protected GedcomLabelRecord[] GetLabels()
+        {
+            return GetChildren(GedcomLabelRecord.LabelTag)
+                .Where(r => r.Value.IsGedcomPointer())
+                .Select(r => _database.LabelRecords[r.Value.AsGedcomPointer()])
+                .ToArray();
+        }
         
         protected GedcomRecord GetChild(GedcomTag tag)
         {

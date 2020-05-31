@@ -118,6 +118,8 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<GedcomDateRecord> _lazyDate;
         private readonly Lazy<GedcomUserReferenceNumberRecord[]> _lazyReferences;
         private readonly Lazy<Record[]> _lazyReferencedRecords;
+        private readonly Lazy<GedcomLabelRecord[]> _lazyLabels;
+        private readonly Lazy<string[]> _lazyLabelTitles;
         
         public GedcomSourceRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -138,6 +140,8 @@ namespace Stravaig.Gedcom.Model
             _lazyDate = new Lazy<GedcomDateRecord>(GetDateRecord);
             _lazyReferences = new Lazy<GedcomUserReferenceNumberRecord[]>(GetReferences);
             _lazyReferencedRecords = new Lazy<Record[]>(GetReferencedRecords);
+            _lazyLabels = new Lazy<GedcomLabelRecord[]>(GetLabels);
+            _lazyLabelTitles = new Lazy<string[]>(() => Labels.Select(l => l.Title).ToArray());
         }
 
         private GedcomUserReferenceNumberRecord[] GetReferences()
@@ -248,5 +252,7 @@ namespace Stravaig.Gedcom.Model
         public GedcomUserReferenceNumberRecord[] References => _lazyReferences.Value;
 
         public Record[] ReferencedBy => _lazyReferencedRecords.Value;
+        public GedcomLabelRecord[] Labels => _lazyLabels.Value;
+        public string[] LabelTitles => _lazyLabelTitles.Value;
     }
 }
