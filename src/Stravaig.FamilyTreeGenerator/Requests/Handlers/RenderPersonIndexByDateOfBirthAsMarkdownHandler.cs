@@ -12,48 +12,22 @@ using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
-    public class RenderPersonIndexByDateOfBirthAsMarkdownHandler : RequestHandler<RenderPersonIndex>
+    public class RenderPersonIndexByDateOfBirthAsMarkdownHandler : RenderPersonIndexBaseHandler
     {
-        private readonly ILogger<RenderPersonIndexByDateOfBirthAsMarkdownHandler> _logger;
         private readonly IIndividualNameRenderer _nameRenderer;
-        private readonly IFileNamer _fileNamer;
 
         public RenderPersonIndexByDateOfBirthAsMarkdownHandler(
             ILogger<RenderPersonIndexByDateOfBirthAsMarkdownHandler> logger,
             IIndividualNameRenderer nameRenderer,
             IFileNamer fileNamer)
+            : base(logger, fileNamer)
         {
-            _logger = logger;
             _nameRenderer = nameRenderer;
-            _fileNamer = fileNamer;
         }
 
-        public override RenderPersonIndex Handle(RenderPersonIndex command)
-        {
-            _logger.LogInformation("Rendering Index by name.");
-
-            var fileName = _fileNamer.GetByDateOfBirthIndexFile();
-            using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-            using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
-            WriteHeader(writer);
-            WriteIndex(writer, command.Individuals);
-            
-            return base.Handle(command);
-        }
+        protected override string FileName => _fileNamer.GetByDateOfBirthIndexFile();
         
-        private void WriteHeader(TextWriter writer)
-        {
-            writer.WriteLine("---");
-            writer.WriteLine("layout: page");
-            writer.WriteLine("permalink: /indexes/by-date-of-birth");
-            writer.WriteLine("---");
-            writer.WriteLine();
-
-            writer.WriteLine("# Index - By Date of Birth");
-            writer.WriteLine();
-        }
-        
-        private void WriteIndex(TextWriter writer, GedcomIndividualRecord[] subjects)
+        protected override void WriteIndex(TextWriter writer, GedcomIndividualRecord[] subjects)
         {
             var knowns = subjects
                 .Where(s => IndividualAlivenessExtensions.IsBirthDateKnown(s))
@@ -76,7 +50,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                         writer.WriteLine($"* **Born in {year.Key}.**");
                         foreach (var subject in year.OrderByDateThenFamilyName())
                         {
-                            string name = _nameRenderer.RenderLinkedNameWithLifespan(subject);
+                            string name = _nameRenderer.RenderLinkedNameWithLifespan(subject, boldName:true, familyNameFirst:true);
                             writer.WriteLine($"  * {name}");
                         }
                     }
