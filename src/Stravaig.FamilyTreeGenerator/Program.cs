@@ -73,14 +73,20 @@ namespace Stravaig.FamilyTreeGenerator
             }).Handlers(registry =>
             {
                 registry.Register<Application, ApplicationHandler>();
+                
                 registry.Register<InitFileSystem, InitFileSystemForMarkdownHandler>();
+                
                 registry.Register<RenderIndividual, RenderIndividualAsMarkdownHandler>();
                 registry.Register<RenderIndividual, RenderPersonAncestorsAsJsonHandler>();
                 registry.Register<RenderIndividual, RenderPersonDescendantsAsJsonHandler>();
                 registry.Register<RenderIndividual, RenderPersonFamilyTreeAsJsonHandler>();
+                
                 registry.Register<RenderPersonIndex, RenderPersonIndexByNameAsMarkdownHandler>();
                 registry.Register<RenderPersonIndex, RenderPersonIndexByDateOfBirthAsMarkdownHandler>();
+                registry.Register<RenderPersonIndex, RenderPersonIndexByBirthLocationHandler>();
+                
                 registry.Register<RenderSourceIndex, RenderSourceIndexAsMarkdownHandler>();
+
                 registry.Register<RenderSource, RenderSourceAsMarkdownHandler>();
             });
             services.AddTransient(typeof(ExceptionPolicyHandler<>));

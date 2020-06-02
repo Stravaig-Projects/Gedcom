@@ -36,6 +36,8 @@
             <e p="RenderPersonAsJsonHandlerBase.cs" t="Include" />
             <e p="RenderPersonDescendantsAsJsonHandler.cs" t="Include" />
             <e p="RenderPersonFamilyTreeAsJsonHandler.cs" t="Include" />
+            <e p="RenderPersonIndexBaseHandler.cs" t="Include" />
+            <e p="RenderPersonIndexByBirthLocationHandler.cs" t="Include" />
             <e p="RenderPersonIndexByDateOfBirthAsMarkdownHandler.cs" t="Include" />
             <e p="RenderPersonIndexByNameAsMarkdownHandler.cs" t="Include" />
             <e p="RenderSourceAsMarkdownHandler.cs" t="Include" />
@@ -45,8 +47,8 @@
               <e p="FootnoteOrganiser.cs" t="Include" />
               <e p="IAssociatesOrganiser.cs" t="Include" />
               <e p="IFootnoteOrganiser.cs" t="Include" />
+              <e p="IIndividualNameRenderer.cs" t="Include" />
               <e p="IndividualNameMarkdownRenderer.cs" t="Include" />
-              <e p="IndividualNameRenderer.cs" t="Include" />
               <e p="IRelationshipRenderer.cs" t="Include" />
               <e p="ITimelineRenderer.cs" t="Include" />
               <e p="MarkdownFootnoteOrganiser.cs" t="Include" />

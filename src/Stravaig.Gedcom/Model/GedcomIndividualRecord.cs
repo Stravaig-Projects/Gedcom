@@ -82,6 +82,10 @@ namespace Stravaig.Gedcom.Model
                 Name.IndexOf("/", StringComparison.Ordinal) + 1, 
                 Name.LastIndexOf("/", StringComparison.Ordinal) - Name.IndexOf("/", StringComparison.Ordinal) - 1);
 
+        public string GivenName => Name == null
+            ? string.Empty
+            : NameWithoutMarker.Replace(FamilyName, string.Empty).Replace("  ", " ").Trim();
+        
         public GedcomNameRecord[] Names => _lazyNames.Value;
         
         public GedcomSex Sex => _record.Children.FirstOrDefault(r => r.Tag == SexTag)?.Value.AsGedcomSex() ?? GedcomSex.NotKnown;
