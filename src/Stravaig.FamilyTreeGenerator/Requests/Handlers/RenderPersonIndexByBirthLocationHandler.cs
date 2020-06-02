@@ -65,6 +65,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                             string linkedName = _nameRenderer.RenderLinkedNameWithLifespan(person, boldName:true, familyNameFirst:true);
                             writer.WriteLine($"- {linkedName}");
                         }
+                        writer.WriteLine();
                     }
                 }
             }
