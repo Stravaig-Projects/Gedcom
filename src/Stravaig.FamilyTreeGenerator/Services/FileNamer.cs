@@ -20,6 +20,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
         string GetByNameIndexFile(string relativeTo = null);
         string GetByDateOfBirthIndexFile(string relativeTo = null);
         string GetByBirthLocationIndexFile(string relativeTo = null);
+        string GetByDeathLocationIndexFile(string relativeTo = null);
 
         string GetSourceIndexFile(string relativeTo = null);
         
@@ -104,6 +105,17 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return path;
         }
 
+        public string GetByDeathLocationIndexFile(string relativeTo = null)
+        {
+            const string fileName = "index-by-death-location.md";
+            var baseDirectory = BaseDirectory();
+            var path = Path.Join(baseDirectory.FullName, fileName);
+            if (relativeTo != null)
+                path = Path.GetRelativePath(relativeTo, path);
+            path = path.Replace("\\", "/");
+            return path;
+        }
+        
         public string GetByDateOfBirthIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-date-of-birth.md";

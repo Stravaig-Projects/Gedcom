@@ -6,9 +6,9 @@ using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
-    public class RenderPersonIndexByBirthLocationHandler : RenderPersonIndexByLocationBaseHandler
+    public class RenderPersonIndexByDeathLocationHandler : RenderPersonIndexByLocationBaseHandler
     {
-        public RenderPersonIndexByBirthLocationHandler(
+        public RenderPersonIndexByDeathLocationHandler(
             ILogger<RenderPersonIndexByNameAsMarkdownHandler> logger,
             IIndividualNameRenderer nameRenderer,
             IFileNamer fileNamer)
@@ -16,12 +16,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
         }
 
-        protected override string FileName => _fileNamer.GetByBirthLocationIndexFile();
+        protected override string FileName => _fileNamer.GetByDeathLocationIndexFile();
 
 
         protected override string[] GetPlaceName(GedcomIndividualRecord p)
         {
-            return p.BirthEvent?.Place?.Name
+            return p.DeathEvent?.Place?.Name
                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
                    ?? Array.Empty<string>();
         }
