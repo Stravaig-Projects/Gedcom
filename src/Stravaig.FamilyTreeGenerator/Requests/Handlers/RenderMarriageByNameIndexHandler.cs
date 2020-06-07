@@ -32,6 +32,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         protected override string FileName => _fileNamer.GetByMarriageByNameIndexFile();
         protected override void WriteIndex(TextWriter writer, GedcomFamilyRecord[] families)
         {
+            writer.WriteLine();
+            writer.WriteLine("A list of marriages, civil partnerships and civil unions by family name. There will generally be two entries per marriage, one for each spouse.");
+            writer.WriteLine("");
+
+            
             var marriages = families
                 .SelectMany(f => f.Events
                     .Where(fe => MarriageTags.Contains(fe.Tag))
