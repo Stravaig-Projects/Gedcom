@@ -71,9 +71,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             
             if (entry.Date != null && entry.Date.HasCoherentDate)
             {
-                writer.Write(" on ");
-                writer.Write("**");                
-                writer.Write(_dateRenderer.RenderAsShortDate(entry.Date));
+                writer.Write(" **");                
+                writer.Write(_dateRenderer.RenderAsProse(entry.Date));
                 writer.Write("**");
             }
 
