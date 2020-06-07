@@ -17,16 +17,15 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             public GedcomFamilyEventRecord Event;
             public GedcomDateRecord Date;
         }
-        private readonly IIndividualNameRenderer _nameRenderer;
+
         private readonly IDateRenderer _dateRenderer;
 
         public RenderMarriageByDateIndexHandler(ILogger<RenderMarriageByDateIndexHandler> logger, 
             IIndividualNameRenderer nameRenderer,
             IDateRenderer dateRenderer,
             IFileNamer fileNamer) 
-            : base(logger, fileNamer)
+            : base(logger, nameRenderer, fileNamer)
         {
-            _nameRenderer = nameRenderer;
             _dateRenderer = dateRenderer;
         }
 
@@ -90,7 +89,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.Write(GedcomPlaceRecordExtensions.NormalisedPlaceName((IPlace) entry.Event));
             }
 
-            writer.WriteLine();
+            writer.WriteLine(".");
         }
 
         private void WriteUnknownDateMarriages(TextWriter writer, GedcomFamilyRecord[] families)
@@ -106,14 +105,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             {
                 RenderPartnershipLine(writer, entry);
             }
-        }
-
-        private string RenderPartner(GedcomIndividualRecord person)
-        {
-            if (person.IsAlive())
-                return $"X";
-
-            return _nameRenderer.RenderNameWithLifespan(person, linkName: true, boldName: true);
         }
     }
 }

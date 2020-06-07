@@ -86,6 +86,7 @@ namespace Stravaig.FamilyTreeGenerator
                 registry.Register<RenderPersonIndex, RenderPersonIndexByBirthLocationHandler>();
                 registry.Register<RenderPersonIndex, RenderPersonIndexByDeathLocationHandler>();
                 registry.Register<RenderPersonIndex, RenderMarriageByDateIndexHandler>();
+                registry.Register<RenderPersonIndex, RenderMarriageByNameIndexHandler>();
                 
                 registry.Register<RenderSourceIndex, RenderSourceIndexAsMarkdownHandler>();
 
