@@ -22,6 +22,8 @@ namespace Stravaig.FamilyTreeGenerator.Services
         string GetByBirthLocationIndexFile(string relativeTo = null);
         string GetByDeathLocationIndexFile(string relativeTo = null);
 
+        string GetByMarriageByDateIndexFile(string relativeTo = null);
+
         string GetSourceIndexFile(string relativeTo = null);
         
         IEnumerable<DirectoryInfo>  RequiredDirectories();
@@ -86,56 +88,37 @@ namespace Stravaig.FamilyTreeGenerator.Services
         public string GetByNameIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-family-name.md";
-            var baseDirectory = BaseDirectory();
-            var path = Path.Join(baseDirectory.FullName, fileName);
-            if (relativeTo != null)
-                path = Path.GetRelativePath(relativeTo, path);
-            path = path.Replace("\\", "/");
-            return path;
+            return GetIndexFile(fileName, relativeTo);
         }
         
         public string GetByBirthLocationIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-birth-location.md";
-            var baseDirectory = BaseDirectory();
-            var path = Path.Join(baseDirectory.FullName, fileName);
-            if (relativeTo != null)
-                path = Path.GetRelativePath(relativeTo, path);
-            path = path.Replace("\\", "/");
-            return path;
+            return GetIndexFile(fileName, relativeTo);
         }
 
         public string GetByDeathLocationIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-death-location.md";
-            var baseDirectory = BaseDirectory();
-            var path = Path.Join(baseDirectory.FullName, fileName);
-            if (relativeTo != null)
-                path = Path.GetRelativePath(relativeTo, path);
-            path = path.Replace("\\", "/");
-            return path;
+            return GetIndexFile(fileName, relativeTo);
         }
         
         public string GetByDateOfBirthIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-date-of-birth.md";
-            var baseDirectory = BaseDirectory();
-            var path = Path.Join(baseDirectory.FullName, fileName);
-            if (relativeTo != null)
-                path = Path.GetRelativePath(relativeTo, path);
-            path = path.Replace("\\", "/");
-            return path;
+            return GetIndexFile(fileName, relativeTo);
         }
 
         public string GetSourceIndexFile(string relativeTo = null)
         {
             const string fileName = "index-of-sources-by-title.md";
-            var baseDirectory = BaseDirectory();
-            var path = Path.Join(baseDirectory.FullName, fileName);
-            if (relativeTo != null)
-                path = Path.GetRelativePath(relativeTo, path);
-            path = path.Replace("\\", "/");
-            return path;
+            return GetIndexFile(fileName, relativeTo);
+        }
+
+        public string GetByMarriageByDateIndexFile(string relativeTo = null)
+        {
+            const string fileName = "index-marriage-by-date.md";
+            return GetIndexFile(fileName, relativeTo);
         }
         
         public IEnumerable<DirectoryInfo> RequiredDirectories()
@@ -151,6 +134,16 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return new DirectoryInfo(absoluteRootPath);
         }
 
+        private string GetIndexFile(string fileName, string relativeTo)
+        {
+            var baseDirectory = BaseDirectory();
+            var path = Path.Join(baseDirectory.FullName, fileName);
+            if (relativeTo != null)
+                path = Path.GetRelativePath(relativeTo, path);
+            path = path.Replace("\\", "/");
+            return path;
+        }
+        
         private string PeopleDirectory(string relativeTo = null)
         {
             var peopleDirectory = Path.Join(BaseDirectory().FullName, "people");

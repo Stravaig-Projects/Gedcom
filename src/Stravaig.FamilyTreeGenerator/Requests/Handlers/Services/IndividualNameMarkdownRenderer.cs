@@ -36,19 +36,39 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             return RenderLinkedNameWithLifespan(subject, sourceLocation, boldName);
         }
 
-        public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, 
+        public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject,
+            string linkLocationInRelationTo = null,
+            bool boldName = false,
+            bool familyNameFirst = false)
+        {
+            return RenderNameWithLifespan(subject,
+                linkName: true,
+                linkLocationInRelationTo: linkLocationInRelationTo,
+                boldName: boldName,
+                familyNameFirst: familyNameFirst);
+        }
+        
+        public string RenderNameWithLifespan(GedcomIndividualRecord subject, 
+            bool linkName = false,
             string linkLocationInRelationTo = null,
             bool boldName = false, 
             bool familyNameFirst = false)
         {
-            if (linkLocationInRelationTo == null)
-                linkLocationInRelationTo = _fileNamer.BaseDirectory().FullName;
+            string filePath = string.Empty;
+            if (linkName)
+            {
+                if (linkLocationInRelationTo == null)
+                    linkLocationInRelationTo = _fileNamer.BaseDirectory().FullName;
 
-            var filePath = _fileNamer.GetIndividualFile(subject, linkLocationInRelationTo);
+                filePath = _fileNamer.GetIndividualFile(subject, linkLocationInRelationTo);
+            }
             
             StringBuilder sb = new StringBuilder();
             Bold(sb, boldName);
-            sb.Append($"[{GetName(subject, familyNameFirst)}]({filePath})");
+            if (linkName)
+                sb.Append($"[{GetName(subject, familyNameFirst)}]({filePath})");
+            else
+                sb.Append(GetName(subject, familyNameFirst));
             Bold(sb, boldName);
             
             if (subject.BirthEvent?.Date != null || subject.DeathEvent?.Date != null)

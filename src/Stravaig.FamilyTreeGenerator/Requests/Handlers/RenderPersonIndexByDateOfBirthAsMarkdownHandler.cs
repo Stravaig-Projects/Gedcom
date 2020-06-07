@@ -30,7 +30,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         protected override void WriteIndex(TextWriter writer, GedcomIndividualRecord[] subjects)
         {
             var knowns = subjects
-                .Where(s => IndividualAlivenessExtensions.IsBirthDateKnown(s))
+                .Where(s => s.IsBirthDateKnown())
                 .Where(s => s.BirthEvent.Date.BeginningOfExtent.HasValue)
                 .GroupBy(s => s.BirthEvent.Date.BeginningOfExtent.Value.Year);
 
