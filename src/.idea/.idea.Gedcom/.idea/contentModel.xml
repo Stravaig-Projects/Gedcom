@@ -45,6 +45,7 @@
             <e p="RenderPersonIndexByDeathLocationHandler.cs" t="Include" />
             <e p="RenderPersonIndexByLocationBaseHandler.cs" t="Include" />
             <e p="RenderPersonIndexByNameAsMarkdownHandler.cs" t="Include" />
+            <e p="RenderPersonIndexByOccupationHandler.cs" t="Include" />
             <e p="RenderSourceAsMarkdownHandler.cs" t="Include" />
             <e p="RenderSourceIndexAsMarkdownHandler.cs" t="Include" />
             <e p="Services" t="Include">

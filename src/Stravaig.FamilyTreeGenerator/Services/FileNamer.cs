@@ -21,6 +21,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
         string GetByDateOfBirthIndexFile(string relativeTo = null);
         string GetByBirthLocationIndexFile(string relativeTo = null);
         string GetByDeathLocationIndexFile(string relativeTo = null);
+        string GetByOccupationIndexFile(string relativeTo = null);
 
         string GetByMarriageByDateIndexFile(string relativeTo = null);
         string GetByMarriageByNameIndexFile(string relativeTo = null);
@@ -127,7 +128,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
             const string fileName = "index-marriage-by-name.md";
             return GetIndexFile(fileName, relativeTo);
         }
-        
+
+        public string GetByOccupationIndexFile(string relativeTo = null)
+        {
+            return GetIndexFile("index-by-occupation.md", relativeTo);
+        }
+
         public IEnumerable<DirectoryInfo> RequiredDirectories()
         {
             yield return BaseDirectory();
