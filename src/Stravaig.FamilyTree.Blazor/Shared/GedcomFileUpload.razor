@@ -6,37 +6,44 @@
 <h1>Upload a GEDCOM file to start</h1>
 <InputFile OnChange="HandleFileSelectedAsync" />
 
-@if (isLoading)
+@if (_isLoading)
 {
-<div class="alert alert-info" role="alert">
-  <i class="fas fa-cog fa-spin"></i>
-  Loading file
-  @if (file != null)
-  {
-    @file.Name
-  }
-  else
-  {
-    <text>...</text>
-  }
-</div>
+  <div class="alert alert-info" role="alert">
+    <i class="fas fa-cog fa-spin"></i>
+    Loading file
+    @if (_file != null)
+    {
+      @_file.Name
+    }
+    else
+    {
+      <text>...</text>
+    }
+  </div>
 }
 
-@if (database != null)
+@if (Database != null)
 {
-  <p>Number of people: @database.IndividualRecords.Count</p>
+  <p>Number of people: @Database.IndividualRecords.Count</p>
 }
-@if (error)
+@if (_hasError)
 {
   <div class="alert alert-danger" role="alert">
     <h4 class="alert-heading">Can't load the file!</h4>
-    <p>The file <strong>@file.Name</strong> is not a valid GEDCOM file.</p>
-    @if (exception != null)
+    @if (_file == null)
     {
-      <hr/>
-      <p>@exception.Message</p>
+      <p>I don't have a file to upload.</p>
+    }
+    else
+    {
+      <p>The file <strong>@_file.Name</strong> is not a valid GEDCOM file.</p>
+    }
+    @if (_exception != null)
+    {
+      <hr />
+      <p>@_exception.Message</p>
       <environment include="Development">
-        <pre>@exception</pre>
+        <pre>@_exception</pre>
       </environment>
     }
   </div>
@@ -44,39 +51,45 @@
 
 @code{
 
-  IFileListEntry file;
-  bool error = false;
-  bool isLoading = false;
-  Exception exception;
-  GedcomDatabase database = null;
+  [Parameter]
+  public GedcomDatabase Database { get; set; } = null;
+
+  [Parameter]
+  public EventCallback<GedcomDatabase> DatabaseChanged { get; set; }
+
+  IFileListEntry _file;
+  bool _hasError = false;
+  bool _isLoading = false;
+  Exception _exception;
 
   async Task HandleFileSelectedAsync(IFileListEntry[] files)
   {
-    isLoading = true;
-    exception = null;
-    error = false;
-    file = files.FirstOrDefault();
-    if (!file.Name.EndsWith(".ged", true, CultureInfo.InvariantCulture))
+    _isLoading = true;
+    _exception = null;
+    _hasError = false;
+    _file = files.FirstOrDefault();
+    if (_file == null || !_file.Name.EndsWith(".ged", true, CultureInfo.InvariantCulture))
     {
-      error = true;
+      _hasError = true;
     }
-    if (!error)
+    else
     {
       try
       {
         GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
         var localDatabase = new GedcomDatabase();
-        await localDatabase.PopulateAsync(file.Data);
-        database = localDatabase;
+        await localDatabase.PopulateAsync(_file.Data);
+        Database = localDatabase;
+        await DatabaseChanged.InvokeAsync(Database);
       }
       catch (Exception ex)
       {
-        error = true;
-        exception = ex;
-        database = null;
+        _hasError = true;
+        _exception = ex;
+        Database = null;
       }
     }
-    isLoading = false;
+    _isLoading = false;
   }
 
 }

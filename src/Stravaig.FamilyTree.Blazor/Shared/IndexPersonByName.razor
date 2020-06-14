@@ -1,0 +1,22 @@
+@using Stravaig.Gedcom.Model
+<h1>Index of People By Name</h1>
+
+@foreach (var group in GetFamilyGroups())
+{
+  <h3>@group.Key</h3>
+}
+
+@code {
+  [Parameter]
+  public GedcomDatabase Database { get; set; }
+
+  [Parameter]
+  public EventCallback<GedcomDatabase> DatabaseChanged { get; set; }
+
+  IEnumerable<IGrouping<string, GedcomIndividualRecord>> GetFamilyGroups()
+  {
+    return Database.IndividualRecords.Values
+      .GroupBy(p => p.FamilyName)
+      .OrderBy(g => g.Key);
+  }
+}

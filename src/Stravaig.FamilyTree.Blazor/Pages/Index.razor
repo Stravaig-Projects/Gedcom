@@ -1,3 +1,31 @@
 @page "/"
+@using Stravaig.Gedcom.Model
 
-<GedcomFileUpload/>
+<NavMenu @bind-Database="_database" />
+@if (_database == null)
+{
+  <GedcomFileUpload @bind-Database="_database" />
+}
+else
+{
+  switch (_pageType)
+  {
+    case PageType.IndexPersonByName:
+      <IndexPersonByName @bind-Database="_database" />
+      break;
+    default:
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Unknown page type!</h4>
+        <p>The page type @_pageType was requested, but is unknown.</p>
+      </div>
+      break;
+  }
+}
+
+@code
+{
+  GedcomDatabase _database = null;
+
+  PageType _pageType = PageType.IndexPersonByName;
+  string _itemId = null;
+}
