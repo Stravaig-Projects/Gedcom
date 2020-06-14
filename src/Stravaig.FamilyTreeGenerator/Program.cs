@@ -16,6 +16,7 @@ using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
+using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator
 {
@@ -131,12 +132,8 @@ namespace Stravaig.FamilyTreeGenerator
         {
             GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
             using FileStream gedcomFileStream = new FileStream(optionsSourceFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-            using TextReader streamReader = new StreamReader(gedcomFileStream, Encoding.UTF8);
-            using GedcomLineReader lineReader = new GedcomLineReader(streamReader);
-            GedcomRecordReader recordReader = new GedcomRecordReader(lineReader);
-            
             GedcomDatabase result = new GedcomDatabase();
-            result.Populate(recordReader);
+            result.Populate(gedcomFileStream);
             return result;
         }
     }
