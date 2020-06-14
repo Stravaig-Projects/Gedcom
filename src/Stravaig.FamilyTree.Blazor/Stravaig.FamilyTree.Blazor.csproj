@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\css\fontawesome\" />
     <Folder Include="wwwroot\js\bootstrap\" />
   </ItemGroup>
 

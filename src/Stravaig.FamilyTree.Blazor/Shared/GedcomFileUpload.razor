@@ -1,20 +1,35 @@
 @using System.Globalization
+@using Stravaig.Gedcom
+@using Stravaig.Gedcom.Model
+@using Stravaig.Gedcom.Model.Extensions
 
 <h1>Upload a GEDCOM file to start</h1>
-<InputFile OnChange="HandleFileSelected" />
+<InputFile OnChange="HandleFileSelectedAsync" />
 
-@if (file != null)
+@if (isLoading)
 {
-  <p>Name: @file.Name</p>
-  <p>Size in bytes: @file.Size</p>
-  <p>Last modified date: @file.LastModified.ToShortDateString()</p>
-  <p>Content type (not always supplied by the browser): @file.Type</p>
+  <div class="alert alert-info" role="alert">
+    Loading file @if (file != null) { @file.Name } else { <text>...</text> }
+  </div>
+}
+
+@if (database != null)
+{
+  <p>Number of people: @database.IndividualRecords.Count</p>
 }
 @if (error)
 {
   <div class="alert alert-danger" role="alert">
     <h4 class="alert-heading">Can't load the file!</h4>
     <p>The file <strong>@file.Name</strong> is not a valid GEDCOM file.</p>
+    @if (exception != null)
+    {
+      <hr/>
+      <p>@exception.Message</p>
+      <environment include="Development">
+        <pre>@exception</pre>
+      </environment>
+    }
   </div>
 }
 
@@ -22,15 +37,36 @@
 
   IFileListEntry file;
   bool error = false;
+  bool isLoading = false;
+  Exception exception;
+  GedcomDatabase database = null;
 
-  void HandleFileSelected(IFileListEntry[] files)
+  async Task HandleFileSelectedAsync(IFileListEntry[] files)
   {
+    isLoading = true;
+    exception = null;
     error = false;
     file = files.FirstOrDefault();
     if (!file.Name.EndsWith(".ged", true, CultureInfo.InvariantCulture))
     {
       error = true;
     }
+    if (!error)
+    {
+      try
+      {
+        GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
+        database = new GedcomDatabase();
+        await database.PopulateAsync(file.Data);
+      }
+      catch (Exception ex)
+      {
+        error = true;
+        exception = ex;
+        database = null;
+      }
+    }
+    isLoading = false;
   }
 
 }
