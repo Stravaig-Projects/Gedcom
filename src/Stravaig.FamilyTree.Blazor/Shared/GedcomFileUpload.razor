@@ -1,0 +1,36 @@
+@using System.Globalization
+
+<h1>Upload a GEDCOM file to start</h1>
+<InputFile OnChange="HandleFileSelected" />
+
+@if (file != null)
+{
+  <p>Name: @file.Name</p>
+  <p>Size in bytes: @file.Size</p>
+  <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+  <p>Content type (not always supplied by the browser): @file.Type</p>
+}
+@if (error)
+{
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Can't load the file!</h4>
+    <p>The file <strong>@file.Name</strong> is not a valid GEDCOM file.</p>
+  </div>
+}
+
+@code{
+
+  IFileListEntry file;
+  bool error = false;
+
+  void HandleFileSelected(IFileListEntry[] files)
+  {
+    error = false;
+    file = files.FirstOrDefault();
+    if (!file.Name.EndsWith(".ged", true, CultureInfo.InvariantCulture))
+    {
+      error = true;
+    }
+  }
+
+}
