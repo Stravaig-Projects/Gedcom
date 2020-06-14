@@ -8,9 +8,18 @@
 
 @if (isLoading)
 {
-  <div class="alert alert-info" role="alert">
-    Loading file @if (file != null) { @file.Name } else { <text>...</text> }
-  </div>
+<div class="alert alert-info" role="alert">
+  <i class="fas fa-cog fa-spin"></i>
+  Loading file
+  @if (file != null)
+  {
+    @file.Name
+  }
+  else
+  {
+    <text>...</text>
+  }
+</div>
 }
 
 @if (database != null)
@@ -56,8 +65,9 @@
       try
       {
         GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
-        database = new GedcomDatabase();
-        await database.PopulateAsync(file.Data);
+        var localDatabase = new GedcomDatabase();
+        await localDatabase.PopulateAsync(file.Data);
+        database = localDatabase;
       }
       catch (Exception ex)
       {
