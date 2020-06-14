@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Stravaig.Gedcom\Stravaig.Gedcom.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\bootstrap\" />
+  </ItemGroup>
+
 </Project>
