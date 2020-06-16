@@ -1,0 +1,40 @@
+@using Stravaig.Gedcom.Model
+@switch (Date.Type)
+{
+  case DateType.ApproximatedAbout:
+    <text>about</text>
+    break;
+  case DateType.ApproximatedCalculated:
+    <text>calc'd</text>
+    break;
+  case DateType.ApproximatedEstimated:
+    <text>est'd</text>
+    break;
+  case DateType.Period:
+    if (Date.Year1.HasValue)
+    {
+      <text>from</text>
+    }
+    break;
+  case DateType.Range:
+    if (Date.Year1.HasValue)
+    {
+      if (Date.Year2.HasValue)
+      {
+        <text>bet'</text>
+      }
+      else
+      {
+        <text>after</text>
+      }
+    }
+    break;
+}
+
+
+
+@code {
+  [Parameter]
+  public GedcomDateRecord Date { get; set; }
+}
+

@@ -1,0 +1,31 @@
+@using Stravaig.Gedcom.Model
+@switch (Date.Type)
+{
+  case DateType.Period:
+    if (Date.Year2.HasValue)
+    {
+      <text>to</text>
+    }
+    break;
+  case DateType.Range:
+    if (Date.Year1.HasValue)
+    {
+      if (Date.Year2.HasValue)
+      {
+        <text>and</text>
+      }
+    }
+    else
+    {
+      if (Date.Year2.HasValue)
+      {
+        <text>before</text>
+      }
+    }
+    break;
+}
+
+@code {
+  [Parameter]
+  public GedcomDateRecord Date { get; set; }
+}

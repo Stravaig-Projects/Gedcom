@@ -1,0 +1,39 @@
+@using Stravaig.Gedcom.Model
+@using Stravaig.Gedcom.Extensions
+
+@{
+  string format = DateFormat;
+  if (format.HasContent())
+  {
+      @Date.ToString(format)
+  }
+}
+
+@code {
+  [Parameter]
+  public int? Year { get; set; }
+  
+  [Parameter]
+  public int? Month { get; set; }
+
+  [Parameter]
+  public int? Day { get; set; }
+
+  private DateTime Date => new DateTime(Year ?? 2020, Month ?? 1, Day ?? 1);
+
+  private string DateFormat
+  {
+    get
+    {
+      string format = string.Empty;
+      if (Day.HasValue)
+        format += "d/";
+      if (Month.HasValue)
+        format += "MMM/";
+      if (Year.HasValue)
+        format += "yyyy";
+      return format;
+    }
+  }
+
+}

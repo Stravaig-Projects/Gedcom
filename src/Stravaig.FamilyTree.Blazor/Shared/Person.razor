@@ -1,0 +1,35 @@
+@using Stravaig.Gedcom.Model
+@using Stravaig.FamilyTree.Blazor.Shared.Date
+
+@if (Link)
+{
+  <button class="@PersonClass">@Name</button>
+}
+else
+{
+  <span class="@PersonClass">@Name</span>
+}
+
+@if (CanShowLifespan)
+{
+  <text>(</text><ShortDate Date="@Subject.BirthEvent?.Date" />
+  <text>-</text>
+  <ShortDate Date="@Subject.DeathEvent?.Date" /><text>)</text>
+}
+@code {
+  [Parameter] public GedcomIndividualRecord Subject { get; set; }
+  [Parameter] public bool BoldName { get; set; }
+  [Parameter] public bool ShowLifespan { get; set; }
+  [Parameter] public bool Link { get; set; }
+  [Parameter] public bool FamilyNameFirst { get; set; }
+
+  private string PersonClass => $"person{(BoldName ? " bold" : string.Empty)}";
+
+  private string Name => FamilyNameFirst
+    ? $"{Subject.FamilyName}, {Subject.GivenName}"
+    : Subject.NameWithoutMarker;
+
+  private bool CanShowLifespan => ShowLifespan
+                                  && (Subject.BirthEvent?.Date != null
+                                      || Subject.DeathEvent?.Date != null);
+}

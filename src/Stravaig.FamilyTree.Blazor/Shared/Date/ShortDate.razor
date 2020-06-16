@@ -1,0 +1,17 @@
+@using Stravaig.Gedcom.Model
+@using Stravaig.FamilyTree.Blazor.Shared.Date
+
+@if (Date != null)
+{
+  <ShortDateInitialPreposition Date="@Date" />
+  <ShortDateDate Day="@Date.Day1" Month="@Date.Month1" Year="@Date.Year1" />
+  <ShortDateMiddlePreposition Date="@Date"/>
+  <ShortDateDate Day="@Date.Day2" Month="@Date.Month2" Year="@Date.Year2" />
+}
+
+
+
+@code {
+  [Parameter]
+  public GedcomDateRecord Date { get; set; }
+}
