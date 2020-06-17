@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Stravaig.FamilyTree.Common\Stravaig.FamilyTree.Common.csproj" />
       <ProjectReference Include="..\Stravaig.Gedcom\Stravaig.Gedcom.csproj" />
     </ItemGroup>
 

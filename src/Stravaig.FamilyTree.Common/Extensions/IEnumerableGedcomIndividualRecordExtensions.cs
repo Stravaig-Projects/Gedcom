@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Stravaig.Gedcom.Model;
 
-namespace Stravaig.FamilyTreeGenerator.Extensions
+namespace Stravaig.FamilyTree.Common.Extensions
 {
     public static class IEnumerableGedcomIndividualRecordExtensions
     {

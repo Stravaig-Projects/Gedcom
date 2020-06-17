@@ -6,6 +6,7 @@ using System.Text;
 using Humanizer;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
+using Stravaig.FamilyTree.Common.Extensions;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
@@ -175,13 +176,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         private void WriteHeader(GedcomIndividualRecord subject)
         {
+            var simpleIndividualId = subject.CrossReferenceId.ToSimpleIndividualId();
+
             _writer.WriteLine("---");
             _writer.WriteLine("layout: person");
-            _writer.WriteLine($"subject_key: {subject.CrossReferenceId.ToString().Trim('@').ToLowerInvariant()}");
-            _writer.WriteLine($"permalink: /people/{subject.CrossReferenceId.ToString().Trim('@').ToLowerInvariant()}");
+            _writer.WriteLine($"subject_key: {simpleIndividualId}");
+            _writer.WriteLine($"permalink: /people/{simpleIndividualId}");
             _writer.WriteLine("---");
             _writer.WriteLine();
-
             
             var name = subject.NameWithoutMarker;
             _writer.WriteLine($"# {name}");

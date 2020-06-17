@@ -2,7 +2,7 @@
   "profiles": {
     "Stravaig.FamilyTreeGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "--SourceFile \"../../../../../test-files/Family Tree of Colin Mackay.ged\" --DestinationFolder \"../../../../../test-files/output\""
+      "commandLineArgs": "--SourceFile \"E:\\OneDrive\\Colin\\genealogy\\family-tree-information/Family Tree of Colin Mackay.ged\" --DestinationFolder \"E:\\OneDrive\\Colin\\genealogy\\family-tree-information\\asMD\""
     }
   }
 }

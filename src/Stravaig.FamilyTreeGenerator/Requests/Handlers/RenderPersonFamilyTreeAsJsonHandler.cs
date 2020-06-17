@@ -1,6 +1,7 @@
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Stravaig.FamilyTree.Common.Extensions;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
@@ -50,7 +51,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
             public PersonModel FromSubject(GedcomIndividualRecord subject, IDateRenderer dateRenderer)
             {
-                Id = subject.CrossReferenceId.ToSimpleId();
+                Id = subject.CrossReferenceId.ToSimpleIndividualId();
                 Name = GetName(subject);
                 Gender = subject.Sex.ToString();
                 DateOfBirth = dateRenderer.RenderAsShortDate(subject.BirthEvent?.Date);
@@ -87,7 +88,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 RelationToSubject = relationshipRenderer.HumanReadable(relative.TypeOfRelationship, true);
                 ParentGroupIds = relative.Relative.ChildToFamilies
                     .Select(f => f.Spouses
-                        .Select(s => s.CrossReferenceId.ToSimpleId())
+                        .Select(s => s.CrossReferenceId.ToSimpleIndividualId())
                         .OrderBy(id => id)
                         .ToArray())
                     .ToArray();
@@ -140,7 +141,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 RelationToSubject = relationshipRenderer.HumanReadable(relative.TypeOfRelationship, true);
                 ParentIds = relative.Relative
                     .Parents()
-                    .Select(p => p.Relative.CrossReferenceId.ToSimpleId())
+                    .Select(p => p.Relative.CrossReferenceId.ToSimpleIndividualId())
                     .ToArray();
                 return this;
             }

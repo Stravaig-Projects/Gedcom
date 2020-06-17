@@ -1,5 +1,6 @@
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Stravaig.FamilyTree.Common.Extensions;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
@@ -50,7 +51,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             return new PersonModel
             {
                 Name = GetName(subject),
-                Id = subject.CrossReferenceId.ToSimpleId(),
+                Id = subject.CrossReferenceId.ToSimpleIndividualId(),
                 Gender = subject.Sex.ToString(),
                 DateOfBirth = _dateRenderer.RenderAsShortDate(subject.BirthEvent?.Date),
                 DateOfDeath = _dateRenderer.RenderAsShortDate(subject.DeathEvent?.Date),

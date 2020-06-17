@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Stravaig.FamilyTree.Common.Extensions;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.Gedcom.Model;
 
@@ -64,7 +65,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
 
         public string GetDataFile(GedcomIndividualRecord individual, string filename)
         {
-            string id = individual.CrossReferenceId.ToString().Trim('@').ToLowerInvariant();
+            string id = individual.CrossReferenceId.ToSimpleIndividualId();
             string dir = GetDataDirectory(id);
             var path = Path.Join(dir, filename);
             return path;
@@ -74,7 +75,9 @@ namespace Stravaig.FamilyTreeGenerator.Services
         {
             var sourceDir = SourceDirectory(relativeTo);
             var title = source.Title.MakeFileNameSafe();
-            var fileName = $"{source.CrossReferenceId}-{title}.md".ToLowerInvariant();
+            var fileName = $"{source.CrossReferenceId}-{title}.md"
+                .ToLowerInvariant();
+
             var path = Path.Join(sourceDir, fileName);
             path = path.Replace("\\", "/");
             return path;
