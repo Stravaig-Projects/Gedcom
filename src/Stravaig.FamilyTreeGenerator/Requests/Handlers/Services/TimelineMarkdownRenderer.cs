@@ -247,8 +247,100 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         }
         private (string, string) WriteMarriageEvent(TimelineEntry entry)
         {
-            var spouse = entry.Family.Spouses.FirstOrDefault(s => s != entry.Subject);
+            string item = "Marriage";
             var sb = new StringBuilder();
+            if (entry.Family.Spouses.Any(s => s == entry.Subject))
+            {
+                RenderMarriageEventWhereSubjectIsSpouse(entry, sb);
+            }
+            else
+            {
+                item = GetMarriageEventItemWhereSubjectIsChild(entry);
+                RenderMarriageEventWhereSubjectIsChild(entry, sb);
+            }
+
+
+            if (entry.FamilyEvent.Address != null)
+            {
+                sb.Append("at ");
+                sb.Append(entry.FamilyEvent.Address.Text);
+            }
+            else if (entry.FamilyEvent.Place != null)
+            {
+                sb.Append("in ");
+                sb.Append(entry.FamilyEvent.NormalisedPlaceName());
+            }
+            return (item, sb.ToString());
+        }
+
+        private void RenderMarriageEventWhereSubjectIsChild(TimelineEntry entry, StringBuilder sb)
+        {
+            if (entry.Family.Spouses.Length == 1)
+            {
+                sb.Append("Marriage of ");
+                var spouse = entry.Family.Spouses.First();
+                RenderSpouse(entry, spouse, sb);
+                sb.Append("and unknown");
+            }
+            else if (entry.Family.Spouses.Length == 2)
+            {
+                sb.Append("Marriage of ");
+                var spouse = entry.Family.Spouses.First();
+                RenderSpouse(entry, spouse, sb);
+                sb.Append(" and ");
+                spouse = entry.Family.Spouses.Last();
+                RenderSpouse(entry, spouse, sb);
+            }
+            else
+            {
+                sb.Append("Marriage of unknown parents or guardians");
+            }
+
+            sb.Append(" ");
+        }
+
+        private string GetMarriageEventItemWhereSubjectIsChild(TimelineEntry entry)
+        {
+            string item = "Marriage";
+            Relationship[] relations = entry.Family.Spouses
+                .Select(s => entry.Subject.GetRelationshipTo(s))
+                .ToArray();
+            if (relations.Length == 1)
+            {
+                var relation = _relationshipRenderer.HumanReadable(relations.First(), true);
+                item += $" of {relation}";
+            }
+            else if (relations.Length == 2)
+            {
+                var relationNames = relations.OrderBy(r => r.Qualification)
+                    .Select(r => _relationshipRenderer.HumanReadable(r, true))
+                    .ToArray();
+                item += $" between {relationNames[0]} and {relationNames[1]}";
+            }
+            else
+            {
+                item += " of unknown";
+            }
+
+            return item;
+        }
+
+        private void RenderSpouse(TimelineEntry entry, GedcomIndividualRecord spouse, StringBuilder sb)
+        {
+            if (spouse.IsAlive())
+            {
+                sb.Append("X");
+            }
+            else
+            {
+                var link = _fileNamer.GetIndividualFile(spouse, entry.Subject);
+                sb.Append($"[{spouse.NameWithoutMarker}]({link})");
+            }
+        }
+
+        private void RenderMarriageEventWhereSubjectIsSpouse(TimelineEntry entry, StringBuilder sb)
+        {
+            var spouse = entry.Family.Spouses.FirstOrDefault(s => s != entry.Subject);
             if (spouse != null)
             {
                 sb.Append("Married to ");
@@ -264,18 +356,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
                 sb.Append(" ");
             }
-
-            if (entry.FamilyEvent.Address != null)
-            {
-                sb.Append("at ");
-                sb.Append(entry.FamilyEvent.Address.Text);
-            }
-            else if (entry.FamilyEvent.Place != null)
-            {
-                sb.Append("in ");
-                sb.Append(entry.FamilyEvent.NormalisedPlaceName());
-            }
-            return ("Married", sb.ToString());
         }
 
         private void WriteSubjectTimelineEntry(TimelineEntry entry)
