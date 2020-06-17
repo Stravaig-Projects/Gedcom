@@ -15,26 +15,6 @@ using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
-    public class RenderIndividualImmediateFamilyAsSvgHandler : RequestHandler<RenderIndividual>
-    {
-        private readonly ILogger<RenderIndividualImmediateFamilyAsSvgHandler> _logger;
-        private readonly IFileNamer _fileNamer;
-
-        public RenderIndividualImmediateFamilyAsSvgHandler(
-            ILogger<RenderIndividualImmediateFamilyAsSvgHandler> logger,
-            IFileNamer fileNamer)
-        {
-            _logger = logger;
-            _fileNamer = fileNamer;
-        }
-
-        public override RenderIndividual Handle(RenderIndividual command)
-        {
-            
-            return base.Handle(command);
-        }
-    }
-    
     public class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual>, IDisposable
     {
         private readonly ILogger<RenderIndividualAsMarkdownHandler> _logger;
