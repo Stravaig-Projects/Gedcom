@@ -234,29 +234,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         private void WriteFooter(GedcomIndividualRecord subject)
         {
-            var thisDirectory = new FileInfo(_fileNamer.GetIndividualFile(subject)).DirectoryName;
-            var indexByNameFile = _fileNamer.GetByNameIndexFile(thisDirectory);
-            var indexSourcesFile = _fileNamer.GetSourceIndexFile(thisDirectory);
-            _writer.WriteLine();
-            _writer.WriteLine("## See also");
-            _writer.WriteLine();
-            var associates = _associatesOrganiser.Associates;
-            if (associates.Any())
-            {
-                _writer.WriteLine("- People Mentioned");
-                foreach (var person in associates.OrderByStandardSort())
-                {
-                    var linkedName = _nameRenderer.RenderLinkedNameWithLifespan(person, subject);
-                    _writer.WriteLine($"  - {linkedName}");
-                }
-            }
-            _writer.WriteLine("- Indexes");
-            _writer.WriteLine($"  - [By family name]({indexByNameFile})");
-            if (_hasSources)
-                _writer.WriteLine($"  - [Sources]({indexSourcesFile})");
-
             if (subject.FamilySearchId.HasContent())
+            {
+                _writer.WriteLine();
+                _writer.WriteLine("## See also");
+                _writer.WriteLine();
                 _writer.WriteLine($"- [Family Search Person Details](https://www.familysearch.org/tree/person/details/{subject.FamilySearchId})");
+            }
         }
 
         private void Dispose(bool disposing)
