@@ -2,7 +2,7 @@ using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 {
-    public class RelationshipRenderer : IRelationshipRenderer
+    public class EnglishLanguageRelationshipRenderer : IRelationshipRenderer
     {
         
         public string HumanReadable(Relationship relationship, bool includeGenderWherePossible)

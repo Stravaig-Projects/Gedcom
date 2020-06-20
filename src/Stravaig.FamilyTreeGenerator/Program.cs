@@ -100,7 +100,7 @@ namespace Stravaig.FamilyTreeGenerator
             services.AddTransient<IAssociatesOrganiser, AssociatesOrganiser>();
             services.AddTransient<IIndividualNameRenderer, IndividualNameMarkdownRenderer>();
             services.AddTransient<ITimelineRenderer, TimelineMarkdownRenderer>();
-            services.AddTransient<IRelationshipRenderer, RelationshipRenderer>();
+            services.AddTransient<IRelationshipRenderer, EnglishLanguageRelationshipRenderer>();
             
             
             GedcomDatabase database = GetDatabase(options.SourceFile);
