@@ -3,7 +3,7 @@
 
 @if (Link)
 {
-  <button class="@PersonClass">@Name</button>
+  <button class="@PersonClass" @onclick="@OnPersonButtonClick">@Name</button>
 }
 else
 {
@@ -17,6 +17,7 @@ else
   <ShortDate Date="@Subject.DeathEvent?.Date" /><text>)</text>
 }
 @code {
+  [CascadingParameter(Name="ChangePage")] private Action<Page> ChangePage { get; set; }
   [Parameter] public GedcomIndividualRecord Subject { get; set; }
   [Parameter] public bool BoldName { get; set; }
   [Parameter] public bool ShowLifespan { get; set; }
@@ -32,4 +33,15 @@ else
   private bool CanShowLifespan => ShowLifespan
                                   && (Subject.BirthEvent?.Date != null
                                       || Subject.DeathEvent?.Date != null);
+
+  private void OnPersonButtonClick(MouseEventArgs arg)
+  {
+    Console.WriteLine($"OnPersonButtonClick({arg})");
+    if (ChangePage == null)
+      throw new InvalidOperationException("ChangePage needs to be set as a cascading parameter.");
+    var personPage = new Page().SetPerson(Subject.CrossReferenceId);
+    Console.WriteLine($"PersonPage = {personPage}");
+    ChangePage(personPage);
+  }
+
 }

@@ -4,6 +4,8 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+
+
 .loading {
     height: 100%;
     width: 100%;
@@ -32,14 +34,16 @@ html, body {
     top: 0.5rem;
 }
 
-.index {
-
+button.person {
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.person {
-
-}
-
-.person .bold {
+button.person.bold,
+.person.bold {
   font-weight: bold;
 }

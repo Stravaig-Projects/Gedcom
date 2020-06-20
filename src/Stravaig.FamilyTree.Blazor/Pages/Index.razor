@@ -1,31 +1,50 @@
 @page "/"
 @using Stravaig.Gedcom.Model
+@using Stravaig.FamilyTree.Blazor.Shared.VirtualPages;
 
-<NavMenu @bind-Database="_database" />
-@if (_database == null)
-{
-  <GedcomFileUpload @bind-Database="_database" />
-}
-else
-{
-  switch (_pageType)
+<CascadingValue Name="ChangePage" Value="@((Action<Page>)ChangePage)">
+  <NavMenu @bind-Database="_database" />
+  @if (_database == null)
   {
-    case PageType.IndexPersonByName:
-      <IndexPersonByName @bind-Database="_database" />
-      break;
-    default:
-      <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Unknown page type!</h4>
-        <p>The page type @_pageType was requested, but is unknown.</p>
-      </div>
-      break;
+    <GedcomFileUpload @bind-Database="_database" />
   }
-}
-
+  else
+  {
+    switch (_page.Type)
+    {
+      case PageType.IndexPersonByName:
+        <IndexPersonByName @bind-Database="_database" />
+        break;
+      case PageType.Person:
+        if (_page.Id.HasValue)
+        {
+          var subject = _database.IndividualRecords[_page.Id.Value];
+          <PersonPage Subject="@subject"/>;
+        }
+        else
+        {
+          <ErrorPage Message="A person page was requested, but no Id was supplied."/>
+        }
+        break;
+      default:
+        <div class="alert alert-danger" role="alert">
+          <h4 class="alert-heading">Unknown page type!</h4>
+          <p>The page type @_page.Type was requested, but is unknown.</p>
+        </div>
+        break;
+    }
+  }
+</CascadingValue>
 @code
 {
   GedcomDatabase _database = null;
 
-  PageType _pageType = PageType.IndexPersonByName;
-  string _itemId = null;
+  Page _page = new Page();
+
+  private void ChangePage(Page newPage)
+  {
+    Console.WriteLine($"ChangePage({newPage})");
+    _page = newPage;
+    StateHasChanged();
+  }
 }

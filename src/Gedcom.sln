@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stravaig.FamilyTreeGenerato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stravaig.FamilyTreeGenerator.Tests", "Stravaig.FamilyTreeGenerator.Tests\Stravaig.FamilyTreeGenerator.Tests.csproj", "{37364718-BF47-4909-AC3E-095F0DFF7780}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.FamilyTree.Common", "Stravaig.FamilyTree.Common\Stravaig.FamilyTree.Common.csproj", "{80CCDAB9-284D-44F9-8A9F-69F916C34E58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stravaig.FamilyTree.Common", "Stravaig.FamilyTree.Common\Stravaig.FamilyTree.Common.csproj", "{80CCDAB9-284D-44F9-8A9F-69F916C34E58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.FamilyTree.Blazor", "Stravaig.FamilyTree.Blazor\Stravaig.FamilyTree.Blazor.csproj", "{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stravaig.FamilyTree.Blazor", "Stravaig.FamilyTree.Blazor\Stravaig.FamilyTree.Blazor.csproj", "{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,12 +45,6 @@ Global
 		{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D6F74678-32DC-4FC6-980E-BC622E54E313}
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

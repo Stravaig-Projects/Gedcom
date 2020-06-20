@@ -2,6 +2,12 @@
 {
     public enum PageType
     {
-        IndexPersonByName
+        // Indexes
+        IndexPersonByName,
+        MinIndex = IndexPersonByName,
+        MaxIndex = IndexPersonByName,
+
+        // Specific pages
+        Person,
     }
 }

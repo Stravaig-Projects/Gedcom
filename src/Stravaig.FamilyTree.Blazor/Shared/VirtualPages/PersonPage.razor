@@ -1,0 +1,15 @@
+@using Stravaig.Gedcom.Model
+<h1>@Subject.NameWithoutMarker</h1>
+
+<h2>Names</h2>
+<ul>
+  @foreach (var name in Subject.Names)
+  {
+    <li>@name.WholeName</li>
+  }
+</ul>
+
+@code {
+  [Parameter]
+  public GedcomIndividualRecord Subject { get; set; }
+}

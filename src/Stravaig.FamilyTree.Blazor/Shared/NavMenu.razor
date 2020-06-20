@@ -20,7 +20,7 @@
             Person Index
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Name</a>
+            <a class="dropdown-item" href="#" @onclick="@GoToPersonNameIndex">Name</a>
             <a class="dropdown-item" href="#">Date of Birth</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">Birth Location</a>
@@ -47,4 +47,12 @@
 
   [Parameter]
   public EventCallback<GedcomDatabase> DatabaseChanged { get; set; }
+
+  [CascadingParameter(Name="ChangePage")] private Action<Page> ChangePage { get; set; }
+
+  private void GoToPersonNameIndex()
+  {
+    var page = new Page().SetIndex(PageType.IndexPersonByName);
+    ChangePage(page);
+  }
 }
