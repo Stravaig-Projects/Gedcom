@@ -1,5 +1,6 @@
 @using Stravaig.Gedcom.Model
 @using Stravaig.Gedcom.Extensions
+@using Stravaig.FamilyTree.Common.Extensions
 <h1>Index of People By Name</h1>
 
 @foreach (var group in GetFamilyGroups())
@@ -17,7 +18,7 @@
   </h3>
   <div class="index">
     <ul>
-      @foreach (var person in group.AsEnumerable())
+      @foreach (var person in group.AsEnumerable().OrderByStandardSort())
       {
         <li><Person Subject="@person" ShowLifespan="true" BoldName="true" Link="true" /></li>
       }

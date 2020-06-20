@@ -1,4 +1,5 @@
 @using Stravaig.Gedcom.Model
+@using Stravaig.Gedcom.Model.Extensions
 <h1>@Subject.NameWithoutMarker</h1>
 
 <h2>Names</h2>
@@ -9,7 +10,32 @@
   }
 </ul>
 
+<h2>Immediate Family</h2>
+<ul>
+  @foreach (var familyMember in GetImmediateFamily())
+  {
+
+  }
+</ul>
+
 @code {
   [Parameter]
   public GedcomIndividualRecord Subject { get; set; }
+
+  private IEnumerable<ImmediateRelative> GetImmediateFamily()
+  {
+    var immediateRelatives = Subject.GetImmediateRelatives()
+      .OrderBy(r => r.Relative.BirthEvent?.Date);
+    return immediateRelatives;
+
+    //foreach (var relative in immediateRelatives)
+    //{
+    //  string relationship = _relationshipRenderer.HumanReadable(relative.TypeOfRelationship, true).Titleize();
+    //  string name = relative.Relative.IsAlive()
+    //    ? "X"
+    //    : _nameRenderer.RenderLinkedNameWithLifespan(relative.Relative, subject);
+    //  _writer.WriteLine($"* {relationship}: {name}");
+    //}
+    //_writer.WriteLine();
+  }
 }
