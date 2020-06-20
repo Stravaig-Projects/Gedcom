@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 
 namespace Stravaig.FamilyTree.Blazor
 {
@@ -21,6 +22,7 @@ namespace Stravaig.FamilyTree.Blazor
             {
                 BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
             });
+            builder.Services.AddSingleton<IRelationshipRenderer, EnglishLanguageRelationshipRenderer>();
 
             await builder.Build().RunAsync();
         }

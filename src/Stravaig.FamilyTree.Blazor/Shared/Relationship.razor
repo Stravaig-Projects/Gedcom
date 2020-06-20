@@ -1,0 +1,13 @@
+@using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
+@RelationshipName
+@code {
+  [Parameter]
+  public Stravaig.Gedcom.Model.Relationship TypeOfRelationship { get; set; }
+
+  [Parameter]
+  public bool Genderise { get; set; }
+
+  [Inject] private IRelationshipRenderer _relationshipRenderer { get; set; }
+
+  private string RelationshipName => _relationshipRenderer.HumanReadable(TypeOfRelationship, Genderise);
+}

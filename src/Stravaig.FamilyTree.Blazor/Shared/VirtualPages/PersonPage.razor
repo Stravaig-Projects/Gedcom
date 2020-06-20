@@ -14,7 +14,10 @@
 <ul>
   @foreach (var familyMember in GetImmediateFamily())
   {
-
+    <li>
+      <Relationship Genderise="true" TypeOfRelationship="@familyMember.TypeOfRelationship"/>:
+      <Person Subject="@familyMember.Relative" Link="true" ShowLifespan="true"/>
+    </li>
   }
 </ul>
 
