@@ -1,5 +1,6 @@
 @using Stravaig.Gedcom.Model
 @using Stravaig.Gedcom.Model.Extensions
+@using Stravaig.FamilyTree.Blazor.Shared.Date
 <h1>@Subject.NameWithoutMarker</h1>
 
 <h2>Names</h2>
@@ -11,15 +12,35 @@
 </ul>
 
 <h2>Immediate Family</h2>
-<ul>
+<table class="table table-striped table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Relationship</th>
+    <th scope="col">Person</th>
+    <th scope="col">Birth</th>
+    <th scope="col">Death</th>
+  </tr>
+  </thead>
+  <tbody>
   @foreach (var familyMember in GetImmediateFamily())
   {
-    <li>
-      <Relationship Genderise="true" TypeOfRelationship="@familyMember.TypeOfRelationship"/>:
-      <Person Subject="@familyMember.Relative" Link="true" ShowLifespan="true"/>
-    </li>
+    <tr>
+      <td>
+        <Relationship Genderise="true" TypeOfRelationship="@familyMember.TypeOfRelationship" />
+      </td>
+      <td>
+        <Person Subject="@familyMember.Relative" Link="true" />
+      </td>
+      <td>
+        <ShortDate Date="@familyMember.Relative.BirthEvent?.Date" />
+      </td>
+      <td>
+        <ShortDate Date="@familyMember.Relative.DeathEvent?.Date" />
+      </td>
+    </tr>
   }
-</ul>
+  </tbody>
+</table>
 
 @code {
   [Parameter]
@@ -31,14 +52,5 @@
       .OrderBy(r => r.Relative.BirthEvent?.Date);
     return immediateRelatives;
 
-    //foreach (var relative in immediateRelatives)
-    //{
-    //  string relationship = _relationshipRenderer.HumanReadable(relative.TypeOfRelationship, true).Titleize();
-    //  string name = relative.Relative.IsAlive()
-    //    ? "X"
-    //    : _nameRenderer.RenderLinkedNameWithLifespan(relative.Relative, subject);
-    //  _writer.WriteLine($"* {relationship}: {name}");
-    //}
-    //_writer.WriteLine();
   }
 }
