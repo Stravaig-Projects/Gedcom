@@ -1,0 +1,12 @@
+@using Stravaig.Gedcom.Model
+@using Stravaig.FamilyTree.Blazor.Shared.Date
+<td scope="col"><ShortDate Date="@Entry.Date"/></td>
+<td scope="col"><SubjectEntryItem Entry="@Entry"/></td>
+<td scope="col">Description</td>
+<td scope="col">Source</td>
+<td scope="col">Notes</td>
+
+@code {
+    [Parameter]
+    public TimelineEntry Entry { get; set; }
+}

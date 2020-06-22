@@ -1,6 +1,8 @@
 @using Stravaig.Gedcom.Model
 @using Stravaig.Gedcom.Model.Extensions
 @using Stravaig.FamilyTree.Blazor.Shared.Date
+@using Stravaig.FamilyTree.Blazor.Shared.Timeline
+
 <h1>@Subject.NameWithoutMarker</h1>
 
 <h2>Names</h2>
@@ -16,32 +18,68 @@
   <thead class="thead-light">
     <tr>
       <th scope="col">Relationship</th>
-    <th scope="col">Person</th>
-    <th scope="col">Birth</th>
-    <th scope="col">Death</th>
-  </tr>
+      <th scope="col">Person</th>
+      <th scope="col">Birth</th>
+      <th scope="col">Death</th>
+    </tr>
   </thead>
   <tbody>
-  @foreach (var familyMember in GetImmediateFamily())
+    @foreach (var familyMember in GetImmediateFamily())
+    {
+      <tr>
+        <td>
+          <Relationship Genderise="true" TypeOfRelationship="@familyMember.TypeOfRelationship" />
+        </td>
+        <td>
+          <Person Subject="@familyMember.Relative" Link="true" />
+        </td>
+        <td>
+          <ShortDate Date="@familyMember.Relative.BirthEvent?.Date" />
+        </td>
+        <td>
+          <ShortDate Date="@familyMember.Relative.DeathEvent?.Date" />
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<h2>Timeline</h2>
+<table class="table table-striped table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Item</th>
+      <th scope="col">Description</th>
+      <th scope="col">Source</th>
+      <th scope="col">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+  @foreach (var entry in Subject.GetTimeline(false))
   {
     <tr>
-      <td>
-        <Relationship Genderise="true" TypeOfRelationship="@familyMember.TypeOfRelationship" />
-      </td>
-      <td>
-        <Person Subject="@familyMember.Relative" Link="true" />
-      </td>
-      <td>
-        <ShortDate Date="@familyMember.Relative.BirthEvent?.Date" />
-      </td>
-      <td>
-        <ShortDate Date="@familyMember.Relative.DeathEvent?.Date" />
-      </td>
+    @switch (entry.Type)
+    {
+      case TimelineEntry.EventType.SubjectAttribute:
+      case TimelineEntry.EventType.SubjectEvent:
+        <SubjectTimelineEntry Entry="@entry"/>
+        //WriteSubjectTimelineEntry(entry);
+        break;
+        //case TimelineEntry.EventType.FamilyEvent:
+        //  WriteFamilyTimelineEntry(entry);
+        //  break;
+        //case TimelineEntry.EventType.FamilyMemberEvent:
+        //  WriteFamilyMemberTimelineEntry(entry);
+        //  break;
+        default:
+          <td colspan="5">Unknown entry type: @entry.Type</td>
+          break;
+    }
     </tr>
   }
   </tbody>
 </table>
-
 @code {
   [Parameter]
   public GedcomIndividualRecord Subject { get; set; }
