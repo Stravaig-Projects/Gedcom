@@ -20,7 +20,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
     {
         private readonly ILogger<RenderIndividualAsMarkdownHandler> _logger;
         private readonly IDateRenderer _dateRenderer;
-        private readonly IFootnoteOrganiser _footnoteOrganiser;
+        private readonly IStaticFootnoteOrganiser _footnoteOrganiser;
         private readonly IAssociatesOrganiser _associatesOrganiser;
         private readonly ITimelineRenderer _timelineRenderer;
         private readonly IIndividualNameRenderer _nameRenderer;
@@ -33,7 +33,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         public RenderIndividualAsMarkdownHandler(
             ILogger<RenderIndividualAsMarkdownHandler> logger,
             IDateRenderer dateRenderer,
-            IFootnoteOrganiser footnoteOrganiser,
+            IStaticFootnoteOrganiser footnoteOrganiser,
             IAssociatesOrganiser associatesOrganiser,
             ITimelineRenderer timelineRenderer,
             IIndividualNameRenderer nameRenderer,

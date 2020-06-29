@@ -1,0 +1,33 @@
+@using Stravaig.Gedcom.Model
+@using Stravaig.FamilyTree.Blazor.Services
+@using Microsoft.Extensions.DependencyInjection
+
+@{
+  var notes = GetNoteFootnotes();
+  for (int i = 0; i < notes.Length; i++)
+  {
+    int footnoteNumber = notes[i];
+    <a href="#footnote-@footnoteNumber">@footnoteNumber</a>if (i != notes.Length - 1)
+    {<text>, </text>}
+  }
+}
+
+@code {
+  [Parameter]
+  public TimelineEntry Entry { get; set; }
+
+  [CascadingParameter(Name = "FootnoteOrganiser")]
+  private IWebFootnoteOrganiser FootnoteOrganiser { get; set; }
+
+  private EventRecord Event => (EventRecord)Entry.IndividualEvent
+                             ?? (EventRecord)Entry.IndividualAttribute
+                             ?? Entry.FamilyEvent;
+
+  private int[] GetNoteFootnotes()
+  {
+    return Event.Notes
+      .OrderBy(n => n.Text)
+      .Select(n => FootnoteOrganiser.AddFootnote(n))
+      .ToArray();
+  }
+}

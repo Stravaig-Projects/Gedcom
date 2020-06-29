@@ -96,7 +96,7 @@ namespace Stravaig.FamilyTreeGenerator
             });
             services.AddTransient(typeof(ExceptionPolicyHandler<>));
             
-            services.AddTransient<IFootnoteOrganiser, MarkdownFootnoteOrganiser>();
+            services.AddTransient<IStaticFootnoteOrganiser, MarkdownFootnoteOrganiser>();
             services.AddTransient<IAssociatesOrganiser, AssociatesOrganiser>();
             services.AddTransient<IIndividualNameRenderer, IndividualNameMarkdownRenderer>();
             services.AddTransient<ITimelineRenderer, TimelineMarkdownRenderer>();

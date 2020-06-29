@@ -9,5 +9,6 @@
 
         // Specific pages
         Person,
+        Source,
     }
 }

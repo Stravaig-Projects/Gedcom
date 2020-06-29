@@ -1,12 +1,14 @@
 @using Stravaig.Gedcom.Model
 @using Stravaig.FamilyTree.Blazor.Shared.Date
-<td scope="col"><ShortDate Date="@Entry.Date"/></td>
-<td scope="col"><SubjectEntryItem Entry="@Entry"/></td>
-<td scope="col">Description</td>
-<td scope="col">Source</td>
-<td scope="col">Notes</td>
+@using Stravaig.FamilyTree.Blazor.Services
+@using Stravaig.FamilyTree.Blazor.Shared.Timeline
+<td scope="col"><ShortDate Date="@Entry.Date" /></td>
+<td scope="col"><SubjectEntryItem Entry="@Entry" /></td>
+<td scope="col"><SubjectEntryDescription Entry="@Entry" /></td>
+<td scope="col"><TimelineEntrySources Entry="@Entry"/></td>
+<td scope="col"><TimelineEntryNotes Entry="@Entry"/></td>
 
 @code {
-    [Parameter]
-    public TimelineEntry Entry { get; set; }
+  [Parameter]
+  public TimelineEntry Entry { get; set; }
 }

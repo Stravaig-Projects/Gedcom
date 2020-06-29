@@ -1,0 +1,27 @@
+@using Stravaig.Gedcom.Model
+@using Stravaig.Gedcom.Model.Extensions
+@if (Subject == Entry.Subject)
+{
+  <text>Died</text>
+}
+else
+{
+  <Person Subject="@Subject" Link="true" />
+  <text>(</text>
+  <Relationship typeOfRelationship="@Entry.Subject.GetRelationshipTo(Subject)" />
+  <text>) died</text>
+}
+@if (Entry.IndividualEvent.Place != null)
+{
+  <text> in </text>
+  @Entry.IndividualEvent.NormalisedPlaceName()
+}
+.
+
+@code {
+  [Parameter]
+  public TimelineEntry Entry { get; set; }
+
+  private GedcomIndividualRecord Subject => Entry.OtherFamilyMember ?? Entry.Subject;
+
+}

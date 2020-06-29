@@ -1,6 +1,7 @@
 @using Stravaig.Gedcom.Model
 @using Stravaig.Gedcom.Extensions
 @using Stravaig.Gedcom
+@inherits SubjectEntryBase
 
 @if (IsBorn)
 {
@@ -39,16 +40,4 @@ else
   }
 }
 @code {
-  [Parameter]
-  public TimelineEntry Entry { get; set; }
-
-  private EventRecord Event => (EventRecord)Entry.IndividualEvent ?? Entry.IndividualAttribute;
-  private GedcomTag Tag => Event.Tag;
-  private bool IsBorn => Tag == GedcomIndividualEventRecord.BirthTag;
-  private bool IsDead => Tag == GedcomIndividualEventRecord.DeathTag;
-  private bool IsOccupation => Tag == GedcomIndividualAttributeRecord.OccupationTag;
-  private bool IsResidence => Tag == GedcomIndividualAttributeRecord.ResidenceTag;
-  private bool IsBaptism => Tag == GedcomIndividualEventRecord.BaptismTag;
-  private bool IsImmigration => Tag == GedcomIndividualEventRecord.ImmigrationTag;
-  private bool IsNaturalisation => Tag == GedcomIndividualEventRecord.NaturalisationTag;
 }

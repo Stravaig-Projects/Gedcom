@@ -42,6 +42,10 @@ button.person {
   cursor: pointer;
 }
 
+button.person :hover {
+  text-decoration: underline;
+}
+
 button.person.bold,
 .person.bold {
   font-weight: bold;

@@ -1,0 +1,15 @@
+@using Stravaig.Gedcom.Model
+@using Stravaig.Gedcom
+@inherits SubjectEntryBase
+
+@if (IsBorn)
+{
+  <BirthEvent Entry="@Entry"/>
+}
+else if (IsDead)
+{
+  <DeathEvent Entry="@Entry"/>
+}
+
+@code {
+}

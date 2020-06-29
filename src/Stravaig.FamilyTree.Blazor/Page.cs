@@ -30,6 +30,13 @@ namespace Stravaig.FamilyTree.Blazor
             return this;
         }
 
+        public Page SetSource(GedcomPointer id)
+        {
+            Type = PageType.Source;
+            Id = id;
+            return this;
+        }
+
         public override string ToString()
         {
             if (Id.HasValue)

@@ -2,6 +2,9 @@
 @using Stravaig.Gedcom.Model.Extensions
 @using Stravaig.FamilyTree.Blazor.Shared.Date
 @using Stravaig.FamilyTree.Blazor.Shared.Timeline
+@using Stravaig.FamilyTree.Common.Footnotes
+@using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
+@using Stravaig.FamilyTree.Blazor.Services
 
 <h1>@Subject.NameWithoutMarker</h1>
 
@@ -47,48 +50,91 @@
 <h2>Timeline</h2>
 <table class="table table-striped table-bordered">
   <thead class="thead-light">
-    <tr>
-      <th scope="col">Date</th>
-      <th scope="col">Item</th>
-      <th scope="col">Description</th>
-      <th scope="col">Source</th>
-      <th scope="col">Notes</th>
-    </tr>
+  <tr>
+    <th scope="col">Date</th>
+    <th scope="col">Item</th>
+    <th scope="col">Description</th>
+    <th scope="col">Source</th>
+    <th scope="col">Notes</th>
+  </tr>
   </thead>
   <tbody>
-  @foreach (var entry in Subject.GetTimeline(false))
-  {
-    <tr>
-    @switch (entry.Type)
+  <CascadingValue Name="FootnoteOrganiser" Value="@FootnoteOrganiser">
+    @foreach (var entry in Subject.GetTimeline(false))
     {
-      case TimelineEntry.EventType.SubjectAttribute:
-      case TimelineEntry.EventType.SubjectEvent:
-        <SubjectTimelineEntry Entry="@entry"/>
-        //WriteSubjectTimelineEntry(entry);
-        break;
-        //case TimelineEntry.EventType.FamilyEvent:
-        //  WriteFamilyTimelineEntry(entry);
-        //  break;
-        //case TimelineEntry.EventType.FamilyMemberEvent:
-        //  WriteFamilyMemberTimelineEntry(entry);
-        //  break;
-        default:
-          <td colspan="5">Unknown entry type: @entry.Type</td>
-          break;
+      <tr>
+        @switch (entry.Type)
+        {
+          case TimelineEntry.EventType.SubjectAttribute:
+          case TimelineEntry.EventType.SubjectEvent:
+            <SubjectTimelineEntry Entry="@entry" />
+            break;
+          //case TimelineEntry.EventType.FamilyEvent:
+
+          //  WriteFamilyTimelineEntry(entry);
+          //  break;
+          //case TimelineEntry.EventType.FamilyMemberEvent:
+          //  WriteFamilyMemberTimelineEntry(entry);
+          //  break;
+          default:
+            <td colspan="5">Unknown entry type: @entry.Type</td>
+            break;
+        }
+      </tr>
     }
-    </tr>
-  }
+  </CascadingValue>
+  </tbody>
+</table>
+
+<h2>Footnotes</h2>
+
+<table>
+  <tbody>
+    @foreach (var footnote in FootnoteOrganiser.Footnotes.OrderBy(fn => fn.Id))
+    {
+      <tr>
+        <td>@footnote.Id</td>
+        @if (footnote.Note != null)
+        {
+          <td>@footnote.Note.Text</td>
+        }
+        else if (footnote.Source != null)
+        {
+          <td>
+            <p><strong>@footnote.Source.Title</strong></p>
+            <ul>
+              <li><SourceLink Id="@footnote.Source.CrossReferenceId" Text="Full Source and notes"/></li>
+            </ul>
+          </td>
+        }
+        <td>@footnote.</td>
+      </tr>
+    }
   </tbody>
 </table>
 @code {
-  [Parameter]
-  public GedcomIndividualRecord Subject { get; set; }
 
-  private IEnumerable<ImmediateRelative> GetImmediateFamily()
-  {
-    var immediateRelatives = Subject.GetImmediateRelatives()
-      .OrderBy(r => r.Relative.BirthEvent?.Date);
-    return immediateRelatives;
+    private IWebFootnoteOrganiser _footnoteOrganiser;
+    [Inject]
+    private IWebFootnoteOrganiser FootnoteOrganiser
+    {
+      get => _footnoteOrganiser;
+      set
+      {
+        Console.WriteLine($"[INJECT] Setting {GetType().FullName}.{nameof(FootnoteOrganiser)} with {value?.ToString() ?? "** NULL **"}");
+        _footnoteOrganiser = value;
+      }
+    }
 
-  }
+    [Parameter]
+    public GedcomIndividualRecord Subject { get; set; }
+
+    private IEnumerable<ImmediateRelative> GetImmediateFamily()
+    {
+      var immediateRelatives = Subject.GetImmediateRelatives()
+        .OrderBy(r => r.Relative.BirthEvent?.Date);
+      return immediateRelatives;
+
+    }
+
 }

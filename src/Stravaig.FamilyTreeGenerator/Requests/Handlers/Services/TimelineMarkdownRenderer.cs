@@ -17,7 +17,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         private readonly IRelationshipRenderer _relationshipRenderer;
         private readonly IFileNamer _fileNamer;
         private TextWriter _writer;
-        private IFootnoteOrganiser _footnoteOrganiser;
+        private IStaticFootnoteOrganiser _footnoteOrganiser;
         private IAssociatesOrganiser _associatesOrganiser;
         private IIndividualNameRenderer _nameRenderer;
 
@@ -35,7 +35,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
         public void WriteTimeline(TextWriter writer,
             GedcomIndividualRecord subject, 
-            IFootnoteOrganiser footnoteOrganiser,
+            IStaticFootnoteOrganiser footnoteOrganiser,
             IAssociatesOrganiser associatesOrganiser)
         {
             _writer = writer;

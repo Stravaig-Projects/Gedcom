@@ -1,0 +1,49 @@
+@using Stravaig.Gedcom.Model
+@using Stravaig.Gedcom.Model.Extensions
+@using Relationship = Stravaig.FamilyTree.Blazor.Shared.Relationship
+
+@if (Subject == Entry.Subject)
+{
+  <text>Born</text>
+}
+else
+{
+  <Person Subject="@Subject" Link="true" />
+  <text>(</text>
+  <Relationship typeOfRelationship="@Entry.Subject.GetRelationshipTo(Subject)" />
+  <text>) born</text>
+}
+@{
+  var bioParents = BiologicalParents;
+  if (bioParents.Length > 0)
+  {
+    <text> to </text>
+    var parent = bioParents[0];
+    <Person Subject="@parent" Link="true" />
+    if (bioParents.Length > 1)
+    {
+      <text> and </text>
+      parent = bioParents[1];
+      <Person Subject="@parent" Link="true" />
+    }
+  }
+  if (Entry.IndividualEvent.Place != null)
+  {
+    <text> in </text>
+    @Entry.IndividualEvent.NormalisedPlaceName()
+  }
+}
+.
+
+@code {
+  [Parameter]
+  public TimelineEntry Entry { get; set; }
+
+  private GedcomIndividualRecord Subject => Entry.OtherFamilyMember ?? Entry.Subject;
+
+  private GedcomIndividualRecord[] BiologicalParents => Subject.Parents()
+    .Where(r => r.TypeOfRelationship.Qualification == Qualification.Biological)
+    .Select(r => r.Relative)
+    .ToArray();
+
+}

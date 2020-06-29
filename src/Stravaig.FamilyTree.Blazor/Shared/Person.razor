@@ -36,11 +36,9 @@ else
 
   private void OnPersonButtonClick(MouseEventArgs arg)
   {
-    Console.WriteLine($"OnPersonButtonClick({arg})");
     if (ChangePage == null)
       throw new InvalidOperationException("ChangePage needs to be set as a cascading parameter.");
     var personPage = new Page().SetPerson(Subject.CrossReferenceId);
-    Console.WriteLine($"PersonPage = {personPage}");
     ChangePage(personPage);
   }
 

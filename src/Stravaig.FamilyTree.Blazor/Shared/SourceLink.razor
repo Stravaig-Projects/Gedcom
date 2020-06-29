@@ -1,0 +1,19 @@
+@using Stravaig.Gedcom
+<button @onclick="@OnSourceButtonClick">@Text</button>
+
+@code {
+  [CascadingParameter(Name="ChangePage")] private Action<Page> ChangePage { get; set; }
+
+  [Parameter]
+    public GedcomPointer Id { get; set; }
+
+  [Parameter]
+  public string Text { get; set; }
+
+  private void OnSourceButtonClick()
+  {
+    var sourcePage = new Page().SetSource(Id);
+    ChangePage(sourcePage);
+
+  }
+}

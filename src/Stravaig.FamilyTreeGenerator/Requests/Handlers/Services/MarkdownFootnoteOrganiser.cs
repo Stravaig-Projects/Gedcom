@@ -7,7 +7,7 @@ using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 {
-    public class MarkdownFootnoteOrganiser : FootnoteOrganiser
+    public class MarkdownFootnoteOrganiser : StaticFootnoteOrganiser
     {
         private readonly IDateRenderer _dateRenderer;
         private readonly IFileNamer _fileNamer;
