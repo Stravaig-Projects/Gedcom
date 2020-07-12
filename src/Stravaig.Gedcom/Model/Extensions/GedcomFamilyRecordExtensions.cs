@@ -17,7 +17,7 @@ namespace Stravaig.Gedcom.Model.Extensions
         public static GedcomIndividualRecord OtherSpouse(this GedcomFamilyRecord family, GedcomIndividualRecord subject)
         {
             if (family.IsSpouse(subject))
-                return family.Spouses.First(s => s != subject);
+                return family.Spouses.FirstOrDefault(s => s != subject);
             return null;
         }
     }

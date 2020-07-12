@@ -113,7 +113,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 FromSubject(relative.Relative, dateRenderer);
                 RelationToSubject = relationshipRenderer.HumanReadable(relative.TypeOfRelationship, true);
                 var family = relative.Subject.SpouseToFamilies
-                    .First(f => f.OtherSpouse(relative.Subject) == relative.Relative);
+                    .FirstOrDefault(f => f.OtherSpouse(relative.Subject) == relative.Relative);
                 
                 var marriage = family?.Events
                     .FirstOrDefault(fe => fe.Tag == GedcomFamilyEventRecord.MarriageTag);
