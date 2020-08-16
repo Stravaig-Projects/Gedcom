@@ -4,7 +4,7 @@ using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom
 {
-    public struct GedcomPointer
+    public readonly struct GedcomPointer : IComparable<GedcomPointer>
     {
         private readonly string _value;
 
@@ -46,5 +46,10 @@ namespace Stravaig.Gedcom
 
         public static bool operator ==(GedcomPointer a, GedcomPointer b) => a._value == b._value;
         public static bool operator !=(GedcomPointer a, GedcomPointer b) => a._value != b._value;
+
+        public int CompareTo(GedcomPointer other)
+        {
+            return string.Compare(_value, other._value, StringComparison.Ordinal);
+        }
     }
 }

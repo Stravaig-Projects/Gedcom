@@ -178,6 +178,7 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="CommandLineOptions.cs" t="Include" />
         <e p="FileNamer.cs" t="Include" />
+        <e p="GedcomDatabaseExtensions.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">

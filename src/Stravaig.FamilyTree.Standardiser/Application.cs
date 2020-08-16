@@ -37,8 +37,8 @@ namespace Stravaig.FamilyTree.Standardiser
 
             using var fs = new FileStream(_options.DestinationFile, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
             using var writer = new StreamWriter(fs, Encoding.UTF8);
-            var orderedRecords = _database.Records;
-            for (int i = 0; i < orderedRecords.Count; i++)
+            var orderedRecords = _database.StandardisedTopLevelRecordOrder();
+            for (int i = 0; i < orderedRecords.Length; i++)
             {
                 var record = orderedRecords[i];
                 WriteTopLevelRecord(writer, record);
