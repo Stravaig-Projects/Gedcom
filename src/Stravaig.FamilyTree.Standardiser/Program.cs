@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,7 @@ namespace Stravaig.FamilyTree.Standardiser
             using var provider = BuildServiceProvider(options);
             _logger = provider.GetService<ILogger<Program>>();
             _logger.LogInformation("Application bootstrapping complete.");
+            provider.GetService<Application>().Run();
         }
         
         private static CommandLineOptions ExtractCommandLineInfo(string[] args)
@@ -49,6 +51,9 @@ namespace Stravaig.FamilyTree.Standardiser
                 CommandLineOptions opts = p.GetRequiredService<CommandLineOptions>();
                 return GetDatabase(opts.SourceFile);
             });
+            services.AddSingleton<FileNamer>();
+            services.AddSingleton<Func<DateTimeOffset>>(p => () => DateTimeOffset.Now);
+            services.AddSingleton<Application>();
         }
 
         private static void AddLoggingServices(ServiceCollection services)

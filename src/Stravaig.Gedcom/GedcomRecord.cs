@@ -41,6 +41,8 @@ namespace Stravaig.Gedcom
         public IReadOnlyList<GedcomRecord> Children => _children;
         public GedcomRecord Parent => _parent;
 
+        public GedcomLine Line => _line;
+
         public IReadOnlyList<GedcomRecord> SiblingsInclusive =>
             _parent?.Children
             ?? EmptyArray;

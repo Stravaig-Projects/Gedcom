@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stravaig.FamilyTree.Blazor"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.FamilyTree.Standardiser", "Stravaig.FamilyTree.Standardiser\Stravaig.FamilyTree.Standardiser.csproj", "{DB98E280-0598-41B5-B864-72385BD08519}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.FamilyTree.Standardiser.UnitTests", "Stravaig.FamilyTree.Standardiser.UnitTests\Stravaig.FamilyTree.Standardiser.UnitTests.csproj", "{376ADE5A-8203-4B50-A15E-9F33E703B36D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CB5236BE-06C2-4FF1-895C-634DDBF3413F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,11 +55,19 @@ Global
 		{DB98E280-0598-41B5-B864-72385BD08519}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB98E280-0598-41B5-B864-72385BD08519}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB98E280-0598-41B5-B864-72385BD08519}.Release|Any CPU.Build.0 = Release|Any CPU
+		{376ADE5A-8203-4B50-A15E-9F33E703B36D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{376ADE5A-8203-4B50-A15E-9F33E703B36D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{376ADE5A-8203-4B50-A15E-9F33E703B36D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{376ADE5A-8203-4B50-A15E-9F33E703B36D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {99D8657F-CCEC-4E60-A5ED-EE87F4581C27}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6561D63D-F21C-4621-A735-104FED4881CD} = {CB5236BE-06C2-4FF1-895C-634DDBF3413F}
+		{376ADE5A-8203-4B50-A15E-9F33E703B36D} = {CB5236BE-06C2-4FF1-895C-634DDBF3413F}
 	EndGlobalSection
 EndGlobal

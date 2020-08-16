@@ -177,6 +177,7 @@
         <e p="Application.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="CommandLineOptions.cs" t="Include" />
+        <e p="FileNamer.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
@@ -186,6 +187,18 @@
         </e>
         <e p="Program.cs" t="Include" />
         <e p="Stravaig.FamilyTree.Standardiser.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Stravaig.FamilyTree.Standardiser.UnitTests" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="FileNamerTests.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="Stravaig.FamilyTree.Standardiser.UnitTests.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Stravaig.FamilyTree.Standardiser.UnitTests.csproj" t="IncludeRecursive" />
       </e>
       <e p="Stravaig.FamilyTreeGenerator" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
@@ -432,10 +445,16 @@
         </e>
         <e p="Stravaig.Gedcom.UnitTests.csproj" t="IncludeRecursive" />
       </e>
+      <e p="Tests" t="Include" />
+    </e>
+    <e p="C:\Users\colin\.nuget\packages\microsoft.net.test.sdk\16.4.0\build\netcoreapp2.1" t="Include">
+      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
     </e>
     <e p="C:\Users\colin\.nuget\packages\microsoft.net.test.sdk\16.6.1\build\netcoreapp2.1" t="Include">
       <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
     </e>
+    <e p="C:\Users\colin\.nuget\packages\microsoft.testplatform.testhost\16.4.0\build\netcoreapp2.1\x64\testhost.dll" t="Include" />
+    <e p="C:\Users\colin\.nuget\packages\microsoft.testplatform.testhost\16.4.0\build\netcoreapp2.1\x64\testhost.exe" t="Include" />
     <e p="C:\Users\colin\.nuget\packages\microsoft.testplatform.testhost\16.6.1\build\netcoreapp2.1\x64\testhost.dll" t="Include" />
     <e p="C:\Users\colin\.nuget\packages\microsoft.testplatform.testhost\16.6.1\build\netcoreapp2.1\x64\testhost.exe" t="Include" />
     <e p="C:\Users\colin\.nuget\packages\nunit3testadapter\3.15.1\build\netcoreapp2.0\nunit.engine.api.dll" t="Include" />
@@ -446,7 +465,7 @@
     <e p="C:\Users\colin\.nuget\packages\nunit3testadapter\3.16.1\build\netcoreapp2.1\nunit.engine.dll" t="Include" />
     <e p="C:\Users\colin\.nuget\packages\nunit3testadapter\3.16.1\build\netcoreapp2.1\NUnit3.TestAdapter.dll" t="Include" />
     <e p="C:\Users\colin\.nuget\packages\nunit3testadapter\3.16.1\build\netcoreapp2.1\NUnit3.TestAdapter.pdb" t="Include" />
-    <e p="C:\Users\colin\AppData\local\JetBrains\Rider2020.1\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\colin\AppData\local\JetBrains\Rider2020.1\resharper-host\local\Transient\ReSharperHost\v201\SolutionCaches\_Gedcom.1334150498.00" t="ExcludeRecursive" />
+    <e p="C:\Users\colin\AppData\local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\colin\AppData\local\JetBrains\Rider2020.2\resharper-host\local\Transient\Rider\v202\SolutionCaches\_Gedcom.1334150498.00" t="ExcludeRecursive" />
   </component>
 </project>
