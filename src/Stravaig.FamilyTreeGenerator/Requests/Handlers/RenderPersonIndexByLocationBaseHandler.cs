@@ -39,7 +39,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                     writer.WriteLine("## _Unknown_");
                 writer.WriteLine();
                 var stateGroups =
-                    countryGroup.GroupBy(p => GetPlaceName(p)?.TakeWhile(l => l != countryGroup.Key).LastOrDefault());
+                    countryGroup.GroupBy(p => GetPlaceName(p)?.TakeWhile(l => l != countryGroup.Key).LastOrDefault())
+                        .OrderBy(g => g.Key);
 
                 foreach (var stateGroup in stateGroups)
                 {
@@ -50,7 +51,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                     }
 
                     var localeGroups = stateGroup
-                        .GroupBy(p => string.Join(", ", GetPlaceName(p)?.TakeWhile(l => l != stateGroup.Key) ?? Array.Empty<string>()));
+                        .GroupBy(p => string.Join(", ",
+                            GetPlaceName(p)?.TakeWhile(l => l != stateGroup.Key) ?? Array.Empty<string>()))
+                        .OrderBy(g => g.Key);
                     foreach (var localeGroup in localeGroups)
                     {
                         if (localeGroup.Key.HasContent())
