@@ -6,7 +6,7 @@ using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
-    public class RenderPersonIndexByBirthLocationHandler : RenderPersonIndexByLocationBaseHandler
+    public class RenderPersonIndexByBirthLocationHandler : RenderPersonIndexBySingleLocationBaseHandler
     {
         public RenderPersonIndexByBirthLocationHandler(
             ILogger<RenderPersonIndexByNameAsMarkdownHandler> logger,
