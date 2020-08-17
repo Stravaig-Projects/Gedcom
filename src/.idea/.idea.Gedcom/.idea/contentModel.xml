@@ -225,23 +225,26 @@
           <e p="Application.cs" t="Include" />
           <e p="Handlers" t="Include">
             <e p="ApplicationHandler.cs" t="Include" />
+            <e p="Glue" t="Include">
+              <e p="RenderMarriageIndexBaseHandler.cs" t="Include" />
+              <e p="RenderPersonAsJsonHandlerBase.cs" t="Include" />
+              <e p="RenderPersonIndexByMultipleLocationsBaseHandler.cs" t="Include" />
+              <e p="RenderPersonIndexBySingleLocationBaseHandler.cs" t="Include" />
+            </e>
             <e p="InitFileSystemForMarkdownHandler.cs" t="Include" />
             <e p="RenderIndividualAsMarkdownHandler.cs" t="Include" />
             <e p="RenderMarriageByDateIndexHandler.cs" t="Include" />
             <e p="RenderMarriageByNameIndexHandler.cs" t="Include" />
-            <e p="RenderMarriageIndexBaseHandler.cs" t="Include" />
             <e p="RenderPersonAncestorsAsJsonHandler.cs" t="Include" />
-            <e p="RenderPersonAsJsonHandlerBase.cs" t="Include" />
             <e p="RenderPersonDescendantsAsJsonHandler.cs" t="Include" />
             <e p="RenderPersonFamilyTreeAsJsonHandler.cs" t="Include" />
             <e p="RenderPersonIndexBaseHandler.cs" t="Include" />
             <e p="RenderPersonIndexByBirthLocationHandler.cs" t="Include" />
             <e p="RenderPersonIndexByDateOfBirthAsMarkdownHandler.cs" t="Include" />
             <e p="RenderPersonIndexByDeathLocationHandler.cs" t="Include" />
-            <e p="RenderPersonIndexByMultipleLocationsBaseHandler.cs" t="Include" />
             <e p="RenderPersonIndexByNameAsMarkdownHandler.cs" t="Include" />
             <e p="RenderPersonIndexByOccupationHandler.cs" t="Include" />
-            <e p="RenderPersonIndexBySingleLocationBaseHandler.cs" t="Include" />
+            <e p="RenderPersonIndexByResidenceLocationHandler.cs" t="Include" />
             <e p="RenderSourceAsMarkdownHandler.cs" t="Include" />
             <e p="RenderSourceIndexAsMarkdownHandler.cs" t="Include" />
             <e p="Services" t="Include">
