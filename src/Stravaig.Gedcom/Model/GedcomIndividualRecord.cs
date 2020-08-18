@@ -9,6 +9,7 @@ namespace Stravaig.Gedcom.Model
     {
         public static readonly GedcomTag Tag = "INDI".AsGedcomTag();
         public static readonly GedcomTag SexTag = "SEX".AsGedcomTag();
+        public static readonly GedcomTag RestrictionNoticeTag = "RESN".AsGedcomTag();
         public static readonly GedcomTag FamilySearchIdTag = "_FID".AsGedcomTag();
         
         private readonly Lazy<GedcomNameRecord[]> _lazyNames;
@@ -69,6 +70,10 @@ namespace Stravaig.Gedcom.Model
         // ReSharper disable once PossibleInvalidOperationException
         // Checked in the ctor.
         public GedcomPointer CrossReferenceId => _record.CrossReferenceId.Value;
+
+        public string RestrictionNotice => _record.Children
+            .FirstOrDefault(r => r.Tag == RestrictionNoticeTag)
+            ?.Value;
 
         public int AssumedDeathAge => _database.Settings.AssumedDeathAge;
         

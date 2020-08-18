@@ -48,14 +48,14 @@ namespace Stravaig.FamilyTree.Standardiser
         private void WriteTopLevelRecord(StreamWriter writer, GedcomRecord record)
         {
             writer.WriteLine(record.Line.ToString());
-            foreach(var child in record.Children)
+            foreach(var child in _database.OrderChildren(record))
                 WriteChildRecord(writer, child);
         }
 
         private void WriteChildRecord(StreamWriter writer, GedcomRecord record)
         {
             writer.WriteLine(record.Line.ToString());
-            foreach(var child in record.Children)
+            foreach (var child in _database.OrderChildren(record))
                 WriteChildRecord(writer, child);
         }
 

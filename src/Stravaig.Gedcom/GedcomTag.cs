@@ -3,7 +3,7 @@ using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom
 {
-    public struct GedcomTag
+    public readonly struct GedcomTag : IComparable<GedcomTag>
     {
         private const char Underscore = (char) 0x95;
         private readonly string _value;
@@ -48,5 +48,10 @@ namespace Stravaig.Gedcom
 
         public static bool operator ==(GedcomTag a, GedcomTag b) => a._value == b._value;
         public static bool operator !=(GedcomTag a, GedcomTag b) => a._value != b._value;
+
+        public int CompareTo(GedcomTag other)
+        {
+            return string.Compare(_value, other._value, StringComparison.Ordinal);
+        }
     }
 }

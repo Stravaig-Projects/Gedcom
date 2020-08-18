@@ -17,6 +17,8 @@ namespace Stravaig.Gedcom.Model
             _database = database ?? throw new ArgumentNullException(nameof(database));
         }
 
+        public GedcomRecord UnderlyingRecord => _record;
+
         protected GedcomDateRecord GetDateRecord()
         {
             var record = GetChild(GedcomDateRecord.DateTag);
