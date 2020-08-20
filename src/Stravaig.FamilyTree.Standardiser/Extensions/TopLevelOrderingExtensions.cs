@@ -1,13 +1,12 @@
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using Stravaig.Gedcom;
 using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model;
 
-namespace Stravaig.FamilyTree.Standardiser
+namespace Stravaig.FamilyTree.Standardiser.Extensions
 {
-    public static class ChildrenOrderingExtensions
+    public static class TopLevelOrderingExtensions
     {
         private static readonly GedcomTag ChangeTag = "CHAN".AsGedcomTag();
         private static readonly GedcomTag MultimediaTag = "OBJE".AsGedcomTag();
@@ -31,7 +30,10 @@ namespace Stravaig.FamilyTree.Standardiser
             if (restrictionNotice != null)
                 yield return restrictionNotice;
 
-            var names = records.Where(r => r.Tag == GedcomNameRecord.NameTag);
+            var names = person.Names
+                .OrderBy(n => n.Type)
+                .ThenBy(n => n.Name)
+                .Select(n => n.UnderlyingRecord);
             foreach (var name in names)
                 yield return name;
 
@@ -41,7 +43,7 @@ namespace Stravaig.FamilyTree.Standardiser
 
             var events = person.Events
                 .OrderBy(e => e.Date)
-                .ThenBy(e => e.Tag); //records.Where(r => GedcomIndividualEventRecord.EventTags.Contains(r.Tag));
+                .ThenBy(e => e.Tag);
             foreach (var @event in events)
                 yield return @event.UnderlyingRecord;
 
@@ -90,76 +92,19 @@ namespace Stravaig.FamilyTree.Standardiser
                 yield return changeDate;
 
             var notes = records.Where(r => r.Tag == GedcomNoteRecord.NoteTag)
-                .OrderBy(r => r.CrossReferenceId);
+                .OrderBy(r => r.Value);
             foreach (var note in notes)
                 yield return note;
             
             var sources = records.Where(r => r.Tag == GedcomSourceRecord.SourceTag)
-                .OrderBy(r => r.CrossReferenceId);
+                .OrderBy(r => r.Value);
             foreach (var source in sources)
                 yield return source;
 
             var multimedia = records.Where(r => r.Tag == MultimediaTag)
-                .OrderBy(r => r.CrossReferenceId);
+                .OrderBy(r => r.Value);
             foreach (var obj in multimedia)
                 yield return obj;
-        }
-    }
-    public static class GedcomDatabaseExtensions
-    {
-        private static readonly GedcomTag HeaderTag = "HEAD".AsGedcomTag();
-        private static readonly GedcomTag MultimediaTag = "OBJE".AsGedcomTag();
-        private static readonly GedcomTag SubmissionTag = "SUBM".AsGedcomTag();
-
-        public static GedcomRecord[] StandardisedTopLevelRecordOrder(this GedcomDatabase database)
-        {
-            return database.StandardisedTopLevelRecordOrderImpl().ToArray();
-        }
-        
-        private static IEnumerable<GedcomRecord> StandardisedTopLevelRecordOrderImpl(this GedcomDatabase database)
-        {
-            var records = database.Records;
-            yield return records.First(r => r.Tag == HeaderTag);
-
-            var submissionRecord = records.FirstOrDefault(r => r.Tag == SubmissionTag);
-            if (submissionRecord != null)
-                yield return submissionRecord;
-            
-            var orderedIndividualRecords = records
-                .Where(r => r.Tag == GedcomIndividualRecord.Tag)
-                .OrderBy(r => r.CrossReferenceId);
-            foreach (var record in orderedIndividualRecords)
-                yield return record;
-
-            var orderedFamilyRecords = records
-                .Where(r => r.Tag == GedcomFamilyRecord.FamilyTag)
-                .OrderBy(r => r.CrossReferenceId);
-            foreach (var record in orderedFamilyRecords)
-                yield return record;
-
-            var orderedNoteRecords = records
-                .Where(r => r.Tag == GedcomNoteRecord.NoteTag)
-                .OrderBy(r => r.CrossReferenceId);
-            foreach (var record in orderedNoteRecords)
-                yield return record;
-            
-            var orderedSourceRecords = records
-                .Where(r => r.Tag == GedcomSourceRecord.SourceTag)
-                .OrderBy(r => r.CrossReferenceId);
-            foreach (var record in orderedSourceRecords)
-                yield return record;
-            
-            var orderedMultimediaRecords = records
-                .Where(r => r.Tag == MultimediaTag)
-                .OrderBy(r => r.CrossReferenceId);
-            foreach (var record in orderedMultimediaRecords)
-                yield return record;
-
-            var orderedLabelRecords = records
-                .Where(r => r.Tag == GedcomLabelRecord.LabelTag)
-                .OrderBy(r => r.CrossReferenceId);
-            foreach (var record in orderedLabelRecords)
-                yield return record;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Stravaig.Gedcom.Model
             _lazyNames = new Lazy<GedcomNameRecord[]>(
                 () => _record.Children
                     .Where(r => r.Tag == GedcomNameRecord.NameTag)
-                    .Select(r => new GedcomNameRecord(r))
+                    .Select(r => new GedcomNameRecord(r, _database))
                     .ToArray());
 
             _lazyEvents = new Lazy<GedcomIndividualEventRecord[]>(

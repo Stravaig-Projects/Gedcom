@@ -4,15 +4,14 @@ using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.Model
 {
-    public class GedcomNameRecord
+    public class GedcomNameRecord : Record
     {
         public static readonly GedcomTag NameTag = "NAME".AsGedcomTag();
         public static readonly GedcomTag TypeTag = "TYPE".AsGedcomTag();
 
-        private readonly GedcomRecord _record;
-        public GedcomNameRecord(GedcomRecord record)
+        public GedcomNameRecord(GedcomRecord record, GedcomDatabase database) 
+            : base(record, database)
         {
-            _record = record ?? throw new ArgumentNullException(nameof(record));
             if (_record.Tag != NameTag)
                 throw new ArgumentException($"Expected a Name record but got \"{_record.Tag}\".");
         }

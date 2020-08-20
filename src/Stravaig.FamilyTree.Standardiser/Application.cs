@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using Stravaig.FamilyTree.Standardiser.Extensions;
 using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
 
@@ -48,7 +51,20 @@ namespace Stravaig.FamilyTree.Standardiser
         private void WriteTopLevelRecord(StreamWriter writer, GedcomRecord record)
         {
             writer.WriteLine(record.Line.ToString());
-            foreach(var child in _database.OrderChildren(record))
+            foreach (var child in _database.OrderChildren(record))
+            {
+                if (GedcomIndividualEventRecord.EventTags.Contains(child.Tag) || 
+                    GedcomIndividualAttributeRecord.AttributeTags.Contains(child.Tag))
+                    WriteEventChildren(writer, child);
+                else
+                    WriteChildRecord(writer, child);
+            }
+        }
+
+        private void WriteEventChildren(StreamWriter writer, GedcomRecord record)
+        {
+            writer.WriteLine(record.Line.ToString());
+            foreach (var child in record.OrderEventChildren())
                 WriteChildRecord(writer, child);
         }
 
