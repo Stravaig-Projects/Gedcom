@@ -20,7 +20,67 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
                 var person = database.IndividualRecords[pointer.Value];
                 return OrderRecordsForPerson(person);
             }
+            if (parentTag == GedcomFamilyRecord.FamilyTag && pointer.HasValue)
+            {
+                var family = database.FamilyRecords[pointer.Value];
+                return OrderRecordsForFamily(family);
+            }
             return topLevelRecord.Children;
+        }
+
+        private static IEnumerable<GedcomRecord> OrderRecordsForFamily(GedcomFamilyRecord family)
+        {
+            var records = family.UnderlyingRecord.Children;
+            var restrictionNotice = records.FirstOrDefault(r => r.Tag == GedcomIndividualRecord.RestrictionNoticeTag);
+            if (restrictionNotice != null)
+                yield return restrictionNotice;
+            
+            var events = family.Events
+                .OrderBy(e => e.Date)
+                .ThenBy(e => e.Tag);
+            foreach (var @event in events)
+                yield return @event.UnderlyingRecord;
+
+            var husband = records.FirstOrDefault(r => r.Tag == GedcomFamilyRecord.HusbandTag);
+            if (husband != null)
+                yield return husband;
+
+            var wife = records.FirstOrDefault(r => r.Tag == GedcomFamilyRecord.WifeTag);
+            if (wife != null)
+                yield return wife;
+
+            var children = records.Where(r => r.Tag == GedcomFamilyRecord.ChildTag);
+            foreach (var child in children)
+                yield return child;
+            
+            // TODO: Number of Children
+            
+            // TODO: LDS Submission
+            
+            // TODO: LDS Spouse sealing
+            
+            // TODO: REFN
+            
+            // TODO: RIN
+            
+            var changeDate = records.FirstOrDefault(r => r.Tag == ChangeTag);
+            if (changeDate != null)
+                yield return changeDate;
+
+            var notes = records.Where(r => r.Tag == GedcomNoteRecord.NoteTag)
+                .OrderBy(r => r.Value);
+            foreach (var note in notes)
+                yield return note;
+            
+            var sources = records.Where(r => r.Tag == GedcomSourceRecord.SourceTag)
+                .OrderBy(r => r.Value);
+            foreach (var source in sources)
+                yield return source;
+
+            var multimedia = records.Where(r => r.Tag == MultimediaTag)
+                .OrderBy(r => r.Value);
+            foreach (var obj in multimedia)
+                yield return obj;
         }
 
         private static IEnumerable<GedcomRecord> OrderRecordsForPerson(GedcomIndividualRecord person)
