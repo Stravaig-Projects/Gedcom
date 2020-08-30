@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Model;
 using Stravaig.Gedcom.Model.Extensions;
 
@@ -9,9 +10,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 {
     public abstract class TimelineMarkdownRendererBase
     {
+        protected readonly IDateRenderer _dateRenderer;
+
         protected TextWriter _writer;
         protected IStaticFootnoteOrganiser _footnoteOrganiser;
-        
+
         protected void WriteFootnoteLinks(IEnumerable<int> footnoteIds)
         {
             bool isFirst = true;
@@ -25,6 +28,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             }
         }
 
+        protected TimelineMarkdownRendererBase(IDateRenderer dateRenderer)
+        {
+            _dateRenderer = dateRenderer;
+        }
+        
         protected IEnumerable<int> GetSourceFootnotes(EventRecord eventRecord)
         {
             return eventRecord.Sources

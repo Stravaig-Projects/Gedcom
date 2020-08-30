@@ -13,7 +13,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 {
     public class TimelineMarkdownRenderer : TimelineMarkdownRendererBase, ITimelineRenderer
     {
-        private readonly IDateRenderer _dateRenderer;
         private readonly IRelationshipRenderer _relationshipRenderer;
         private readonly IFileNamer _fileNamer;
         private IAssociatesOrganiser _associatesOrganiser;
@@ -24,8 +23,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             IRelationshipRenderer relationshipRenderer,
             IIndividualNameRenderer nameRenderer,
             IFileNamer fileNamer)
+            : base(dateRenderer)
         {
-            _dateRenderer = dateRenderer;
             _relationshipRenderer = relationshipRenderer;
             _fileNamer = fileNamer;
             _nameRenderer = nameRenderer;
