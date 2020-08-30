@@ -26,6 +26,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private readonly IIndividualNameRenderer _nameRenderer;
         private readonly IFileNamer _fileNamer;
         private readonly IRelationshipRenderer _relationshipRenderer;
+        private readonly IResidenceRenderer _residenceRenderer;
         private FileStream _fs;
         private TextWriter _writer;
         private bool _hasSources;
@@ -38,6 +39,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             ITimelineRenderer timelineRenderer,
             IIndividualNameRenderer nameRenderer,
             IRelationshipRenderer relationshipRenderer,
+            IResidenceRenderer residenceRenderer,
             IFileNamer fileNamer)
         {
             _logger = logger;
@@ -48,6 +50,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _nameRenderer = nameRenderer;
             _fileNamer = fileNamer;
             _relationshipRenderer = relationshipRenderer;
+            _residenceRenderer = residenceRenderer;
             _hasSources = false;
         }
 
@@ -61,6 +64,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             WriteNames(command.Individual);
             WriteImmediateFamily(command.Individual);
             _timelineRenderer.WriteTimeline(_writer, command.Individual, _footnoteOrganiser, _associatesOrganiser);
+            _residenceRenderer.WriteResidence(_writer, command.Individual, _footnoteOrganiser);
             WriteNotes(command.Individual);
             WriteAssociations(command.Individual);
             _footnoteOrganiser.WriteFootnotes(_writer, command.Individual);

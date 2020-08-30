@@ -11,15 +11,13 @@ using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 {
-    public class TimelineMarkdownRenderer : ITimelineRenderer
+    public class TimelineMarkdownRenderer : TimelineMarkdownRendererBase, ITimelineRenderer
     {
         private readonly IDateRenderer _dateRenderer;
         private readonly IRelationshipRenderer _relationshipRenderer;
         private readonly IFileNamer _fileNamer;
-        private TextWriter _writer;
-        private IStaticFootnoteOrganiser _footnoteOrganiser;
         private IAssociatesOrganiser _associatesOrganiser;
-        private IIndividualNameRenderer _nameRenderer;
+        private readonly IIndividualNameRenderer _nameRenderer;
 
         public TimelineMarkdownRenderer(
             IDateRenderer dateRenderer,
@@ -95,41 +93,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             _writer.WriteLine();
         }
 
-        private void WriteFootnoteLinks(IEnumerable<int> footnoteIds)
-        {
-            bool isFirst = true;
-            foreach (int id in footnoteIds)
-            {
-                if (isFirst)
-                    isFirst = false;
-                else
-                    _writer.Write(", ");
-                _writer.Write($"[{id}](#{id})");
-            }
-        }
-
-        private IEnumerable<int> GetSourceFootnotes(EventRecord eventRecord)
-        {
-            return eventRecord.Sources
-                .OrderBy(s => s.Title)
-                .Select(s => _footnoteOrganiser.AddFootnote(s));
-        }
-
-        private IEnumerable<int> GetNoteFootnotes(EventRecord eventRecord)
-        {
-            var subjects = eventRecord switch
-            {
-                ISubject single => new[] {single.Subject},
-                ISubjects multiple => multiple.Subjects,
-                _ => Array.Empty<GedcomIndividualRecord>(),
-            };
-            if (subjects.Any(s => s.IsAlive()))
-                return Array.Empty<int>();
-            
-            return eventRecord.Notes
-                .OrderBy(n => n.Text)
-                .Select(n => _footnoteOrganiser.AddFootnote(n));
-        }
 
         private void WriteFamilyMemberTimelineEntry(TimelineEntry entry)
         {
@@ -371,7 +334,10 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             else if (tag == GedcomIndividualAttributeRecord.OccupationTag)
                 (item, description) = WriteOccupation(entry);
             else if (tag == GedcomIndividualAttributeRecord.ResidenceTag)
-                (item, description) = WriteResidence(entry);
+            {
+                // Do nothing, this is handled elsewhere
+                return;
+            }
             else if (tag == GedcomIndividualEventRecord.BaptismTag)
                 (item, description) = WriteBaptism(entry);
             else if (tag == GedcomIndividualEventRecord.ImmigrationTag)
@@ -433,22 +399,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             else if (entry.IndividualEvent?.Place != null)
                 description += " in " + entry.IndividualEvent.NormalisedPlaceName();
             return ("Baptism", description);
-        }
-
-        private (string, string) WriteResidence(TimelineEntry entry)
-        {
-            string description;
-            var attr = entry.IndividualAttribute;
-            if ((attr.Address?.Text).HasContent())
-                description = attr.Address.Text;
-            else if (attr.Text.HasContent())
-                description = attr.Text;
-            else if ((attr.Place?.Name).HasContent())
-                description = attr.NormalisedPlaceName();
-            else
-                description = "Unknown";
-
-            return ("Residence", description);
         }
 
         private (string, string) WriteOccupation(TimelineEntry entry)

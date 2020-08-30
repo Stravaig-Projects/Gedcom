@@ -256,11 +256,14 @@
               <e p="IAssociatesOrganiser.cs" t="Include" />
               <e p="IIndividualNameRenderer.cs" t="Include" />
               <e p="IndividualNameMarkdownRenderer.cs" t="Include" />
+              <e p="IResidenceRenderer.cs" t="Include" />
               <e p="IStaticFootnoteOrganiser.cs" t="Include" />
               <e p="ITimelineRenderer.cs" t="Include" />
               <e p="MarkdownFootnoteOrganiser.cs" t="Include" />
+              <e p="ResidenceMarkdownRenderer.cs" t="Include" />
               <e p="StaticFootnoteOrganiser.cs" t="Include" />
               <e p="TimelineMarkdownRenderer.cs" t="Include" />
+              <e p="TimelineMarkdownRendererBase.cs" t="Include" />
             </e>
           </e>
           <e p="InitFileSystem.cs" t="Include" />
