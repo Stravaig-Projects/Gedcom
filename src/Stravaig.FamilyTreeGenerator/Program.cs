@@ -103,6 +103,7 @@ namespace Stravaig.FamilyTreeGenerator
             services.AddTransient<ITimelineRenderer, TimelineMarkdownRenderer>();
             services.AddTransient<IRelationshipRenderer, EnglishLanguageRelationshipRenderer>();
             services.AddTransient<IResidenceRenderer, ResidenceMarkdownRenderer>();
+            services.AddTransient<IOccupationRenderer, OccupationMarkdownRenderer>();
 
             services.AddSingleton<CommandLineOptions>(options);
             services.AddSingleton<GedcomDatabase>(p=>

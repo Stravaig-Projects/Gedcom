@@ -330,9 +330,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteBirthEvent(entry);
             else if (tag == GedcomIndividualEventRecord.DeathTag)
                 (item, description) = WriteDeathEvent(entry);
-            else if (tag == GedcomIndividualAttributeRecord.OccupationTag)
-                (item, description) = WriteOccupation(entry);
-            else if (tag == GedcomIndividualAttributeRecord.ResidenceTag)
+            else if ((tag == GedcomIndividualAttributeRecord.ResidenceTag) || 
+                     (tag == GedcomIndividualAttributeRecord.OccupationTag))
             {
                 // Do nothing, this is handled elsewhere
                 return;
@@ -398,11 +397,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             else if (entry.IndividualEvent?.Place != null)
                 description += " in " + entry.IndividualEvent.NormalisedPlaceName();
             return ("Baptism", description);
-        }
-
-        private (string, string) WriteOccupation(TimelineEntry entry)
-        {
-            return ("Occupation", entry.IndividualAttribute.Text);
         }
 
         private (string, string) WriteDeathEvent(TimelineEntry entry)

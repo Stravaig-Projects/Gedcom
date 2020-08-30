@@ -253,13 +253,16 @@
             <e p="RenderSourceIndexAsMarkdownHandler.cs" t="Include" />
             <e p="Services" t="Include">
               <e p="AssociationsOrganiser.cs" t="Include" />
+              <e p="AttributeRendererBase.cs" t="Include" />
               <e p="IAssociatesOrganiser.cs" t="Include" />
               <e p="IIndividualNameRenderer.cs" t="Include" />
               <e p="IndividualNameMarkdownRenderer.cs" t="Include" />
+              <e p="IOccupationRenderer.cs" t="Include" />
               <e p="IResidenceRenderer.cs" t="Include" />
               <e p="IStaticFootnoteOrganiser.cs" t="Include" />
               <e p="ITimelineRenderer.cs" t="Include" />
               <e p="MarkdownFootnoteOrganiser.cs" t="Include" />
+              <e p="OccupationMarkdownRenderer.cs" t="Include" />
               <e p="ResidenceMarkdownRenderer.cs" t="Include" />
               <e p="StaticFootnoteOrganiser.cs" t="Include" />
               <e p="TimelineMarkdownRenderer.cs" t="Include" />
