@@ -10,13 +10,19 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
     {
         private static readonly GedcomTag ChangeTag = "CHAN".AsGedcomTag();
         private static readonly GedcomTag MultimediaTag = "OBJE".AsGedcomTag();
-        public static IEnumerable<GedcomRecord> OrderEventChildren(this GedcomRecord eventRecord)
+        public static IEnumerable<GedcomRecord> OrderIndividualEventChildren(this GedcomRecord eventRecord)
         {
             var age = eventRecord.Children.FirstOrDefault(r => r.Tag == GedcomIndividualEventRecord.AgeTag);
             if (age != null)
                 yield return age;
 
-            var type = eventRecord.Children.FirstOrDefault(r => r.Tag == GedcomIndividualEventRecord.TypeTag);
+            foreach (var gedcomRecord in OrderEventDetailRecords(eventRecord)) 
+                yield return gedcomRecord;
+        }
+
+        private static IEnumerable<GedcomRecord> OrderEventDetailRecords(GedcomRecord eventRecord)
+        {
+            var type = eventRecord.Children.FirstOrDefault(r => r.Tag == EventRecord.TypeTag);
             if (type != null)
                 yield return type;
 
@@ -31,14 +37,15 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
             var address = eventRecord.Children.FirstOrDefault(r => r.Tag == GedcomAddressRecord.AddressTag);
             if (address != null)
                 yield return address;
-            
+
             // TODO: Responsible Agency
-            
+
             // TODO: Religious Affiliation
-            
+
             // TODO: Cause of Event
-            
-            var restrictionNotice = eventRecord.Children.FirstOrDefault(r => r.Tag == GedcomIndividualRecord.RestrictionNoticeTag);
+
+            var restrictionNotice =
+                eventRecord.Children.FirstOrDefault(r => r.Tag == GedcomIndividualRecord.RestrictionNoticeTag);
             if (restrictionNotice != null)
                 yield return restrictionNotice;
 
@@ -56,7 +63,7 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
                 .OrderBy(r => r.Value);
             foreach (var link in multimediaLinks)
                 yield return link;
-            
+
             var childToFamily = eventRecord.Children.FirstOrDefault(r => r.Tag == GedcomFamilyLinkRecord.ChildToFamilyTag);
             if (childToFamily != null)
                 yield return childToFamily;
@@ -65,5 +72,20 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
             if (changeDate != null)
                 yield return changeDate;
         }
+
+        public static IEnumerable<GedcomRecord> OrderFamilyEventChildren(this GedcomRecord eventRecord)
+        {
+            var husband = eventRecord.Children.FirstOrDefault(r => r.Tag == GedcomFamilyRecord.HusbandTag);
+            if (husband != null)
+                yield return husband;
+
+            var wife = eventRecord.Children.FirstOrDefault(r => r.Tag == GedcomFamilyRecord.WifeTag);
+            if (wife != null)
+                yield return wife;
+
+            foreach (var gedcomRecord in OrderEventDetailRecords(eventRecord)) 
+                yield return gedcomRecord;
+        }
+
     }
 }

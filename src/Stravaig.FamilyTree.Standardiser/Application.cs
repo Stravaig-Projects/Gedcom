@@ -55,19 +55,27 @@ namespace Stravaig.FamilyTree.Standardiser
             {
                 if (GedcomIndividualEventRecord.EventTags.Contains(child.Tag) || 
                     GedcomIndividualAttributeRecord.AttributeTags.Contains(child.Tag))
-                    WriteEventChildren(writer, child);
+                    WriteIndividualEventChildren(writer, child);
+                else if (GedcomFamilyEventRecord.FamilyEventTags.Contains(child.Tag))
+                    WriteFamilyEventChildren(writer, child);
                 else
                     WriteChildRecord(writer, child);
             }
         }
 
-        private void WriteEventChildren(StreamWriter writer, GedcomRecord record)
+        private void WriteIndividualEventChildren(StreamWriter writer, GedcomRecord record)
         {
             writer.WriteLine(record.Line.ToString());
-            foreach (var child in record.OrderEventChildren())
+            foreach (var child in record.OrderIndividualEventChildren())
                 WriteChildRecord(writer, child);
         }
 
+        private void WriteFamilyEventChildren(StreamWriter writer, GedcomRecord record)
+        {
+            writer.WriteLine(record.Line.ToString());
+            foreach (var child in record.OrderFamilyEventChildren())
+                WriteChildRecord(writer, child);
+        }
         private void WriteChildRecord(StreamWriter writer, GedcomRecord record)
         {
             writer.WriteLine(record.Line.ToString());
