@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.FamilyTree.Standar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CB5236BE-06C2-4FF1-895C-634DDBF3413F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.Gedcom.PowerShell", "Stravaig.Gedcom.PowerShell\Stravaig.Gedcom.PowerShell.csproj", "{EB81C74C-8593-4760-9080-D34A562041EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{376ADE5A-8203-4B50-A15E-9F33E703B36D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{376ADE5A-8203-4B50-A15E-9F33E703B36D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{376ADE5A-8203-4B50-A15E-9F33E703B36D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB81C74C-8593-4760-9080-D34A562041EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB81C74C-8593-4760-9080-D34A562041EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB81C74C-8593-4760-9080-D34A562041EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB81C74C-8593-4760-9080-D34A562041EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
