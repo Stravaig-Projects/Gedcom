@@ -10,19 +10,19 @@ namespace Stravaig.Gedcom.PowerShell
     public class PSGedcomDatabase
     {
         private readonly GedcomDatabase _database;
-        private readonly Lazy<PSGedcomIndividualRecord[]> _individualRecords;
+        private readonly Lazy<PSGedcomIndividual[]> _individualRecords;
         
         public PSGedcomDatabase(GedcomDatabase database)
         {
             _database = database;
-            _individualRecords = new Lazy<PSGedcomIndividualRecord[]>(
+            _individualRecords = new Lazy<PSGedcomIndividual[]>(
                 () => _database.IndividualRecords
                     .Select(kvp => kvp.Value)
                     .OrderByStandardSort()
-                    .Select(ir => new PSGedcomIndividualRecord(ir))
+                    .Select(ir => new PSGedcomIndividual(ir))
                     .ToArray());
         }
 
-        public PSGedcomIndividualRecord[] Individuals => _individualRecords.Value;
+        public PSGedcomIndividual[] Individuals => _individualRecords.Value;
     }
 }

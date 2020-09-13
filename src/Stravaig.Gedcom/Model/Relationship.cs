@@ -2,21 +2,6 @@ using System;
 
 namespace Stravaig.Gedcom.Model
 {
-    public enum GenerationZeroRelationships
-    {
-        NotGenZero = 0,
-        Sibling,
-        Self,
-        Spouse,
-    }
-
-    public enum Direction
-    {
-        Ancestor = -1,
-        SameGeneration = 0,
-        Descendent = 1,
-    }
-    
     public readonly struct Relationship
     {
         public static readonly Relationship NotRelated = new Relationship(Model.Gender.Unknown, GenerationZeroRelationships.NotGenZero);
@@ -49,6 +34,9 @@ namespace Stravaig.Gedcom.Model
         public bool IsSibling => DirectedGenerationsRemoved == 0 && _generationZero == GenerationZeroRelationships.Sibling;
         public bool IsParent => DirectedGenerationsRemoved == -1;
         public bool IsChild => DirectedGenerationsRemoved == 1;
+        public bool IsAncestor => Direction == Direction.Ancestor;
+        public bool IsDescendant => Direction == Direction.Descendant;
+        public bool IsSameGeneration => Direction == Direction.SameGeneration;
         
         public Gender Gender { get; }
         public Qualification Qualification { get; }
@@ -59,7 +47,7 @@ namespace Stravaig.Gedcom.Model
             ? Direction.SameGeneration
             : DirectedGenerationsRemoved < 0
                 ? Direction.Ancestor
-                : Direction.Descendent;
+                : Direction.Descendant;
 
         public override int GetHashCode()
         {

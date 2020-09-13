@@ -47,7 +47,7 @@ namespace Stravaig.Gedcom.Model.Extensions
             if (child != null)
             {
                 Gender gender = child.Sex.ToGender();
-                return new Relationship(gender, 1, Direction.Descendent);
+                return new Relationship(gender, 1, Direction.Descendant);
             }
 
             return Relationship.NotRelated;
@@ -113,7 +113,7 @@ namespace Stravaig.Gedcom.Model.Extensions
                     foreach (var child in family.Children)
                     {
                         Qualification qualification = child.GetPedigree(subject) ?? Qualification.Unknown;
-                        yield return new ImmediateRelative(subject, child, new Relationship(child.Sex.ToGender(), 1, Direction.Descendent, qualification));
+                        yield return new ImmediateRelative(subject, child, new Relationship(child.Sex.ToGender(), 1, Direction.Descendant, qualification));
                     }
                 }
                 else if (link.Type == GedcomFamilyType.ChildToFamily)

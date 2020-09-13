@@ -330,6 +330,7 @@
             <e p="DateComparer.cs" t="Include" />
           </e>
           <e p="DateType.cs" t="Include" />
+          <e p="Direction.cs" t="Include" />
           <e p="EventRecord.cs" t="Include" />
           <e p="Extensions" t="Include">
             <e p="GedcomDatabaseExtensions.cs" t="Include" />
@@ -364,6 +365,7 @@
           <e p="GedcomTitleRecord.cs" t="Include" />
           <e p="GedcomUserReferenceNumberRecord.cs" t="Include" />
           <e p="Gender.cs" t="Include" />
+          <e p="GenerationZeroRelationships.cs" t="Include" />
           <e p="ImmediateRelative.cs" t="Include" />
           <e p="IPlace.cs" t="Include" />
           <e p="ISubject.cs" t="Include" />
@@ -397,6 +399,12 @@
         <e p="Commands" t="Include">
           <e p="GetGedcomDatabase.cs" t="Include" />
         </e>
+        <e p="Extensions" t="Include">
+          <e p="GedcomDateRecordExtensions.cs" t="Include" />
+          <e p="GedcomIndividualRecordExtension.cs" t="Include" />
+          <e p="GedcomNameRecordExtensions.cs" t="Include" />
+          <e p="ImmediateRelativeExtensions.cs" t="Include" />
+        </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netstandard2.0" t="Include">
@@ -405,7 +413,10 @@
           </e>
         </e>
         <e p="PSGedcomDatabase.cs" t="Include" />
-        <e p="PSGedcomIndividualRecord.cs" t="Include" />
+        <e p="PSGedcomDate.cs" t="Include" />
+        <e p="PSGedcomIndividual.cs" t="Include" />
+        <e p="PSGedcomName.cs" t="Include" />
+        <e p="PSImmediateRelative.cs" t="Include" />
         <e p="Stravaig.Gedcom.PowerShell.csproj" t="IncludeRecursive" />
       </e>
       <e p="Stravaig.Gedcom.UnitTests" t="IncludeRecursive">
