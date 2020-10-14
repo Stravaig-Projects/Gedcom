@@ -32,7 +32,7 @@ jobs:
     name: Build, Test, and Release
     runs-on: ubuntu-latest
     env:
-      STRAVAIG_SOLUTION: ./src/Stravaig.Gedcom.sln
+      STRAVAIG_SOLUTION: ./src/Gedcom.sln
       STRAVAIG_UNIT_TESTS: ./src/**.UnitTests
       STRAVAIG_PACKAGE_PROJECT: src/Stravaig.Gedcom/Stravaig.Gedcom.csproj
       
@@ -46,9 +46,13 @@ jobs:
 
     - name: Display workflow state
       run: |
+        echo "Solution: $STRAVAIG_SOLUTION"
+        echo "Unit tests: $STRAVAIG_UNIT_TESTS"
+        echo "Package project: $STRAVAIG_PACKAGE_PROJECT"
         echo "Package version: $STRAVAIG_PACKAGE_VERSION"
         echo "Version Suffix: $STRAVAIG_PACKAGE_VERSION_SUFFIX"
         echo "Publish To NuGet: $STRAVAIG_PUBLISH_TO_NUGET" 
+        echo "Solution: $STRAVAIG_SOLUTION"
      
     - uses: actions/setup-dotnet@v1
       name: Setup .NET Core
