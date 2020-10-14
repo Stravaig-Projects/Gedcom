@@ -1,63 +1,74 @@
 name: Build Stravaig.Gedcom
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - '.vscode/**'
+      - '.gitignore'
 
-jobs:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+    paths-ignore:
+      - 'README.md'
+      - '.vscode/**'
+      - '.gitignore'
+
+  workflow_dispatch:
+    inputs:
+      isPublic:
+        description: 'Is Public Release'
+        required: false
+        default: "false"
+      isPreview:
+        description: 'Is Preview Release'
+        required: false
+        default: "true"
+
+jobs:     
   build:
-
+    name: Build, Test, and Release
     runs-on: ubuntu-latest
-
+    env:
+      STRAVAIG_SOLUTION: ./src/Stravaig.Gedcom.sln
+      STRAVAIG_UNIT_TESTS: ./src/**.UnitTests
+      STRAVAIG_PACKAGE_PROJECT: src/Stravaig.Gedcom/Stravaig.Gedcom.csproj
+      
     steps:
     - uses: actions/checkout@v2
       name: Checking out the source code
-      
-    - name: Get Environment Info
-      run: env
 
+    - name: Set version number
+      shell: pwsh
+      run: ./Set-Version.ps1 -IsPublic "${{ github.event.inputs.isPublic }}" -IsPreview "${{ github.event.inputs.isPreview }}"
+
+    - name: Display workflow state
+      run: |
+        echo "Package version: $STRAVAIG_PACKAGE_VERSION"
+        echo "Version Suffix: $STRAVAIG_PACKAGE_VERSION_SUFFIX"
+        echo "Publish To NuGet: $STRAVAIG_PUBLISH_TO_NUGET" 
+     
     - uses: actions/setup-dotnet@v1
       name: Setup .NET Core
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 3.1.402
     
+    - name: Build Solution
+      run: dotnet build ${{ env.STRAVAIG_SOLUTION }} --configuration Release
+
     - name: Test solution
-      run: dotnet test src/Stravaig.Gedcom.UnitTests/Stravaig.Gedcom.UnitTests.csproj --configuration Release
+      run: dotnet test ${{ STRAVAIG_UNIT_TESTS }} --configuration Release
       
-    # - name: Create Preview Packages
-    #   run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --version-suffix preview --output prerelease-packages
-      
-    # - name: Upload prerelease artefacts
-    #   uses: actions/upload-artifact@1.0.0
-    #   with:
-    #     name: prerelease-packages
-    #     path: prerelease-packages
-      
-    # - name: Create Stable Packages
-    #   run: dotnet pack src/Stravaig.Gedcom/Stravaig.Gedcom.csproj --configuration Release --include-source --include-symbols --output stable-packages
+    - name: Package Preview Release
+      if: ${{ env.STRAVAIG_PACKAGE_VERSION_SUFFIX != '~' }}
+      run: dotnet pack ${{ STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" --version-suffix "$STRAVAIG_PACKAGE_VERSION_SUFFIX" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
-    # - name: Upload stable artefacts
-    #   uses: actions/upload-artifact@1.0.0
-    #   with:
-    #     name: stable-packages
-    #     path: stable-packages
+    - name: Package Stable Release
+      if: ${{ env.STRAVAIG_PACKAGE_VERSION_SUFFIX == '~' }}
+      run: dotnet pack ${{ STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
-  # deploy-prerelease:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Download artefacts
-  #     uses: actions/download-artifact@v1
-  #     with:
-  #       name: prerelease-packages
-  #       path: .
-
-  #   - name: List Artefacts
-  #     run: ls -a -r
-      
-  #   - name: Publish nuget
-  #     run: |
-  #          for f in ./*-preview.nupkg
-  #          do
-  #            echo "Publishing package @$f"
-  #            curl -X PUT -u "Stravaig-Projects:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/Stravaig-Projects/
-  #          done
-  #     shell: bash
+    - name: Push package to NuGet
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
+      run: dotnet nuget push ./out/*.nupkg --api-key ${{ secrets.STRAVAIG_NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
