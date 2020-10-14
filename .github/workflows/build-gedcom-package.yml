@@ -59,15 +59,15 @@ jobs:
       run: dotnet build ${{ env.STRAVAIG_SOLUTION }} --configuration Release
 
     - name: Test solution
-      run: dotnet test ${{ STRAVAIG_UNIT_TESTS }} --configuration Release
+      run: dotnet test ${{ env.STRAVAIG_UNIT_TESTS }} --configuration Release
       
     - name: Package Preview Release
       if: ${{ env.STRAVAIG_PACKAGE_VERSION_SUFFIX != '~' }}
-      run: dotnet pack ${{ STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" --version-suffix "$STRAVAIG_PACKAGE_VERSION_SUFFIX" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack ${{ env.STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" --version-suffix "$STRAVAIG_PACKAGE_VERSION_SUFFIX" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Package Stable Release
       if: ${{ env.STRAVAIG_PACKAGE_VERSION_SUFFIX == '~' }}
-      run: dotnet pack ${{ STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack ${{ env.STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Push package to NuGet
       if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
