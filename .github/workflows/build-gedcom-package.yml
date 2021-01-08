@@ -46,7 +46,7 @@ jobs:
     env:
       STRAVAIG_SOLUTION: ./src/Gedcom.sln
       STRAVAIG_UNIT_TESTS: ./src/Stravaig.Gedcom.UnitTests
-      STRAVAIG_PACKAGE_PROJECT: src/Stravaig.Gedcom/Stravaig.Gedcom.csproj
+      STRAVAIG_PROJECT: Stravaig.Gedcom
       
     steps:
     - uses: actions/checkout@v2
@@ -58,13 +58,15 @@ jobs:
 
     - name: Display workflow state
       run: |
-        echo "Solution: $STRAVAIG_SOLUTION"
-        echo "Unit tests: $STRAVAIG_UNIT_TESTS"
-        echo "Package project: $STRAVAIG_PACKAGE_PROJECT"
-        echo "Package version: $STRAVAIG_PACKAGE_VERSION"
-        echo "Version Suffix: $STRAVAIG_PACKAGE_VERSION_SUFFIX"
-        echo "Publish To NuGet: $STRAVAIG_PUBLISH_TO_NUGET" 
-        echo "Solution: $STRAVAIG_SOLUTION"
+          echo "STRAVAIG_SOLUTION: $STRAVAIG_SOLUTION"
+          echo "STRAVAIG_PROJECT: $STRAVAIG_PROJECT"
+          echo "STRAVAIG_TESTS: $STRAVAIG_TESTS"
+          echo "STRAVAIG_PACKAGE_VERSION: $STRAVAIG_PACKAGE_VERSION"
+          echo "STRAVAIG_PACKAGE_VERSION_SUFFIX: $STRAVAIG_PACKAGE_VERSION_SUFFIX"
+          echo "STRAVAIG_PACKAGE_FULL_VERSION: $STRAVAIG_PACKAGE_FULL_VERSION"
+          echo "STRAVAIG_PUBLISH_TO_NUGET: $STRAVAIG_PUBLISH_TO_NUGET"
+          echo "STRAVAIG_IS_PREVIEW: $STRAVAIG_IS_PREVIEW"
+          echo "STRAVAIG_IS_STABLE: $STRAVAIG_IS_STABLE"
      
     - uses: actions/setup-dotnet@v1
       name: Setup .NET Core
@@ -78,12 +80,12 @@ jobs:
       run: dotnet test ${{ env.STRAVAIG_UNIT_TESTS }} --configuration Release
       
     - name: Package Preview Release
-      if: ${{ env.STRAVAIG_PACKAGE_VERSION_SUFFIX != '~' }}
-      run: dotnet pack ${{ env.STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" --version-suffix "$STRAVAIG_PACKAGE_VERSION_SUFFIX" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      if: ${{ env.STRAVAIG_IS_PREVIEW == 'true' }}
+      run: dotnet pack ./src/$STRAVAIG_PROJECT/$STRAVAIG_PROJECT.csproj --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" --version-suffix "$STRAVAIG_PACKAGE_VERSION_SUFFIX" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Package Stable Release
-      if: ${{ env.STRAVAIG_PACKAGE_VERSION_SUFFIX == '~' }}
-      run: dotnet pack ${{ env.STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      if: ${{ env.STRAVAIG_IS_STABLE == 'true' }}
+      run: dotnet pack ./src/$STRAVAIG_PROJECT/$STRAVAIG_PROJECT.csproj --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Push package to NuGet
       if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
