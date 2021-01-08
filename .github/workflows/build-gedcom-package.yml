@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - '#60-bring-this-repo-in-line-with-others'
     paths-ignore:
       - 'README.md'
       - 'Example/**'
