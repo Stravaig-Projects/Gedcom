@@ -1,4 +1,4 @@
-name: Build Stravaig.Gedcom
+name: Build, Test & Release Stravaig.Gedcom
 
 on:
   push:
