@@ -4,7 +4,7 @@ namespace Stravaig.Gedcom.Model
 {
     public readonly struct Relationship
     {
-        public static readonly Relationship NotRelated = new Relationship(Model.Gender.Unknown, GenerationZeroRelationships.NotGenZero);
+        public static readonly Relationship NotRelated = new Relationship(Gender.Unknown, GenerationZeroRelationships.NotGenZero);
         private readonly GenerationZeroRelationships _generationZero;
         
         public Relationship(Gender gender, int directedGenerationsRemoved, Qualification qualification = Qualification.Biological)

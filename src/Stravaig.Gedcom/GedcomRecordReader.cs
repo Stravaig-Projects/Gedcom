@@ -6,7 +6,7 @@ namespace Stravaig.Gedcom
     {
         private readonly GedcomLineReader _reader;
         private int _lineNumber;
-        private GedcomLine _peekedLine = null;
+        private GedcomLine _peekedLine;
         public GedcomRecordReader(GedcomLineReader reader)
         {
             _reader = reader;

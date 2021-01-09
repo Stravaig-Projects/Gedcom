@@ -9,7 +9,7 @@ namespace Stravaig.Gedcom
         private readonly GedcomLineParser _parser;
         private readonly TextReader _reader;
         private int _lineNumber;
-        private bool _isAtEnd = false;
+        private bool _isAtEnd;
 
         public GedcomLineReader(TextReader reader)
         {

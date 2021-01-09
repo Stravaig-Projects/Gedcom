@@ -1,4 +1,3 @@
-using System;
 using Stravaig.Gedcom.Model;
 
 namespace Stravaig.Gedcom.Extensions
@@ -6,7 +5,6 @@ namespace Stravaig.Gedcom.Extensions
     public static class StringExtensions
     {
         private const char PointerBookend = (char) 0x40; // @ symbol.
-        private const char Zero = (char) 0x30; // number 0.
         
         /// <summary>
         /// Determines if the target string is a valid pointer identifier.

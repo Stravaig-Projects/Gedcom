@@ -160,7 +160,7 @@ namespace Stravaig.Gedcom.Extensions
         ///   where, respectively:
         ///   (0x21)-(0x22)=! "
         ///   (0x24)-(0x2F)=$ % & ' ( ) * + , - . /
-        ///   (0x3A)-(0x3F)=: ; < = > ?
+        ///   (0x3A)-(0x3F)=: ; &lt; = > ?
         ///   (0x5B)-(0x5E)=[ \ ] ^
         ///   (0x60)=`
         ///   (0x7B)-(0x7E)={ | } ~

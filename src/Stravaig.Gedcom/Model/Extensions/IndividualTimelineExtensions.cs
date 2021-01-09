@@ -44,15 +44,7 @@ namespace Stravaig.Gedcom.Model.Extensions
             var deathDate = subject.DeathEvent?.Date;
             return te.Date.IsBetween(birthDate, deathDate);
         }
-
-        private static IEnumerable<TimelineEntry> GetBirthAndDeathOnly(GedcomIndividualRecord subject)
-        {
-            if (subject.BirthEvent != null)
-                yield return new TimelineEntry(subject, subject.BirthEvent);
-            if (subject.DeathEvent != null)
-                yield return new TimelineEntry(subject, subject.DeathEvent);
-        }
-
+        
         private static IEnumerable<TimelineEntry> GetAllEvents(GedcomIndividualRecord subject)
         {
             HashSet<GedcomPointer> individualsYielded = new HashSet<GedcomPointer>();

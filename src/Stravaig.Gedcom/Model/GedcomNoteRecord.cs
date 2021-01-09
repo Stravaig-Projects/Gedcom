@@ -23,15 +23,11 @@ namespace Stravaig.Gedcom.Model
     {
         public static readonly GedcomTag NoteTag = "NOTE".AsGedcomTag();
 
-        private readonly Lazy<string> _noteText;
-
         public GedcomNoteRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
         {
             if (record.Tag != NoteTag)
                 throw new ArgumentException("Expected a \"NOTE\" record.", nameof(record));
-
-            _noteText = new Lazy<string>(GetText);
         }
 
         public GedcomPointer? CrossReferenceId => _record.CrossReferenceId;
