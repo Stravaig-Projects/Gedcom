@@ -1,8 +1,7 @@
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Stravaig.FamilyTree.Common.Extensions;
-using Stravaig.FamilyTreeGenerator.Extensions;
-using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
+using Stravaig.FamilyTree.Common.Humaniser;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Model;
 using Stravaig.Gedcom.Model.Extensions;
@@ -13,6 +12,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
     {
         private class PersonModel
         {
+            // ReSharper disable UnusedAutoPropertyAccessor.Local
+            // Used by JSON Serialiser
             public string Id { get; set; }
             public string Name { get; set; }
             public string Gender { get; set; }
@@ -20,6 +21,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             public string DateOfBirth { get; set; }
             public string DateOfDeath { get; set; }
             public PersonModel[] Parents { get; set; }
+            // ReSharper restore UnusedAutoPropertyAccessor.Local
         }
         
         private readonly IRelationshipRenderer _relationshipRenderer;

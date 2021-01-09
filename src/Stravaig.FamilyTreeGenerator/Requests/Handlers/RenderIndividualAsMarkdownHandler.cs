@@ -7,6 +7,7 @@ using Humanizer;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
 using Stravaig.FamilyTree.Common.Extensions;
+using Stravaig.FamilyTree.Common.Humaniser;
 using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
@@ -16,10 +17,11 @@ using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
+    // Instantiated by Paramore Brighter
     public class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual>, IDisposable
     {
         private readonly ILogger<RenderIndividualAsMarkdownHandler> _logger;
-        private readonly IDateRenderer _dateRenderer;
         private readonly IStaticFootnoteOrganiser _footnoteOrganiser;
         private readonly IAssociatesOrganiser _associatesOrganiser;
         private readonly ITimelineRenderer _timelineRenderer;
@@ -33,7 +35,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         
         public RenderIndividualAsMarkdownHandler(
             ILogger<RenderIndividualAsMarkdownHandler> logger,
-            IDateRenderer dateRenderer,
             IStaticFootnoteOrganiser footnoteOrganiser,
             IAssociatesOrganiser associatesOrganiser,
             ITimelineRenderer timelineRenderer,
@@ -44,7 +45,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             IFileNamer fileNamer)
         {
             _logger = logger;
-            _dateRenderer = dateRenderer;
             _footnoteOrganiser = footnoteOrganiser;
             _associatesOrganiser = associatesOrganiser;
             _timelineRenderer = timelineRenderer;

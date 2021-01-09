@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Stravaig.Gedcom.Extensions;
@@ -11,7 +10,7 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
 {
     public static class StringExtensions
     {
-        private const char ellipsis = (char) 0x2026; // …
+        private const char Ellipsis = (char) 0x2026; // …
         public static string MakeFileNameSafe(this string target)
         {
             if (target == null)
@@ -36,7 +35,7 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
                 result = result.Replace("--", "-");
             } while (result.Length < len);
             if (len > 100)
-                result = result.Substring(0, 99) + ellipsis;
+                result = result.Substring(0, 99) + Ellipsis;
             return result;
         }
         

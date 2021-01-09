@@ -284,6 +284,7 @@
           <e p="FileNamer.cs" t="Include" />
         </e>
         <e p="Stravaig.FamilyTreeGenerator.csproj" t="IncludeRecursive" />
+        <e p="Stravaig.FamilyTreeGenerator.csproj.DotSettings" t="Include" />
       </e>
       <e p="Stravaig.FamilyTreeGenerator.Tests" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />

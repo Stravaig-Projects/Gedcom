@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Stravaig.FamilyTree.Blazor.Services;
-using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
+using Stravaig.FamilyTree.Common.Humaniser;
 
 namespace Stravaig.FamilyTree.Blazor
 {

@@ -1,6 +1,6 @@
 using Stravaig.Gedcom.Model;
 
-namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
+namespace Stravaig.FamilyTree.Common.Humaniser
 {
     public interface IRelationshipRenderer
     {

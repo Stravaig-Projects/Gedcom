@@ -84,7 +84,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             if (entry.Event.Place != null)
             {
                 writer.Write(" at ");
-                writer.Write(GedcomPlaceRecordExtensions.NormalisedPlaceName((IPlace) entry.Event));
+                writer.Write(entry.Event.NormalisedPlaceName());
             }
 
             writer.WriteLine(".");

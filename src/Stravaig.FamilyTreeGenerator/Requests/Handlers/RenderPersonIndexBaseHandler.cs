@@ -1,9 +1,7 @@
 using System.IO;
 using System.Text;
-using System.Threading;
 using Humanizer;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
 using Paramore.Brighter;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Model;

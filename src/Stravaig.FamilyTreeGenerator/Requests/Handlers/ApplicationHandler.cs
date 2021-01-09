@@ -12,24 +12,19 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
     public class ApplicationHandler : RequestHandler<Application>
     {
-
         private readonly ILogger<ApplicationHandler> _logger;
         private readonly GedcomDatabase _database;
-        private readonly CommandLineOptions _options;
         private readonly IAmACommandProcessor _commander;
         private readonly Dictionary<GedcomPointer, SourceEntry> _sources;
-        
-        
+
         public ApplicationHandler(
             ILogger<ApplicationHandler> logger,
             IAmACommandProcessor commander,
-            GedcomDatabase database,
-            CommandLineOptions options)
+            GedcomDatabase database)
         {
             _logger = logger;
             _commander = commander;
             _database = database;
-            _options = options;
             _sources = new Dictionary<GedcomPointer, SourceEntry>();
         }
 
