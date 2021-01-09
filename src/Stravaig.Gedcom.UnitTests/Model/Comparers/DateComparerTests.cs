@@ -42,7 +42,6 @@ namespace Stravaig.Gedcom.UnitTests.Model.Comparers
         [Test]
         public void XIsIncoherentYIsNot_Returns_XIsLessThanY()
         {
-            var x = GetGedcomDate("(Today)");
             var y = GetGedcomDate("09 APR 2020");
             DateComparer.CompareDate(null, y).ShouldBe(Order.XIsLessThanY);
         }
@@ -58,7 +57,6 @@ namespace Stravaig.Gedcom.UnitTests.Model.Comparers
         public void XIsNotNullYIsIncoherent_Returns_XIsGreaterThanY()
         {
             var x = GetGedcomDate("09 APR 2020");
-            var y = GetGedcomDate("(Today)");
             DateComparer.CompareDate(x, null).ShouldBe(Order.XIsGreaterThanY);
         }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Stravaig.FamilyTree.Common.Extensions;

@@ -1,7 +1,6 @@
 using System;
 using NUnit.Framework;
 using Shouldly;
-using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.UnitTests
 {

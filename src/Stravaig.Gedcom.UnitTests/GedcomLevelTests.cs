@@ -15,14 +15,14 @@ namespace Stravaig.Gedcom.UnitTests
         [TestCaseSource(nameof(ValidLevels))]
         public void ctor_ValidValues_CreateLevelObject(int value)
         {
-            GedcomLevel level = new GedcomLevel(value);
+            _ = new GedcomLevel(value);
         }
 
         [Test]
         [TestCaseSource(nameof(ValidLevelStrings))]
         public void ctor_ValidStringValues_CreateLevelObject(string value)
         {
-            GedcomLevel level = new GedcomLevel(value);
+            _ = new GedcomLevel(value);
         }
         
         [Test]
@@ -207,20 +207,20 @@ namespace Stravaig.Gedcom.UnitTests
         private static IEnumerable<GedcomLevel[]> InvalidSubordinateLevels()
         {
             for (int i = 0; i <= 99; i++)
-                yield return new GedcomLevel[] {i.AsGedcomLevel() , i.AsGedcomLevel()};
+                yield return new [] {i.AsGedcomLevel() , i.AsGedcomLevel()};
             for (int i = 0; i <= 98; i++)
-                yield return new GedcomLevel[] {(i + 1).AsGedcomLevel() , i.AsGedcomLevel()};
+                yield return new [] {(i + 1).AsGedcomLevel() , i.AsGedcomLevel()};
         }
         private static IEnumerable<GedcomLevel[]> ValidSubordinateLevels()
         {
             for (int i = 0; i <= 98; i++)
-                yield return new GedcomLevel[] {i.AsGedcomLevel(), (i + 1).AsGedcomLevel()};
+                yield return new [] {i.AsGedcomLevel(), (i + 1).AsGedcomLevel()};
         }
         
         private static IEnumerable<GedcomLevel[]> ValidNextLineLevelMaxValues()
         {
             for (int i = 0; i <= 98; i++)
-                yield return new GedcomLevel[] {i.AsGedcomLevel(), (i + 1).AsGedcomLevel()};
+                yield return new [] {i.AsGedcomLevel(), (i + 1).AsGedcomLevel()};
         }
         
         private static IEnumerable<int> ValidLevels()
