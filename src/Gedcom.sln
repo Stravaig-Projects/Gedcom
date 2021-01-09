@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stravaig.FamilyTreeGenerato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stravaig.FamilyTree.Common", "Stravaig.FamilyTree.Common\Stravaig.FamilyTree.Common.csproj", "{80CCDAB9-284D-44F9-8A9F-69F916C34E58}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stravaig.FamilyTree.Blazor", "Stravaig.FamilyTree.Blazor\Stravaig.FamilyTree.Blazor.csproj", "{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.FamilyTree.Standardiser", "Stravaig.FamilyTree.Standardiser\Stravaig.FamilyTree.Standardiser.csproj", "{DB98E280-0598-41B5-B864-72385BD08519}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.FamilyTree.Standardiser.UnitTests", "Stravaig.FamilyTree.Standardiser.UnitTests\Stravaig.FamilyTree.Standardiser.UnitTests.csproj", "{376ADE5A-8203-4B50-A15E-9F33E703B36D}"
@@ -22,6 +20,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CB5236BE-06C2-4FF1-895C-634DDBF3413F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.Gedcom.PowerShell", "Stravaig.Gedcom.PowerShell\Stravaig.Gedcom.PowerShell.csproj", "{EB81C74C-8593-4760-9080-D34A562041EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__Build_and_Deploy", "__Build_and_Deploy", "{51FEE412-DC7C-4B18-9357-D9CB4BA80449}"
+ProjectSection(SolutionItems) = preProject
+	..\.github\workflows\build-gedcom-package.yml = ..\.github\workflows\build-gedcom-package.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__Documentation", "__Documentation", "{FE3C1BE4-99FF-4487-B6CF-71E5F30E936B}"
+ProjectSection(SolutionItems) = preProject
+	..\release-notes\full-release-notes.md = ..\release-notes\full-release-notes.md
+	..\release-notes\wip-release-notes.md = ..\release-notes\wip-release-notes.md
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +58,6 @@ Global
 		{80CCDAB9-284D-44F9-8A9F-69F916C34E58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80CCDAB9-284D-44F9-8A9F-69F916C34E58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80CCDAB9-284D-44F9-8A9F-69F916C34E58}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91F859EF-8954-4602-8FBB-D8DAB7A22AA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB98E280-0598-41B5-B864-72385BD08519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DB98E280-0598-41B5-B864-72385BD08519}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB98E280-0598-41B5-B864-72385BD08519}.Release|Any CPU.ActiveCfg = Release|Any CPU

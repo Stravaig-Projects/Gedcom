@@ -1,14 +1,10 @@
 using System;
 using System.Net.Http;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Stravaig.FamilyTree.Blazor.Services;
-using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
+using Stravaig.FamilyTree.Common.Humaniser;
 
 namespace Stravaig.FamilyTree.Blazor
 {

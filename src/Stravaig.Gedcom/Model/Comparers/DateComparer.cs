@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Stravaig.Gedcom.Constants;
 using Stravaig.Gedcom.Settings;
 

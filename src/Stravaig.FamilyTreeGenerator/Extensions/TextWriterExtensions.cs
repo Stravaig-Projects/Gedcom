@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.IO.Compression;
 using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Extensions

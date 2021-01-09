@@ -1,5 +1,4 @@
 using System;
-using System.Data.Common;
 using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom

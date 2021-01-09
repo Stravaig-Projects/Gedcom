@@ -16,7 +16,7 @@ namespace Stravaig.Gedcom.UnitTests
         public void EnsureThatUnderlyingReaderIsClosedOnDispose()
         {
             using StringReader stringReader = new StringReader(string.Empty);
-            using (GedcomLineReader gedcomReader = new GedcomLineReader(stringReader))
+            using (new GedcomLineReader(stringReader))
             {
                 // Do nothing here. Just going to dispose directly.
             }
@@ -120,7 +120,7 @@ namespace Stravaig.Gedcom.UnitTests
             while (gedcomReader.IsAtEnd == false)
             {
                 // Run to the end of the file.
-                GedcomLine result = await ReadMaybeAsync(gedcomReader, type);
+                await ReadMaybeAsync(gedcomReader, type);
             }
 
             int lineNumber = gedcomReader.LineNumber;

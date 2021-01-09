@@ -3,6 +3,8 @@ using Stravaig.Gedcom.Model;
 
 namespace Stravaig.Gedcom.PowerShell
 {
+    // ReSharper disable once InconsistentNaming
+    // This is the PowerShell standard naming.
     public class PSGedcomDate
     {
         private readonly GedcomDateRecord _date;

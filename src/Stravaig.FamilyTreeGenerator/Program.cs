@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using CommandLine;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +8,7 @@ using Paramore.Brighter;
 using Paramore.Brighter.Extensions.DependencyInjection;
 using Paramore.Brighter.Policies.Handlers;
 using Polly;
-using Polly.Registry;
+using Stravaig.FamilyTree.Common.Humaniser;
 using Stravaig.FamilyTreeGenerator.Requests;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
@@ -105,8 +104,8 @@ namespace Stravaig.FamilyTreeGenerator
             services.AddTransient<IResidenceRenderer, ResidenceMarkdownRenderer>();
             services.AddTransient<IOccupationRenderer, OccupationMarkdownRenderer>();
 
-            services.AddSingleton<CommandLineOptions>(options);
-            services.AddSingleton<GedcomDatabase>(p=>
+            services.AddSingleton(options);
+            services.AddSingleton(p=>
             {
                 CommandLineOptions opts = p.GetRequiredService<CommandLineOptions>();
                 return GetDatabase(opts.SourceFile);

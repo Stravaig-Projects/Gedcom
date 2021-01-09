@@ -2,7 +2,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Stravaig.FamilyTree.Common.Extensions;
-using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Requests.Handlers.Services;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Model;

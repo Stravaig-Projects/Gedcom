@@ -31,7 +31,7 @@ namespace Stravaig.FamilyTree.Standardiser
             set
             {
                 var absolutePath = Path.GetFullPath(value);
-                _destinationFile = value;
+                _destinationFile = absolutePath;
             }
         }
     }

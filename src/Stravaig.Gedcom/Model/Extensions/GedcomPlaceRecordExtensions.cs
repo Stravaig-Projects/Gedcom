@@ -1,5 +1,3 @@
-using System.Net.NetworkInformation;
-
 namespace Stravaig.Gedcom.Model.Extensions
 {
     public static class GedcomPlaceRecordExtensions

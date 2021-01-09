@@ -127,26 +127,40 @@ namespace Stravaig.Gedcom.Model.Parsers
 {
     public class DateParser
     {
-        private const string SymbolAbout = "ABT";
-        private const string SymbolAboutAlt = "ABOUT";
-        private const string SymbolAfter = "AFT";
-        private const string SymbolAfterAlt = "AFTER";
-        private const string SymbolAnd = "AND";
-        private const string SymbolBefore = "BEF";
-        private const string SymbolBeforeAlt = "BEFORE";
-        private const string SymbolBetween = "BET";
-        private const string SymbolBetweenAlt = "BETWEEN";
-        private const string SymbolCalculated = "CAL";
-        private const string SymbolEstimated = "EST";
-        private const string SymbolFrom = "FROM";
-        private const string SymbolInterpreted = "INT";
-        private const string SymbolTo = "TO";
+        static class Symbol
+        {
+            public const string About = "ABT";
+            public const string AboutAlt = "ABOUT";
+            public const string After = "AFT";
+            public const string AfterAlt = "AFTER";
+            public const string And = "AND";
+            public const string Before = "BEF";
+            public const string BeforeAlt = "BEFORE";
+            public const string Between = "BET";
+            public const string BetweenAlt = "BETWEEN";
+            public const string Calculated = "CAL";
+            public const string Estimated = "EST";
+            public const string From = "FROM";
+            public const string Interpreted = "INT";
+            public const string To = "TO";
+        }
 
-        private static readonly string[] MonthNames = new[]
+        private static readonly string[] MonthNames =
         {
             // THE GEDCOM STANDARD-release-5.5.1.pdf
             // P52/53
-            "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+            "JAN",
+            "FEB",
+            "MAR",
+            "APR",
+            "MAY",
+            "JUN",
+            "JUL",
+            "AUG",
+            "SEP",
+            "OCT",
+            "NOV",
+            "DEC"
         };
 
         private enum State
@@ -247,25 +261,25 @@ namespace Stravaig.Gedcom.Model.Parsers
                 return;
             }
 
-            if (IsCurrentTokenOneOf(SymbolFrom, SymbolTo))
+            if (IsCurrentTokenOneOf(Symbol.From, Symbol.To))
             {
                 ParseDatePeriod();
                 return;
             }
 
-            if (IsCurrentTokenOneOf(SymbolBefore, SymbolAfter, SymbolBetween, SymbolBeforeAlt, SymbolAfterAlt, SymbolBetweenAlt))
+            if (IsCurrentTokenOneOf(Symbol.Before, Symbol.After, Symbol.Between, Symbol.BeforeAlt, Symbol.AfterAlt, Symbol.BetweenAlt))
             {
                 ParseDateRange();
                 return;
             }
 
-            if (IsCurrentTokenOneOf(SymbolAbout, SymbolCalculated, SymbolEstimated, SymbolAboutAlt))
+            if (IsCurrentTokenOneOf(Symbol.About, Symbol.Calculated, Symbol.Estimated, Symbol.AboutAlt))
             {
                 ParseDateApproximated();
                 return;
             }
 
-            if (IsCurrentToken(SymbolInterpreted))
+            if (IsCurrentToken(Symbol.Interpreted))
             {
                 ParseDateInterpreted();
                 return;
@@ -340,9 +354,9 @@ namespace Stravaig.Gedcom.Model.Parsers
 
         private void ParseDateApproximated()
         {
-            if (IsCurrentTokenOneOf(SymbolAbout, SymbolAboutAlt))
+            if (IsCurrentTokenOneOf(Symbol.About, Symbol.AboutAlt))
                 Type = DateType.ApproximatedAbout;
-            else if (IsCurrentToken(SymbolCalculated))
+            else if (IsCurrentToken(Symbol.Calculated))
                 Type = DateType.ApproximatedCalculated;
             else
                 Type = DateType.ApproximatedEstimated;
@@ -354,26 +368,26 @@ namespace Stravaig.Gedcom.Model.Parsers
         private void ParseDateRange()
         {
             Type = DateType.Range;
-            if (IsCurrentTokenOneOf(SymbolBefore, SymbolBeforeAlt))
+            if (IsCurrentTokenOneOf(Symbol.Before, Symbol.BeforeAlt))
             {
                 _state = State.SecondDate;
                 MoveNext();
                 ParseDate();
                 MoveNext();
             }
-            else if (IsCurrentTokenOneOf(SymbolAfter, SymbolAfterAlt))
+            else if (IsCurrentTokenOneOf(Symbol.After, Symbol.AfterAlt))
             {
                 _state = State.FirstDate;
                 MoveNext();
                 ParseDate();
                 MoveNext();
             }
-            else if (IsCurrentTokenOneOf(SymbolBetween, SymbolBetweenAlt))
+            else if (IsCurrentTokenOneOf(Symbol.Between, Symbol.BetweenAlt))
             {
                 _state = State.FirstDate;
                 MoveNext();
                 ParseDate();
-                if (IsCurrentToken(SymbolAnd))
+                if (IsCurrentToken(Symbol.And))
                 {
                     _state = State.SecondDate;
                     MoveNext();
@@ -389,34 +403,38 @@ namespace Stravaig.Gedcom.Model.Parsers
         private void ParseDatePeriod()
         {
             Type = DateType.Period;
-            if (IsCurrentToken(SymbolFrom))
+            if (IsCurrentToken(Symbol.From))
             {
                 _state = State.FirstDate;
                 MoveNext();
                 ParseDate();
             }
 
-            if (IsCurrentToken(SymbolTo))
+            if (IsCurrentToken(Symbol.To))
             {
                 _state = State.SecondDate;
                 MoveNext();
                 ParseDate();
             }
         }
-
+        
         private void ParseCalendarEscape()
         {
-            Action<CalendarType> setCalendar =
-                _state == State.FirstDate
-                    ? new Action<CalendarType>(c => Calendar1 = c)
-                    : new Action<CalendarType>(c => Calendar2 = c);
+            void SetCalendar(CalendarType calendar)
+            {
+                if (_state == State.FirstDate)
+                    Calendar1 = calendar;
+                else
+                    Calendar2 = calendar;
+            }
+            
             switch (_currentToken)
             {
                 case "@#DHEBREW@":
-                    setCalendar(CalendarType.Hebrew);
+                    SetCalendar(CalendarType.Hebrew);
                     break;
                 case "@#DROMAN@":
-                    setCalendar(CalendarType.Roman);
+                    SetCalendar(CalendarType.Roman);
                     break;
                 case "@#DFRENCH":
                     MoveNext();
@@ -424,16 +442,16 @@ namespace Stravaig.Gedcom.Model.Parsers
                     return;
                 case "@#DFRENCHR@":
                 case "R@":
-                    setCalendar(CalendarType.French);
+                    SetCalendar(CalendarType.French);
                     break;
                 case "@#DGREGORIAN@":
-                    setCalendar(CalendarType.Gregorian);
+                    SetCalendar(CalendarType.Gregorian);
                     break;
                 case "@#DJULIAN@":
-                    setCalendar(CalendarType.Julian);
+                    SetCalendar(CalendarType.Julian);
                     break;
                 case "@#DUNKNOWN@":
-                    setCalendar(CalendarType.Unknown);
+                    SetCalendar(CalendarType.Unknown);
                     break;
                 default:
                     throw new InvalidOperationException($"Expected a Calendar Escape, but got \"{_currentToken}\".");

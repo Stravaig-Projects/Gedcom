@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -59,7 +58,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
                     var localeGroups = stateGroup
                         .GroupBy(pl => string.Join(", ",
-                            pl.Location.TakeWhile(l => l != stateGroup.Key) ?? Array.Empty<string>()))
+                            pl.Location.TakeWhile(l => l != stateGroup.Key)))
                         .OrderBy(g => g.Key);
                     foreach (var localeGroup in localeGroups)
                     {

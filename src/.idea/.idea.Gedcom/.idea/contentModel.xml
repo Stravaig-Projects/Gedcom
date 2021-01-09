@@ -1,155 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="C:\dev\Gedcom\.github\workflows\build-gedcom-package.yml" t="Include" />
+    <e p="C:\dev\Gedcom\release-notes\full-release-notes.md" t="Include" />
+    <e p="C:\dev\Gedcom\release-notes\wip-release-notes.md" t="Include" />
     <e p="C:\dev\Gedcom\src" t="IncludeFlat">
+      <e p="__Build_and_Deploy" t="Include" />
+      <e p="__Documentation" t="Include" />
       <e p="Gedcom.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
-      <e p="Stravaig.FamilyTree.Blazor" t="IncludeRecursive">
-        <e p="_Imports.razor" t="Include" />
-        <e p="App.razor" t="Include" />
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netstandard2.1" t="Include">
-              <e p="Stravaig.FamilyTree.Blazor.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
-        </e>
-        <e p="Page.cs" t="Include" />
-        <e p="Pages" t="Include">
-          <e p="Index.razor" t="Include" />
-        </e>
-        <e p="PageType.cs" t="Include" />
-        <e p="Program.cs" t="Include" />
-        <e p="Properties" t="Include">
-          <e p="launchSettings.json" t="Include" />
-        </e>
-        <e p="Services" t="Include">
-          <e p="IWebFootnoteOrganiser.cs" t="Include" />
-          <e p="WebFootnoteOrganiser.cs" t="Include" />
-        </e>
-        <e p="Shared" t="Include">
-          <e p="Date" t="Include">
-            <e p="ShortDate.razor" t="Include" />
-            <e p="ShortDateDate.razor" t="Include" />
-            <e p="ShortDateInitialPreposition.razor" t="Include" />
-            <e p="ShortDateMiddlePreposition.razor" t="Include" />
-          </e>
-          <e p="GedcomFileUpload.razor" t="Include" />
-          <e p="MainLayout.razor" t="Include" />
-          <e p="NavMenu.razor" t="Include" />
-          <e p="Person.razor" t="Include" />
-          <e p="Relationship.razor" t="Include" />
-          <e p="SourceLink.razor" t="Include" />
-          <e p="Timeline" t="Include">
-            <e p="BirthEvent.razor" t="Include" />
-            <e p="DeathEvent.razor" t="Include" />
-            <e p="EventBase.cs" t="Include" />
-            <e p="SubjectEntryBase.cs" t="Include" />
-            <e p="SubjectEntryDescription.razor" t="Include" />
-            <e p="SubjectEntryItem.razor" t="Include" />
-            <e p="SubjectTimelineEntry.razor" t="Include" />
-            <e p="TimelineEntryNotes.razor" t="Include" />
-            <e p="TimelineEntrySources.razor" t="Include" />
-          </e>
-          <e p="VirtualPages" t="Include">
-            <e p="ErrorPage.razor" t="Include" />
-            <e p="IndexPersonByName.razor" t="Include" />
-            <e p="PersonPage.razor" t="Include" />
-          </e>
-        </e>
-        <e p="Stravaig.FamilyTree.Blazor.csproj" t="IncludeRecursive" />
-        <e p="wwwroot" t="Include">
-          <e p="css" t="Include">
-            <e p="app.css" t="Include" />
-            <e p="bootstrap" t="Include">
-              <e p="bootstrap-grid.css" t="Include" />
-              <e p="bootstrap-grid.css.map" t="Include" />
-              <e p="bootstrap-grid.min.css" t="Include" />
-              <e p="bootstrap-grid.min.css.map" t="Include" />
-              <e p="bootstrap-reboot.css" t="Include" />
-              <e p="bootstrap-reboot.css.map" t="Include" />
-              <e p="bootstrap-reboot.min.css" t="Include" />
-              <e p="bootstrap-reboot.min.css.map" t="Include" />
-              <e p="bootstrap.css" t="Include" />
-              <e p="bootstrap.css.map" t="Include" />
-              <e p="bootstrap.min.css" t="Include" />
-              <e p="bootstrap.min.css.map" t="Include" />
-            </e>
-            <e p="open-iconic" t="Include">
-              <e p="font" t="Include">
-                <e p="css" t="Include">
-                  <e p="open-iconic-bootstrap.min.css" t="Include" />
-                </e>
-                <e p="fonts" t="Include">
-                  <e p="open-iconic.eot" t="Include" />
-                  <e p="open-iconic.otf" t="Include" />
-                  <e p="open-iconic.svg" t="Include" />
-                  <e p="open-iconic.ttf" t="Include" />
-                  <e p="open-iconic.woff" t="Include" />
-                </e>
-              </e>
-              <e p="FONT-LICENSE" t="Include" />
-              <e p="ICON-LICENSE" t="Include" />
-              <e p="README.md" t="Include" />
-            </e>
-          </e>
-          <e p="favicon.ico" t="Include" />
-          <e p="fontawesome-5.13.0" t="Include">
-            <e p="css" t="Include">
-              <e p="all.css" t="Include" />
-              <e p="all.min.css" t="Include" />
-              <e p="brands.css" t="Include" />
-              <e p="brands.min.css" t="Include" />
-              <e p="fontawesome.css" t="Include" />
-              <e p="fontawesome.min.css" t="Include" />
-              <e p="regular.css" t="Include" />
-              <e p="regular.min.css" t="Include" />
-              <e p="solid.css" t="Include" />
-              <e p="solid.min.css" t="Include" />
-              <e p="svg-with-js.css" t="Include" />
-              <e p="svg-with-js.min.css" t="Include" />
-              <e p="v4-shims.css" t="Include" />
-              <e p="v4-shims.min.css" t="Include" />
-            </e>
-            <e p="webfonts" t="Include">
-              <e p="fa-brands-400.eot" t="Include" />
-              <e p="fa-brands-400.svg" t="Include" />
-              <e p="fa-brands-400.ttf" t="Include" />
-              <e p="fa-brands-400.woff" t="Include" />
-              <e p="fa-brands-400.woff2" t="Include" />
-              <e p="fa-regular-400.eot" t="Include" />
-              <e p="fa-regular-400.svg" t="Include" />
-              <e p="fa-regular-400.ttf" t="Include" />
-              <e p="fa-regular-400.woff" t="Include" />
-              <e p="fa-regular-400.woff2" t="Include" />
-              <e p="fa-solid-900.eot" t="Include" />
-              <e p="fa-solid-900.svg" t="Include" />
-              <e p="fa-solid-900.ttf" t="Include" />
-              <e p="fa-solid-900.woff" t="Include" />
-              <e p="fa-solid-900.woff2" t="Include" />
-            </e>
-          </e>
-          <e p="index.html" t="Include" />
-          <e p="js" t="Include">
-            <e p="bootstrap" t="Include">
-              <e p="bootstrap.bundle.js" t="Include" />
-              <e p="bootstrap.bundle.js.map" t="Include" />
-              <e p="bootstrap.bundle.min.js" t="Include" />
-              <e p="bootstrap.bundle.min.js.map" t="Include" />
-              <e p="bootstrap.js" t="Include" />
-              <e p="bootstrap.js.map" t="Include" />
-              <e p="bootstrap.min.js" t="Include" />
-              <e p="bootstrap.min.js.map" t="Include" />
-            </e>
-            <e p="jquery" t="Include">
-              <e p="jquery-3.5.1.slim.js" t="Include" />
-              <e p="jquery-3.5.1.slim.min.js" t="Include" />
-              <e p="jquery-3.5.1.slim.min.map" t="Include" />
-            </e>
-          </e>
-        </e>
-      </e>
       <e p="Stravaig.FamilyTree.Common" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
         <e p="Extensions" t="Include">
@@ -284,6 +143,7 @@
           <e p="FileNamer.cs" t="Include" />
         </e>
         <e p="Stravaig.FamilyTreeGenerator.csproj" t="IncludeRecursive" />
+        <e p="Stravaig.FamilyTreeGenerator.csproj.DotSettings" t="Include" />
       </e>
       <e p="Stravaig.FamilyTreeGenerator.Tests" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
@@ -448,6 +308,8 @@
           <e p="CharExtensions_IsGedcomAlphaTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomDigitTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomOtherCharTests.cs" t="Include" />
+          <e p="CharExtensions_IsGedcomOtherTests.cs" t="Include" />
+          <e p="IsGedcomOtherCharTests.cs" t="Include" />
           <e p="StringExtensions_AsGedcomSex.cs" t="Include" />
           <e p="StringExtensions_IsGedcomLevelTests.cs" t="Include" />
           <e p="StringExtensions_IsGedcomPointerTests.cs" t="Include" />
@@ -469,9 +331,6 @@
         <e p="Model" t="Include">
           <e p="Comparers" t="Include">
             <e p="DateComparerTests.cs" t="Include" />
-          </e>
-          <e p="Extensions" t="Include">
-            <e p="RelationshipExtensionsTests.cs" t="Include" />
           </e>
           <e p="GedcomDateRecordTests.cs" t="Include" />
           <e p="Parsers" t="Include">
