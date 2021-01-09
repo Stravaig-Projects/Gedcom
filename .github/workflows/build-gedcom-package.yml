@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       STRAVAIG_SOLUTION: ./src/Gedcom.sln
-      STRAVAIG_UNIT_TESTS: ./src/Stravaig.Gedcom.UnitTests
+      STRAVAIG_TESTS: ./src/Stravaig.Gedcom.UnitTests
       STRAVAIG_PROJECT: Stravaig.Gedcom
       
     steps:
@@ -78,7 +78,7 @@ jobs:
       run: dotnet build ${{ env.STRAVAIG_SOLUTION }} --configuration Release
 
     - name: Test solution
-      run: dotnet test ${{ env.STRAVAIG_UNIT_TESTS }} --configuration Release
+      run: dotnet test ${{ env.STRAVAIG_TESTS }} --configuration Release
       
     - name: Package Preview Release
       if: ${{ env.STRAVAIG_IS_PREVIEW == 'true' }}
