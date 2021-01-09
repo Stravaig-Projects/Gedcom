@@ -30,7 +30,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private readonly IOccupationRenderer _occupationRenderer;
         private FileStream _fs;
         private TextWriter _writer;
-        private bool _hasSources;
         
         public RenderIndividualAsMarkdownHandler(
             ILogger<RenderIndividualAsMarkdownHandler> logger,
@@ -54,7 +53,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _relationshipRenderer = relationshipRenderer;
             _residenceRenderer = residenceRenderer;
             _occupationRenderer = occupationRenderer;
-            _hasSources = false;
         }
 
         public override RenderIndividual Handle(RenderIndividual command)
@@ -81,7 +79,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
             void AddSource(GedcomSourceRecord record, GedcomIndividualRecord individualRecord)
             {
-                _hasSources = true;
                 command.AddSource(record, individualRecord);
             }
 
