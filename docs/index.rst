@@ -13,6 +13,8 @@ The GEDCOM file format is the defacto standard for transmission of genealogy or 
    :maxdepth: 2
    :caption: Introduction:
 
+   intro/installing-the-package
+   
 
 .. toctree::
    :maxdepth: 2
