@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="C:\dev\Gedcom\.github\workflows\build-gedcom-package.yml" t="Include" />
+    <e p="C:\dev\Gedcom\release-notes\full-release-notes.md" t="Include" />
+    <e p="C:\dev\Gedcom\release-notes\wip-release-notes.md" t="Include" />
     <e p="C:\dev\Gedcom\src" t="IncludeFlat">
+      <e p="__Build_and_Deploy" t="Include" />
+      <e p="__Documentation" t="Include" />
       <e p="Gedcom.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="Stravaig.FamilyTree.Common" t="IncludeRecursive">

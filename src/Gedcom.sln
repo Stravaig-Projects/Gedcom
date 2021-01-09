@@ -21,6 +21,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CB5236BE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stravaig.Gedcom.PowerShell", "Stravaig.Gedcom.PowerShell\Stravaig.Gedcom.PowerShell.csproj", "{EB81C74C-8593-4760-9080-D34A562041EC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__Build_and_Deploy", "__Build_and_Deploy", "{51FEE412-DC7C-4B18-9357-D9CB4BA80449}"
+ProjectSection(SolutionItems) = preProject
+	..\.github\workflows\build-gedcom-package.yml = ..\.github\workflows\build-gedcom-package.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__Documentation", "__Documentation", "{FE3C1BE4-99FF-4487-B6CF-71E5F30E936B}"
+ProjectSection(SolutionItems) = preProject
+	..\release-notes\full-release-notes.md = ..\release-notes\full-release-notes.md
+	..\release-notes\wip-release-notes.md = ..\release-notes\wip-release-notes.md
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
