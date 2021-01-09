@@ -45,8 +45,8 @@ namespace Stravaig.FamilyTree.Standardiser
 
         private static void AddApplicationServices(ServiceCollection services, CommandLineOptions options)
         {
-            services.AddSingleton<CommandLineOptions>(options);
-            services.AddSingleton<GedcomDatabase>(p=>
+            services.AddSingleton(options);
+            services.AddSingleton(p=>
             {
                 CommandLineOptions opts = p.GetRequiredService<CommandLineOptions>();
                 return GetDatabase(opts.SourceFile);
