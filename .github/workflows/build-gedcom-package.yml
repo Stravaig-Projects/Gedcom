@@ -6,15 +6,27 @@ on:
       - main
     paths-ignore:
       - 'README.md'
+      - 'Example/**'
       - '.vscode/**'
       - '.gitignore'
+      - 'contributors.md'
+      - 'release-notes/**'
+      - '.github/PULL_REQUEST_TEMPLATE/**'
+      - 'src/.idea/**'
+      - 'docs/**'
 
   pull_request:
     types: [assigned, opened, synchronize, reopened]
     paths-ignore:
       - 'README.md'
+      - 'Example/**'
       - '.vscode/**'
       - '.gitignore'
+      - 'contributors.md'
+      - 'release-notes/**'
+      - '.github/PULL_REQUEST_TEMPLATE/**'
+      - 'src/.idea/**'
+      - 'docs/**'
 
   workflow_dispatch:
     inputs:
@@ -33,12 +45,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       STRAVAIG_SOLUTION: ./src/Gedcom.sln
-      STRAVAIG_UNIT_TESTS: ./src/Stravaig.Gedcom.UnitTests
-      STRAVAIG_PACKAGE_PROJECT: src/Stravaig.Gedcom/Stravaig.Gedcom.csproj
+      STRAVAIG_TESTS: ./src/Stravaig.Gedcom.UnitTests
+      STRAVAIG_PROJECT: Stravaig.Gedcom
       
     steps:
     - uses: actions/checkout@v2
       name: Checking out the source code
+      with:
+        fetch-depth: 0
 
     - name: Set version number
       shell: pwsh
@@ -46,33 +60,100 @@ jobs:
 
     - name: Display workflow state
       run: |
-        echo "Solution: $STRAVAIG_SOLUTION"
-        echo "Unit tests: $STRAVAIG_UNIT_TESTS"
-        echo "Package project: $STRAVAIG_PACKAGE_PROJECT"
-        echo "Package version: $STRAVAIG_PACKAGE_VERSION"
-        echo "Version Suffix: $STRAVAIG_PACKAGE_VERSION_SUFFIX"
-        echo "Publish To NuGet: $STRAVAIG_PUBLISH_TO_NUGET" 
-        echo "Solution: $STRAVAIG_SOLUTION"
+          echo "STRAVAIG_SOLUTION: $STRAVAIG_SOLUTION"
+          echo "STRAVAIG_PROJECT: $STRAVAIG_PROJECT"
+          echo "STRAVAIG_TESTS: $STRAVAIG_TESTS"
+          echo "STRAVAIG_PACKAGE_VERSION: $STRAVAIG_PACKAGE_VERSION"
+          echo "STRAVAIG_PACKAGE_VERSION_SUFFIX: $STRAVAIG_PACKAGE_VERSION_SUFFIX"
+          echo "STRAVAIG_PACKAGE_FULL_VERSION: $STRAVAIG_PACKAGE_FULL_VERSION"
+          echo "STRAVAIG_PUBLISH_TO_NUGET: $STRAVAIG_PUBLISH_TO_NUGET"
+          echo "STRAVAIG_IS_PREVIEW: $STRAVAIG_IS_PREVIEW"
+          echo "STRAVAIG_IS_STABLE: $STRAVAIG_IS_STABLE"
      
     - uses: actions/setup-dotnet@v1
       name: Setup .NET Core
       with:
-        dotnet-version: 3.1.402
+        dotnet-version: 3.1.x
     
     - name: Build Solution
       run: dotnet build ${{ env.STRAVAIG_SOLUTION }} --configuration Release
 
     - name: Test solution
-      run: dotnet test ${{ env.STRAVAIG_UNIT_TESTS }} --configuration Release
+      run: dotnet test ${{ env.STRAVAIG_TESTS }} --configuration Release
       
     - name: Package Preview Release
-      if: ${{ env.STRAVAIG_PACKAGE_VERSION_SUFFIX != '~' }}
-      run: dotnet pack ${{ env.STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" --version-suffix "$STRAVAIG_PACKAGE_VERSION_SUFFIX" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      if: ${{ env.STRAVAIG_IS_PREVIEW == 'true' }}
+      run: dotnet pack ./src/$STRAVAIG_PROJECT/$STRAVAIG_PROJECT.csproj --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" --version-suffix "$STRAVAIG_PACKAGE_VERSION_SUFFIX" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Package Stable Release
-      if: ${{ env.STRAVAIG_PACKAGE_VERSION_SUFFIX == '~' }}
-      run: dotnet pack ${{ env.STRAVAIG_PACKAGE_PROJECT }} --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      if: ${{ env.STRAVAIG_IS_STABLE == 'true' }}
+      run: dotnet pack ./src/$STRAVAIG_PROJECT/$STRAVAIG_PROJECT.csproj --configuration Release --output ./out --include-symbols --include-source /p:VersionPrefix="$STRAVAIG_PACKAGE_VERSION" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
     - name: Push package to NuGet
       if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
       run: dotnet nuget push ./out/*.nupkg --api-key ${{ secrets.STRAVAIG_NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+
+    - name: List Contributors
+      shell: pwsh
+      run: ./list-contributors.ps1
+
+    - name: Build Release Notes
+      shell: pwsh
+      run: ./build-release-notes.ps1
+
+    - name: Archive Simulated Release Notes
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'false' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: simulated-release-information
+        path: |
+          contributors.md
+          release-notes/full-release-notes.md
+          release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md
+        retention-days: 7
+
+    - name: Archive Release Notes
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-information
+        path: |
+          contributors.md
+          release-notes/full-release-notes.md
+          release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md
+      
+    - name: Mark Release
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "./out/*.nupkg,./out/*.snupkg,LICENSE,contributors.md,readme.md,./release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        bodyFile: "release-body.md"
+        prerelease: ${{ env.STRAVAIG_IS_PREVIEW }}
+        commit: ${{ env.GITHUB_SHA }}
+        tag: v${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}
+        draft: false
+        
+    - name: Bump version
+      #IF Publishing & Stable release
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
+      shell: pwsh
+      run: ./Bump-Version.ps1 -BumpPatch
+
+    - name: Reset WIP release notes
+      #IF Publishing & Stable release
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
+      shell: pwsh
+      run: ./Reset-WipReleaseNotes.ps1
+      
+    - name: Commit post release updates
+      #IF Publishing & Stable release
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
+      uses: EndBug/add-and-commit@v5
+      with:
+        add: ./contributors.md ./release-notes/** ./version.txt
+        author_name: StravaigBot
+        author_email: stravaig@colinmackay.scot
+        message: "[bot] Bump Version & Post v${{ env.STRAVAIG_PACKAGE_FULL_VERSION }} Release updates."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
