@@ -31,7 +31,7 @@ on:
   workflow_dispatch:
     inputs:
       isPublic:
-        description: 'Is Public Release'
+        description: 'Is Public Release'     
         required: false
         default: "false"
       isPreview:
