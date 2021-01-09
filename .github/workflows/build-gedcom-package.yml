@@ -94,67 +94,67 @@ jobs:
       if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
       run: dotnet nuget push ./out/*.nupkg --api-key ${{ secrets.STRAVAIG_NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
 
-      - name: List Contributors
-        shell: pwsh
-        run: ./list-contributors.ps1
+    - name: List Contributors
+      shell: pwsh
+      run: ./list-contributors.ps1
 
-      - name: Build Release Notes
-        shell: pwsh
-        run: ./build-release-notes.ps1
+    - name: Build Release Notes
+      shell: pwsh
+      run: ./build-release-notes.ps1
 
-      - name: Archive Simulated Release Notes
-        if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'false' }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: simulated-release-information
-          path: |
-            contributors.md
-            release-notes/full-release-notes.md
-            release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md
-          retention-days: 7
+    - name: Archive Simulated Release Notes
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'false' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: simulated-release-information
+        path: |
+          contributors.md
+          release-notes/full-release-notes.md
+          release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md
+        retention-days: 7
 
-      - name: Archive Release Notes
-        if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-information
-          path: |
-            contributors.md
-            release-notes/full-release-notes.md
-            release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md
+    - name: Archive Release Notes
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-information
+        path: |
+          contributors.md
+          release-notes/full-release-notes.md
+          release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md
+      
+    - name: Mark Release
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "./out/*.nupkg,./out/*.snupkg,LICENSE,contributors.md,readme.md,./release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        bodyFile: "release-body.md"
+        prerelease: ${{ env.STRAVAIG_IS_PREVIEW }}
+        commit: ${{ env.GITHUB_SHA }}
+        tag: v${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}
+        draft: false
         
-      - name: Mark Release
-        if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' }}
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "./out/*.nupkg,./out/*.snupkg,LICENSE,contributors.md,readme.md,./release-notes/release-notes-${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}.md"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          bodyFile: "release-body.md"
-          prerelease: ${{ env.STRAVAIG_IS_PREVIEW }}
-          commit: ${{ env.GITHUB_SHA }}
-          tag: v${{ env.STRAVAIG_PACKAGE_FULL_VERSION }}
-          draft: false
-          
-      - name: Bump version
-        #IF Publishing & Stable release
-        if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
-        shell: pwsh
-        run: ./Bump-Version.ps1 -BumpPatch
+    - name: Bump version
+      #IF Publishing & Stable release
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
+      shell: pwsh
+      run: ./Bump-Version.ps1 -BumpPatch
 
-      - name: Reset WIP release notes
-        #IF Publishing & Stable release
-        if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
-        shell: pwsh
-        run: ./Reset-WipReleaseNotes.ps1
-        
-      - name: Commit post release updates
-        #IF Publishing & Stable release
-        if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
-        uses: EndBug/add-and-commit@v5
-        with:
-          add: ./contributors.md ./release-notes/** ./version.txt
-          author_name: StravaigBot
-          author_email: stravaig@colinmackay.scot
-          message: "[bot] Bump Version & Post v${{ env.STRAVAIG_PACKAGE_FULL_VERSION }} Release updates."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Reset WIP release notes
+      #IF Publishing & Stable release
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
+      shell: pwsh
+      run: ./Reset-WipReleaseNotes.ps1
+      
+    - name: Commit post release updates
+      #IF Publishing & Stable release
+      if: ${{ env.STRAVAIG_PUBLISH_TO_NUGET == 'true' && env.STRAVAIG_IS_STABLE == 'true' }}
+      uses: EndBug/add-and-commit@v5
+      with:
+        add: ./contributors.md ./release-notes/** ./version.txt
+        author_name: StravaigBot
+        author_email: stravaig@colinmackay.scot
+        message: "[bot] Bump Version & Post v${{ env.STRAVAIG_PACKAGE_FULL_VERSION }} Release updates."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
