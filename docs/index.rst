@@ -14,6 +14,8 @@ The GEDCOM file format is the defacto standard for transmission of genealogy or 
    :caption: Introduction:
 
    intro/installing-the-package
+   intro/getting-started
+   intro/populating-the-gedcom-database
    
 
 .. toctree::

@@ -22,7 +22,7 @@ You can install the package into your project from a PowerShell prompt. Navigate
 
     Install-Package Stravaig.Gedcom
 
-If you want to install a specific version add ``-RequiredVersion <version>``
+If you want to install a specific version add ``-Version <version>``
 
 Installing using the .NET CLI
 -----------------------------
