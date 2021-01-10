@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
@@ -80,5 +80,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6561D63D-F21C-4621-A735-104FED4881CD} = {CB5236BE-06C2-4FF1-895C-634DDBF3413F}
 		{376ADE5A-8203-4B50-A15E-9F33E703B36D} = {CB5236BE-06C2-4FF1-895C-634DDBF3413F}
+		{37364718-BF47-4909-AC3E-095F0DFF7780} = {CB5236BE-06C2-4FF1-895C-634DDBF3413F}
 	EndGlobalSection
 EndGlobal
