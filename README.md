@@ -6,27 +6,13 @@ A GEDCOM file reader
 
 ![Build Stravaig.Gedcom](https://github.com/Stravaig-Projects/Gedcom/workflows/Build%20Stravaig.Gedcom/badge.svg)
 
-## Support
+![Latest Stable Package](https://img.shields.io/nuget/v/Stravaig.Gedcom?color=004880&label=nuget%20stable&logo=nuget)
 
-### Dates
+![Latest package, including preview](https://img.shields.io/nuget/vpre/Stravaig.Gedcom?color=ffffff&label=nuget%20latest&logo=nuget)
 
-Can parse types:
-* Date
-* Date Period
-* Date Range
-* Date Approximated
-* Interpreted Date
-* Date Phrase
+![Documentation Status](https://readthedocs.org/projects/stravaig-gedcom/badge/?version=latest)](https://stravaig-gedcom.readthedocs.io/en/latest/?badge=latest)
 
-Can parse:
-* Gregorian
-* Julian
 
-Not supported:
-* Years prior to 32 CE
-* `(B.C.)` year suffix to denote years BCE.
-* The slash "/" <DIGIT><DIGIT> a year modifier which shows the possible date alternatives.
-* Date conversion (e.g. Julian to Gregorian)
+## Documentation
 
-Supported, but not standard
-* Single digit days (spec says `dd`)
+The documentation for this project is available on Read The Docs: https://stravaig-gedcom.readthedocs.io/en/latest/
