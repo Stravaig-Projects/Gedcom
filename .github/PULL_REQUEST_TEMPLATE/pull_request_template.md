@@ -28,7 +28,7 @@ Depending on what the PR is for these may not be needed.
 If any of these items are not needed, then they can be removed.
 -->
 
-- [ ] I have updated the `readme.md` file
+- [ ] I have updated or created the relevant documentation files.
 - [ ] I have bumped the version number in the `version.txt`
 - [ ] I have added or updated any necessary tests.
 - [ ] I have ensured that any new code is covered by tests where reasonably possible.

@@ -14,3 +14,4 @@ Date: ???
 
 * #60: Make build and release process consistent with other Stravaig Projects.
 * #72: Fix errors and warnings issued by Rider.
+* #73: Make a start on the documentation.
