@@ -23,6 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="_resources\Extensions\GedcomDatabaseExtensionsTests\Relationships.ged">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="_resources\GedcomRecordReaderTests\header-jumps-levels.ged" />
       <EmbeddedResource Include="_resources\GedcomRecordReaderTests\header.ged" />
       <EmbeddedResource Include="_resources\GedcomRecordReaderTests\two-record-file.ged" />

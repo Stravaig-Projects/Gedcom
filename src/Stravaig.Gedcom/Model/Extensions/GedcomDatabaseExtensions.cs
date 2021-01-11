@@ -6,6 +6,12 @@ namespace Stravaig.Gedcom.Model.Extensions
 {
     public static class GedcomDatabaseExtensions
     {
+        public static void PopulateFromFile(this GedcomDatabase database, string filePath)
+        {
+            using FileStream gedcomFileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            database.Populate(gedcomFileStream);
+        }
+        
         public static void Populate(this GedcomDatabase database, Stream stream)
         {
             using TextReader streamReader = new StreamReader(stream, Encoding.UTF8);
@@ -19,6 +25,12 @@ namespace Stravaig.Gedcom.Model.Extensions
             database.Populate(recordReader);
         }
 
+        public static async Task PopulateFromFileAsync(this GedcomDatabase database, string filePath)
+        {
+            using FileStream gedcomFileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            await PopulateAsync(database, gedcomFileStream);
+        }
+        
         public static async Task PopulateAsync(this GedcomDatabase database, Stream stream)
         {
             using TextReader streamReader = new StreamReader(stream, Encoding.UTF8);

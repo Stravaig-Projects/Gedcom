@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using CommandLine;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
@@ -131,9 +130,8 @@ namespace Stravaig.FamilyTreeGenerator
         private static GedcomDatabase GetDatabase(string optionsSourceFile)
         {
             GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
-            using FileStream gedcomFileStream = new FileStream(optionsSourceFile, FileMode.Open, FileAccess.Read, FileShare.Read);
             GedcomDatabase result = new GedcomDatabase();
-            result.Populate(gedcomFileStream);
+            result.PopulateFromFile(optionsSourceFile);
             return result;
         }
     }

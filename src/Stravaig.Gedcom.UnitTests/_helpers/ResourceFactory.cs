@@ -20,6 +20,12 @@ namespace Stravaig.Gedcom.UnitTests._helpers
             string fullResourceName = GetFullResourceName(baseType, resourceName);
             return GetReader(fullResourceName);
         }
+        
+        public static Stream GetStream(Type baseType, string resourceName)
+        {
+            string fullResourceName = GetFullResourceName(baseType, resourceName);
+            return GetStream(fullResourceName);
+        }
       
         public static string Get(string fullResourceName)
         {
@@ -39,8 +45,7 @@ namespace Stravaig.Gedcom.UnitTests._helpers
         {
             try
             {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                Stream stream = assembly.GetManifestResourceStream(fullResourceName);
+                Stream stream = GetStream(fullResourceName);
                 return new StreamReader(stream, Encoding.UTF8);
             }
             catch (Exception ex)
@@ -49,6 +54,32 @@ namespace Stravaig.Gedcom.UnitTests._helpers
             }
         }
 
+        public static Stream GetStream(string fullResourceName)
+        {
+            try
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                return assembly.GetManifestResourceStream(fullResourceName);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Something went wrong attempting to retrieve resource named \"{fullResourceName}\". See inner exception for more details.", ex);
+            }
+        }
+
+        public static string GetFileName(Type baseType, string resourceName)
+        {
+            string typePath = baseType.FullName
+                .Substring(BaseNamespace.Length + 1)
+                .Replace('.', Path.DirectorySeparatorChar);
+            var fullPath = Path.Join(Environment.CurrentDirectory, "_resources", typePath, resourceName);
+            if (File.Exists(fullPath))
+                return fullPath;
+            
+            throw new FileNotFoundException(
+                $"Cannot find the resource file. Was it set to \"CopyAlways\"?{Environment.NewLine}Current Directory is \"{Environment.CurrentDirectory}\".{Environment.NewLine}File Path: \"{fullPath}\".", fullPath);
+        }
+        
         private static string GetFullResourceName(Type baseType, string resourceName)
         {
             string typeName = baseType.FullName.Substring(BaseNamespace.Length + 1);
