@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Management.Automation;
 using Stravaig.Gedcom.Model;
 using Stravaig.Gedcom.Model.Extensions;
@@ -30,14 +29,11 @@ namespace Stravaig.Gedcom.PowerShell.Commands
         {
             try
             {
-                using (var fs = new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    GedcomSettings.LineLength = LineLength;
-                    _database = new GedcomDatabase();
-                    _database.Settings.AssumedDeathAge = AssumedDeathAge;
-                    _database.Settings.DateOrderingRule = DateOrdering;
-                    _database.Populate(fs);
-                }
+                GedcomSettings.LineLength = LineLength;
+                _database = new GedcomDatabase();
+                _database.Settings.AssumedDeathAge = AssumedDeathAge;
+                _database.Settings.DateOrderingRule = DateOrdering;
+                _database.PopulateFromFile(Path);
             }
             catch (GedcomReaderException grex)
             {
