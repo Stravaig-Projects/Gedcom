@@ -6,5 +6,6 @@
         "nupkg",
         "pwsh",
         "snupkg"
-    ]
+    ],
+    "restructuredtext.confPath": "${workspaceFolder}\\docs"
 }
