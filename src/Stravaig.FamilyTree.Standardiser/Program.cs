@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

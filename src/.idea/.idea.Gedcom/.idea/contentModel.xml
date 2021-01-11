@@ -285,6 +285,11 @@
           <e p="ResourceFactory.cs" t="Include" />
         </e>
         <e p="_resources" t="Include">
+          <e p="Extensions" t="Include">
+            <e p="GedcomDatabaseExtensionsTests" t="Include">
+              <e p="Relationships.ged" t="Include" />
+            </e>
+          </e>
           <e p="GedcomIndividualRecordTests" t="Include">
             <e p="IndividualOne.ged" t="Include" />
           </e>
@@ -309,6 +314,7 @@
           <e p="CharExtensions_IsGedcomDigitTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomOtherCharTests.cs" t="Include" />
           <e p="CharExtensions_IsGedcomOtherTests.cs" t="Include" />
+          <e p="GedcomDatabaseExtensionsTests.cs" t="Include" />
           <e p="IsGedcomOtherCharTests.cs" t="Include" />
           <e p="StringExtensions_AsGedcomSex.cs" t="Include" />
           <e p="StringExtensions_IsGedcomLevelTests.cs" t="Include" />

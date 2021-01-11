@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using CommandLine;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
