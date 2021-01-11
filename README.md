@@ -10,7 +10,7 @@ A GEDCOM file reader
 
 ![Latest package, including preview](https://img.shields.io/nuget/vpre/Stravaig.Gedcom?color=ffffff&label=nuget%20latest&logo=nuget)
 
-![Documentation Status](https://readthedocs.org/projects/stravaig-gedcom/badge/?version=latest)](https://stravaig-gedcom.readthedocs.io/en/latest/?badge=latest)
+![Documentation Status](https://stravaig-gedcom.readthedocs.io/en/latest/?badge=latest)
 
 
 ## Documentation
