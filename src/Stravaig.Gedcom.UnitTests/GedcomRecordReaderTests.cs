@@ -138,7 +138,7 @@ namespace Stravaig.Gedcom.UnitTests
         [TestCaseSource(nameof(ReadTypes))]
         public async Task StressTest(Read type)
         {
-            string path = Path.GetFullPath("..\\..\\..\\..\\..\\test-files\\Family Tree of Colin Mackay.ged");
+            string path = Path.GetFullPath("/Users/colinmackay/dev/family-tree-information/Family Tree of Colin Mackay.ged");
             Console.WriteLine($"File path = {path}");
 
             // The test uses a GEDCOM file created by Synium Mobile Family

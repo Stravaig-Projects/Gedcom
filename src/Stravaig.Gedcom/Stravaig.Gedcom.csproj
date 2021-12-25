@@ -5,7 +5,7 @@
         <LangVersion>8</LangVersion>
 
         <RepositoryUrl>https://github.com/Stravaig-Projects/Gedcom</RepositoryUrl>
-        <Copyright>©2020 Stavaig Projects.</Copyright>
+        <Copyright>©2020-2021 Stavaig Projects.</Copyright>
         <Authors>Colin Mackay</Authors>
         <PackageProjectUrl>https://github.com/Stravaig-Projects/Gedcom</PackageProjectUrl>
         

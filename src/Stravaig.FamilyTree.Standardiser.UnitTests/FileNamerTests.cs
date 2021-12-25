@@ -5,6 +5,7 @@ using Shouldly;
 
 namespace Stravaig.FamilyTree.Standardiser.UnitTests
 {
+    [Ignore("Need to make this not windows specific.")]
     public class FileNamerTests
     {
         private const string TimestampFormat = @"yyyy-MM-dd\'HH-mm-ss";

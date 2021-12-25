@@ -32,6 +32,12 @@ ProjectSection(SolutionItems) = preProject
 	..\release-notes\wip-release-notes.md = ..\release-notes\wip-release-notes.md
 EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__Repository_Management", "__Repository_Management", "{926733B3-2E8A-43E1-9338-91979472947B}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\.gitattributes = ..\.gitattributes
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
