@@ -1,15 +1,19 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Stravaig.FamilyTree.Standardiser.Extensions;
 using Stravaig.Gedcom;
+using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model;
 
 namespace Stravaig.FamilyTree.Standardiser
 {
     public class Application
     {
+        private static readonly GedcomTag HeadTag = "HEAD".AsGedcomTag();
+        
         private readonly ILogger<Application> _logger;
         private readonly CommandLineOptions _options;
         private readonly GedcomDatabase _database;
@@ -72,11 +76,34 @@ namespace Stravaig.FamilyTree.Standardiser
             foreach (var child in record.OrderFamilyEventChildren())
                 WriteChildRecord(writer, child);
         }
+
         private void WriteChildRecord(StreamWriter writer, GedcomRecord record)
+        {
+            if (record.Tag == GedcomPlaceRecord.PlaceTag)
+                WriteNormalisedPlaceRecord(writer, record);
+            else
+                WriteGeneralChildRecord(writer, record);
+        }
+
+        private void WriteGeneralChildRecord(StreamWriter writer, GedcomRecord record)
         {
             writer.WriteLine(record.Line.ToString());
             foreach (var child in _database.OrderChildren(record))
                 WriteChildRecord(writer, child);
+        }
+
+        private void WriteNormalisedPlaceRecord(StreamWriter writer, GedcomRecord @record)
+        {
+            var level = @record.Level;
+            var tag = @record.Tag;
+            var value = string.Join(',', (@record.Value ?? string.Empty).Split(',', StringSplitOptions.TrimEntries));
+            writer.WriteLine($"{level} {tag} {value}".Trim());
+            foreach (var child in _database.OrderChildren(record))
+            {
+                if (child.Tag == GedcomPlaceRecord.FormTag && child.Parent?.Parent?.Tag != HeadTag)
+                    continue;
+                WriteChildRecord(writer, child);
+            }
         }
 
         private void RenameDestinationFileIfExists()

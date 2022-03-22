@@ -18,6 +18,7 @@ namespace Stravaig.Gedcom.Model
     public class GedcomPlaceRecord : Record
     {
         public static readonly GedcomTag PlaceTag = "PLAC".AsGedcomTag();
+        public static readonly GedcomTag FormTag = "FORM".AsGedcomTag();
 
         private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
         private readonly Lazy<GedcomMapRecord> _lazyMap;
