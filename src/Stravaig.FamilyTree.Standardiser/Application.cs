@@ -79,6 +79,9 @@ namespace Stravaig.FamilyTree.Standardiser
 
         private void WriteChildRecord(StreamWriter writer, GedcomRecord record)
         {
+            if (record.Tag.IsUserDefined)
+                return;
+            
             if (record.Tag == GedcomPlaceRecord.PlaceTag)
                 WriteNormalisedPlaceRecord(writer, record);
             else
