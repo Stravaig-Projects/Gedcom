@@ -18,9 +18,9 @@ namespace Stravaig.FamilyTree.Standardiser
                 return;
             
             using var provider = BuildServiceProvider(options);
-            _logger = provider.GetService<ILogger<Program>>();
+            _logger = provider.GetRequiredService<ILogger<Program>>();
             _logger.LogInformation("Application bootstrapping complete.");
-            provider.GetService<Application>().Run();
+            provider.GetRequiredService<Application>().Run();
         }
         
         private static CommandLineOptions ExtractCommandLineInfo(string[] args)
@@ -70,7 +70,7 @@ namespace Stravaig.FamilyTree.Standardiser
         
         private static GedcomDatabase GetDatabase(string optionsSourceFile)
         {
-            GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
+            GedcomSettings.LineLength = LineLengthSettings.Any;
             GedcomDatabase result = new GedcomDatabase();
             result.PopulateFromFile(optionsSourceFile);
             return result;

@@ -129,7 +129,7 @@ namespace Stravaig.FamilyTreeGenerator
         
         private static GedcomDatabase GetDatabase(string optionsSourceFile)
         {
-            GedcomSettings.LineLength = LineLengthSettings.ValueUpTo255;
+            GedcomSettings.LineLength = LineLengthSettings.Any;
             GedcomDatabase result = new GedcomDatabase();
             result.PopulateFromFile(optionsSourceFile);
             return result;
