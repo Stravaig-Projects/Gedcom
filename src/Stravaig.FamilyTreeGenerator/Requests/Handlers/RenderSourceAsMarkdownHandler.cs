@@ -136,21 +136,23 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 foreach (var reference in source.References)
                 {
                     writer.Write("<li>");
-                    WriteReference(writer, reference);
+                    WriteReference(writer, reference, source);
                     writer.Write("</li>");
                 }
                 writer.Write("</ul>");
             }
             else if (source.References.Length == 1)
             {
-                WriteReference(writer, source.References[0]);                
+                WriteReference(writer, source.References[0], source);                
             }
             writer.WriteLine();
             writer.WriteLine();
         }
 
-        private static void WriteReference(TextWriter writer, GedcomUserReferenceNumberRecord reference)
+        private static void WriteReference(TextWriter writer, GedcomUserReferenceNumberRecord reference, GedcomSourceRecord source)
         {
+            if (source.ReferenceType != null)
+                writer.Write($"({source.ReferenceType.Type}) ");
             if (reference.Type.HasContent())
                 writer.Write($"({reference.Type}) ");
             writer.Write(reference.Reference);

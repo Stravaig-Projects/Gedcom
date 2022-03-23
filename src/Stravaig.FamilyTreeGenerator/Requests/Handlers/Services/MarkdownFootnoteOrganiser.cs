@@ -82,6 +82,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                     foreach (var reference in source.References)
                     {
                         writer.Write($"  * ");
+                        if (source.ReferenceType != null)
+                            writer.Write($"({source.ReferenceType.Type}) ");
                         if (reference.Type.HasContent())
                             writer.Write($"({reference.Type}) ");
                         writer.WriteLine(reference.Reference);

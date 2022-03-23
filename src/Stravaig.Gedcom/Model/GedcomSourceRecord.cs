@@ -117,6 +117,7 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<Record[]> _lazyReferencedRecords;
         private readonly Lazy<GedcomLabelRecord[]> _lazyLabels;
         private readonly Lazy<string[]> _lazyLabelTitles;
+        private readonly Lazy<GedcomUserReferenceNumberTypeRecord> _lazyRefType;
         
         public GedcomSourceRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -139,8 +140,17 @@ namespace Stravaig.Gedcom.Model
             _lazyReferencedRecords = new Lazy<Record[]>(GetReferencedRecords);
             _lazyLabels = new Lazy<GedcomLabelRecord[]>(GetLabels);
             _lazyLabelTitles = new Lazy<string[]>(() => Labels.Select(l => l.Title).ToArray());
+            _lazyRefType = new Lazy<GedcomUserReferenceNumberTypeRecord>(GetReferenceTypeRecord);
         }
 
+        private GedcomUserReferenceNumberTypeRecord GetReferenceTypeRecord()
+        {
+            var record = _record.Children.FirstOrDefault(r => r.Tag == GedcomUserReferenceNumberTypeRecord.ReferenceTypeTag);
+            if (record != null)
+                return new GedcomUserReferenceNumberTypeRecord(record, _database);
+            return null;
+        }
+        
         private GedcomUserReferenceNumberRecord[] GetReferences()
         {
             var result = _record.Children.Where(r => r.Tag == GedcomUserReferenceNumberRecord.ReferenceTag)
@@ -247,7 +257,7 @@ namespace Stravaig.Gedcom.Model
         public string PublicationFacts => _lazyPublication.Value?.Text;
         public string FiledByEntry => _lazyFiledByEntry.Value;
         public GedcomUserReferenceNumberRecord[] References => _lazyReferences.Value;
-
+        public GedcomUserReferenceNumberTypeRecord ReferenceType => _lazyRefType.Value;
         public Record[] ReferencedBy => _lazyReferencedRecords.Value;
         public GedcomLabelRecord[] Labels => _lazyLabels.Value;
         public string[] LabelTitles => _lazyLabelTitles.Value;

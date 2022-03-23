@@ -4,6 +4,19 @@ using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.Model
 {
+    public class GedcomUserReferenceNumberTypeRecord : Record
+    {
+        public static readonly GedcomTag ReferenceTypeTag = "REFT".AsGedcomTag();
+        public GedcomUserReferenceNumberTypeRecord(GedcomRecord record, GedcomDatabase database)
+            : base(record, database)
+        {
+            if (record.Tag != ReferenceTypeTag)
+                throw new ArgumentException($"Expected a \"{ReferenceTypeTag}\" record, but got a \"{record.Tag}\" instead.");
+        }
+        
+        public string Type => _record.Value;
+    }
+    
     public class GedcomUserReferenceNumberRecord : Record
     {
         public static readonly GedcomTag ReferenceTag = "REFN".AsGedcomTag();
