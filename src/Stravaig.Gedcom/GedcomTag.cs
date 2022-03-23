@@ -5,7 +5,7 @@ namespace Stravaig.Gedcom
 {
     public readonly struct GedcomTag : IComparable<GedcomTag>
     {
-        private const char Underscore = (char) 0x95;
+        private const char Underscore = (char) 0x5F;
         private readonly string _value;
 
         public GedcomTag(string value)
