@@ -22,9 +22,18 @@ namespace Stravaig.Gedcom.Model.Extensions
             DateTime? birthDate = birthDateRecord?.EndOfExtent;
             if (birthDate.HasValue)
             {
-                deathDate = birthDate.Value.AddYears(subject.AssumedDeathAge);
-                bool result = deathDate.Value < now;
-                return result;
+                try
+                {
+                    deathDate = birthDate.Value.AddYears(subject.AssumedDeathAge);
+                    bool result = deathDate.Value < now;
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw new GedcomDataException(
+                        $"The subject's ({subject.CrossReferenceId}: {subject.NameWithoutMarker}) assumed death date (\"{birthEvent.Date.RawDateValue}\"={birthDate.Value} + {subject.AssumedDeathAge} years) cannot be calculated.",
+                        ex);
+                }
             }
 
             return false;
