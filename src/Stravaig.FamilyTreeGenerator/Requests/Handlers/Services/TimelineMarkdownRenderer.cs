@@ -86,9 +86,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             _writer.Write(" | ");
             _writer.Write(description);
             _writer.Write(" | ");
-            WriteFootnoteLinks(sources);
+            WriteFootnoteLinks(sources.OrderBy(n => n));
             _writer.Write(" | ");
-            WriteFootnoteLinks(notes);
+            WriteFootnoteLinks(notes.OrderBy(n => n));
             _writer.WriteLine();
         }
 

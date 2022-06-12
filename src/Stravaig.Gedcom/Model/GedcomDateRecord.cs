@@ -34,7 +34,7 @@ namespace Stravaig.Gedcom.Model
 
         public string RawDateValue => _record.Value;
         public DateOrderingRule OrderingRule => _database.Settings.DateOrderingRule;
-        public bool IsSuccessful => string.IsNullOrWhiteSpace(_parser.Value.Error);
+        public bool IsSuccessful => string.IsNullOrWhiteSpace(Error);
         public bool HasCoherentDate => IsSuccessful && Type != DateType.Phrase;
         public string Error => _parser.Value.Error;
         public DateType Type => _parser.Value.Type;

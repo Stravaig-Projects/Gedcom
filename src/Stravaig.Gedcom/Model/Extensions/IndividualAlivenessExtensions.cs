@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Stravaig.Gedcom.Model.Extensions
 {
@@ -36,7 +37,13 @@ namespace Stravaig.Gedcom.Model.Extensions
                 }
             }
 
-            return false;
+            return subject.Children()
+                .Select(c => c.Relative)
+                .Where(c => c.IsBirthDateKnown())
+                .Select(c => c.BirthEvent.Date?.EndOfExtent)
+                .Where(d => d.HasValue)
+                .Select(d => d.Value.AddYears(subject.AssumedDeathAge))
+                .Any(d => d < now);
         }
         
         public static bool IsAlive(this GedcomIndividualRecord subject)

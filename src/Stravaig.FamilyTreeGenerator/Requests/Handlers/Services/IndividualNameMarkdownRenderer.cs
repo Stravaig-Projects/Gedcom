@@ -19,40 +19,45 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject,
             GedcomSourceRecord inRelationToSource,
             bool boldName = false, 
-            bool familyNameFirst = false)
+            bool familyNameFirst = false,
+            GedcomNameRecord specificName = null)
         {
             string sourceLocation =
                 new FileInfo(_fileNamer.GetSourceFile(inRelationToSource)).Directory?.FullName ?? string.Empty;
-            return RenderLinkedNameWithLifespan(subject, sourceLocation, boldName);
+            return RenderLinkedNameWithLifespan(subject, sourceLocation, boldName, familyNameFirst, specificName);
         }
 
         public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject, 
             GedcomIndividualRecord inRelationToPerson, 
             bool boldName = false, 
-            bool familyNameFirst = false)
+            bool familyNameFirst = false,
+            GedcomNameRecord specificName = null)
         {
             string sourceLocation =
                 new FileInfo(_fileNamer.GetIndividualFile(inRelationToPerson)).Directory?.FullName ?? string.Empty;
-            return RenderLinkedNameWithLifespan(subject, sourceLocation, boldName);
+            return RenderLinkedNameWithLifespan(subject, sourceLocation, boldName, familyNameFirst, specificName);
         }
 
         public string RenderLinkedNameWithLifespan(GedcomIndividualRecord subject,
             string linkLocationInRelationTo = null,
             bool boldName = false,
-            bool familyNameFirst = false)
+            bool familyNameFirst = false,
+            GedcomNameRecord specificName = null)
         {
             return RenderNameWithLifespan(subject,
                 linkName: true,
                 linkLocationInRelationTo: linkLocationInRelationTo,
                 boldName: boldName,
-                familyNameFirst: familyNameFirst);
+                familyNameFirst: familyNameFirst,
+                specificName: specificName);
         }
         
         public string RenderNameWithLifespan(GedcomIndividualRecord subject, 
             bool linkName = false,
             string linkLocationInRelationTo = null,
             bool boldName = false, 
-            bool familyNameFirst = false)
+            bool familyNameFirst = false,
+            GedcomNameRecord specificName = null)
         {
             string filePath = string.Empty;
             if (linkName)
@@ -66,9 +71,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             StringBuilder sb = new StringBuilder();
             Bold(sb, boldName);
             if (linkName)
-                sb.Append($"[{GetName(subject, familyNameFirst)}]({filePath})");
+                sb.Append($"[{GetName(subject, familyNameFirst, specificName)}]({filePath})");
             else
-                sb.Append(GetName(subject, familyNameFirst));
+                sb.Append(GetName(subject, familyNameFirst, specificName));
             Bold(sb, boldName);
             
             if (subject.BirthEvent?.Date != null || subject.DeathEvent?.Date != null)
@@ -91,11 +96,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             return sb.ToString();
         }
 
-        private static string GetName(GedcomIndividualRecord subject, bool familyNameFirst)
+        private static string GetName(GedcomIndividualRecord subject, bool familyNameFirst, GedcomNameRecord specificName)
         {
+            if (specificName == null)
+            {
+                if (familyNameFirst)
+                    return $"{subject.FamilyName}, {subject.GivenName}";
+                return subject.NameWithoutMarker;
+            }
+
             if (familyNameFirst)
-                return $"{subject.FamilyName}, {subject.GivenName}";
-            return subject.NameWithoutMarker;
+                return $"{specificName.Surname}, {specificName.Name}";
+            return specificName.WholeName;
         }
 
         private void Bold(StringBuilder sb, in bool isBold)

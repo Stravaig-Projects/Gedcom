@@ -18,6 +18,8 @@ namespace Stravaig.FamilyTreeGenerator.Services
         string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo);
         
         string GetByNameIndexFile(string relativeTo = null);
+        string GetByAllNamesIndexFile(string relativeTo = null);
+
         string GetByDateOfBirthIndexFile(string relativeTo = null);
         string GetByBirthLocationIndexFile(string relativeTo = null);
         string GetByResidenceLocationIndexFile(string relativeTo = null);
@@ -93,6 +95,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
         public string GetByNameIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-family-name.md";
+            return GetIndexFile(fileName, relativeTo);
+        }
+        
+        public string GetByAllNamesIndexFile(string relativeTo = null)
+        {
+            const string fileName = "index-by-all-names.md";
             return GetIndexFile(fileName, relativeTo);
         }
         

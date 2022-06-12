@@ -153,7 +153,8 @@ namespace Stravaig.Gedcom.Model
         
         private GedcomUserReferenceNumberRecord[] GetReferences()
         {
-            var result = _record.Children.Where(r => r.Tag == GedcomUserReferenceNumberRecord.ReferenceTag)
+            var result = _record.Children
+                .Where(r => r.Tag == GedcomUserReferenceNumberRecord.ReferenceTag)
                 .Select(r => new GedcomUserReferenceNumberRecord(r, _database))
                 .ToArray();
             return result;

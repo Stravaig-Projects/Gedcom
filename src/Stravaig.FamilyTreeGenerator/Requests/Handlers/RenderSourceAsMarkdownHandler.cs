@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -155,7 +156,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.Write($"({source.ReferenceType.Type}) ");
             if (reference.Type.HasContent())
                 writer.Write($"({reference.Type}) ");
-            writer.Write(reference.Reference);
+            
+            if (reference.Reference.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                writer.Write($"[Open original source at {reference.Reference}]({reference.Reference})");
+            else
+                writer.Write(reference.Reference);
         }
     }
 }
