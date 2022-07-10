@@ -21,4 +21,9 @@
       <ProjectReference Include="..\Stravaig.Gedcom\Stravaig.Gedcom.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="__resources\Occupations\Lapidary.md" />
+      <EmbeddedResource Include="__resources\Occupations\Lapidary.md" />
+    </ItemGroup>
+
 </Project>

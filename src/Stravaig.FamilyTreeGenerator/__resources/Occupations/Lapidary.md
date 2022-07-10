@@ -1,0 +1,3 @@
+> **Lapidary** (from the Latin _lapidarius_) is the practice of shaping stone, minerals, or gemstones into decorative items such as cabochons, engraved gems (including cameos), and faceted designs. A person who practices lapidary is known as a _lapidarist_. A lapidarist uses the lapidary techniques of cutting, grinding, and polishing.
+> 
+> -- From Wikipedia: [Lapidary](https://en.wikipedia.org/wiki/Lapidary)

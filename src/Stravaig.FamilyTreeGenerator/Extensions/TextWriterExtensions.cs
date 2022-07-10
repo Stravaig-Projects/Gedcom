@@ -19,7 +19,10 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
                         escapedLine = "<br/>";
                     writer.Write("> ");
                     writer.WriteLine(escapedLine);
-                    writer.WriteLine(">");
+                    
+                    // If this is a table, don't put in the new line.
+                    if (!escapedLine.StartsWith("|"))
+                        writer.WriteLine(">");
                 }
                 writer.WriteLine();
             }

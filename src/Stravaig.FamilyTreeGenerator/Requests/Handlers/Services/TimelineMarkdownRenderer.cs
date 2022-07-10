@@ -101,6 +101,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteBirthEvent(entry);
             else if (eventRecord.Tag == GedcomIndividualEventRecord.DeathTag)
                 (item, description) = WriteDeathEvent(entry);
+            else if (eventRecord.Tag == GedcomIndividualEventRecord.BuriedTag)
+                (item, description) = WriteBurialEvent(entry);
             else
             {
                 Relationship relationship = entry.Subject.GetRelationshipTo(entry.OtherFamilyMember);
@@ -330,6 +332,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteBirthEvent(entry);
             else if (tag == GedcomIndividualEventRecord.DeathTag)
                 (item, description) = WriteDeathEvent(entry);
+            else if (tag == GedcomIndividualEventRecord.BuriedTag)
+                (item, description) = WriteBurialEvent(entry);
             else if ((tag == GedcomIndividualAttributeRecord.ResidenceTag) || 
                      (tag == GedcomIndividualAttributeRecord.OccupationTag))
             {
@@ -418,7 +422,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 sb.Append($" in {entry.IndividualEvent.NormalisedPlaceName()}");
             }
 
-            sb.Append(".");
+            sb.Append('.');
 
             string item = "Died";
             if (entry.OtherFamilyMember != null)
@@ -428,6 +432,39 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                     ? entry.OtherFamilyMember.NameWithoutMarker
                     : _relationshipRenderer.HumanReadable(relation, true);
                 item = "Death of " + relationName;
+            }
+            return (item, sb.ToString());
+        }
+
+        private (string, string) WriteBurialEvent(TimelineEntry entry)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var subject = entry.OtherFamilyMember ?? entry.Subject;
+            if (subject == entry.Subject)
+                sb.Append("Was buried");
+            else
+            {
+                _associatesOrganiser.AddAssociate(subject);
+                var link = _fileNamer.GetIndividualFile(entry.OtherFamilyMember, entry.Subject);
+                sb.Append($"[{subject.NameWithoutMarker}]({link}) was buried");
+            }
+
+            if (entry.IndividualEvent.Place != null)
+            {
+                sb.Append($" in {entry.IndividualEvent.NormalisedPlaceName()}");
+            }
+
+            sb.Append('.');
+
+            string item = "Burial";
+            if (entry.OtherFamilyMember != null)
+            {
+                var relation = entry.Subject.GetRelationshipTo(entry.OtherFamilyMember);
+                var relationName = relation.IsNotRelated 
+                    ? entry.OtherFamilyMember.NameWithoutMarker
+                    : _relationshipRenderer.HumanReadable(relation, true);
+                item = "Burial of " + relationName;
             }
             return (item, sb.ToString());
         }

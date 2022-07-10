@@ -100,11 +100,15 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                         "_Redacted because this source is referenced by a (potentially) living person and may contain personally identifiable information._");
                     writer.WriteLine();                    
                 }
-                else if (source.LabelTitles.Contains("PERSONAL"))
+                else if (source.LabelTitles.Contains("PERSONAL", StringComparer.InvariantCultureIgnoreCase))
                 {
                     writer.WriteLine(
                         "_Redacted_");
                     writer.WriteLine();
+                }
+                else if (source.LabelTitles.Contains("Redact Source Text", StringComparer.InvariantCultureIgnoreCase))
+                {
+                    writer.WriteLine("_Text redacted_");
                 }
                 else
                     writer.WriteMarkdownBlockQuote(source.Text);

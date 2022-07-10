@@ -2,6 +2,7 @@
 using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Stravaig.Gedcom;
 using Stravaig.Gedcom.Model;
 using Stravaig.Gedcom.Model.Extensions;
@@ -59,10 +60,10 @@ namespace Stravaig.FamilyTree.Standardiser
         {
             services.AddLogging(builder =>
             {
-                builder.AddConsole(options =>
+                builder.AddSimpleConsole(options =>
                 {
                     options.TimestampFormat = "HH:mm:ss.fff ";
-                    options.LogToStandardErrorThreshold = LogLevel.Critical;
+                    options.ColorBehavior = LoggerColorBehavior.Enabled;
                 });
                 builder.AddDebug();
             });
