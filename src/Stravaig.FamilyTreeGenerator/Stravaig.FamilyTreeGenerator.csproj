@@ -24,6 +24,8 @@
     <ItemGroup>
       <None Remove="__resources\Occupations\Lapidary.md" />
       <EmbeddedResource Include="__resources\Occupations\Lapidary.md" />
+      <None Remove="__resources\Occupations\Midwife.md" />
+      <EmbeddedResource Include="__resources\Occupations\Midwife.md" />
     </ItemGroup>
 
 </Project>

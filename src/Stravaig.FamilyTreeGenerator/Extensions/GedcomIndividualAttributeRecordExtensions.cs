@@ -16,16 +16,21 @@ public static class GedcomIndividualAttributeRecordExtensions
     private const string Blacksmith = "Blacksmith";
     private const string BusinessOwner = "Business Owner";
     private const string Carpenter = "Carpenter";
+    private const string ChildCareProfessional = "Child Care Professional";
     private const string DomesticServant = "Domestic Servant";
     private const string Driver = "Driver";
+    private const string Engineer = "Engineer";
     private const string EstateAgent = "Estate Agent";
     private const string FactoryWorker = "Factory Worker";
     private const string FarmWorker = "Farm Worker";
     private const string FishWorker = "Fish Worker";
+    private const string HealthCareProfessional = "Health Care Professional";
     private const string Janitor = "Janitor";
     private const string Joiner = "Joiner";
     private const string Labourer = "Labourer";
     private const string Librarian = "Librarian";
+    private const string Manager = "Manager";
+    private const string Midwife = "Midwife";
     private const string Miner = "Miner";
     private const string Nurse = "Nurse";
     private const string Painter = "Painter";
@@ -55,7 +60,7 @@ public static class GedcomIndividualAttributeRecordExtensions
         builder.Add("Caretaker", new[]{Janitor});
         builder.Add(Carpenter, new[]{Carpenter, Joiner});
         builder.Add("Carter", new[]{Driver});
-        builder.Add("Children's Nurse", new[] {Nurse});
+        builder.Add("Children's Nurse", new[] {Nurse, HealthCareProfessional, ChildCareProfessional});
         builder.Add("Clothing Business", new[]{BusinessOwner});
         builder.Add("Coachman (Domestic Servant)", new[]{Driver, DomesticServant});
         builder.Add("Coach Painter (Journeyman)", new[]{Painter});
@@ -64,9 +69,12 @@ public static class GedcomIndividualAttributeRecordExtensions
         
         builder.Add("Dairy Maid", new []{FarmWorker});
         builder.Add("Dairymaid", new []{FarmWorker});
-        builder.Add("District Nurse", new[] {Nurse});
+        builder.Add("District Nurse", new[] {Nurse, HealthCareProfessional});
         builder.Add("Domestic", new[]{DomesticServant});
         builder.Add(DomesticServant, new[]{DomesticServant});
+        
+        builder.Add(Engineer, new[]{Engineer});
+        builder.Add("Engineering Laboritory Technician", new[]{Engineer});
         
         builder.Add(FactoryWorker, new[]{FactoryWorker});
         builder.Add(FarmWorker, new[]{FarmWorker});
@@ -76,6 +84,9 @@ public static class GedcomIndividualAttributeRecordExtensions
         builder.Add("Fishwife", new[]{FishWorker});
         builder.Add("Fisherwomen", new[]{FishWorker});
         builder.Add(FishWorker, new[]{FishWorker});
+        
+        builder.Add("Grocer's Apprentice", new[]{RetailWorker});
+        builder.Add("Grocer’s Apprentice", new[]{RetailWorker});
         
         builder.Add("Ham Curer's Vanman", new[]{Driver});
         builder.Add("Head Janitor", new[]{Janitor});
@@ -93,13 +104,19 @@ public static class GedcomIndividualAttributeRecordExtensions
         builder.Add("Library Attendant", new[]{Librarian});
         builder.Add("Light Duty Cycle Factory Warehouse", new[]{FactoryWorker});
         
+        builder.Add("Manager (Engineering Services)", new[]{Manager, Engineer});
         builder.Add("Mason's Labourer", new[]{Labourer});
+        builder.Add(Midwife, new[]{Midwife, HealthCareProfessional});
+        
+        builder.Add("Nanny", new[]{ChildCareProfessional});
+        builder.Add(Nurse, new[]{Nurse, HealthCareProfessional});
+        builder.Add("Nurse Director", new[]{Nurse, Manager, HealthCareProfessional});
         
         builder.Add("Office/Contract Cleaner", new[]{Janitor});
         
         builder.Add("Ploughman", new[]{FarmWorker});
-        builder.Add("Practical Nursing", new[]{Nurse});
-        builder.Add("Proprietor, Children's Nursery", new[]{BusinessOwner});
+        builder.Add("Practical Nursing", new[]{Nurse, HealthCareProfessional});
+        builder.Add("Proprietor, Children's Nursery", new[]{BusinessOwner, ChildCareProfessional});
         
         builder.Add("Railway Driver", new[]{Driver});
         builder.Add("Railway Engine Driver", new[]{Driver});

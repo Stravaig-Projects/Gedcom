@@ -91,7 +91,7 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
             {
                 var nameParts = subject.Names
                     .SelectMany(n => n.Name.Split(' ', '/'))
-                    .Where(n => n.HasContent());
+                    .Where(n => n.HasContent() && n.Length > 1);
                 foreach (string name in nameParts)
                     names.Add(name);
             }

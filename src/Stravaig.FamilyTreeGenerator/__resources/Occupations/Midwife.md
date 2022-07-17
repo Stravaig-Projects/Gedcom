@@ -1,0 +1,5 @@
+> A midwife is a health professional who cares for mothers and newborns around childbirth, a specialisation known as midwifery.
+> 
+> The education and training for a midwife concentrates extensively on the care of women throughout their lifespan; concentrating on being experts in what is normal and identifying conditions that need further evaluation. In most countries, midwives are recognised as skilled healthcare providers. Midwives are trained to recognise variations from the normal progress of labour and understand how to deal with deviations from normal. They may intervene in high risk situations such as breech births, twin births, and births where the baby is in a posterior position, using non-invasive techniques. For complications related to pregnancy and birth that are beyond the midwife's scope of practice, including surgical and instrumental deliveries, they refer their patients to physicians or surgeons.
+> 
+> -- From Wikipedia: [Midwife](https://en.wikipedia.org/wiki/Midwife)
