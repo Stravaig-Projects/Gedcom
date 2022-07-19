@@ -75,12 +75,14 @@ class Program
             registry.Register<Application, ApplicationHandler>();
                 
             registry.Register<InitFileSystem, InitFileSystemForMarkdownHandler>();
-                
+
+            // People pages & data files.
             registry.Register<RenderIndividual, RenderIndividualAsMarkdownHandler>();
             registry.Register<RenderIndividual, RenderPersonAncestorsAsJsonHandler>();
             registry.Register<RenderIndividual, RenderPersonDescendantsAsJsonHandler>();
             registry.Register<RenderIndividual, RenderPersonFamilyTreeAsJsonHandler>();
                 
+            // Indexes
             registry.Register<RenderPersonIndex, RenderPersonIndexByNameAsMarkdownHandler>();
             registry.Register<RenderPersonIndex, RenderPersonIndexByAllKnownNamesAsMarkdownHandler>();
             registry.Register<RenderPersonIndex, RenderPersonIndexByDateOfBirthAsMarkdownHandler>();
@@ -90,9 +92,14 @@ class Program
             registry.Register<RenderPersonIndex, RenderPersonIndexByOccupationHandler>();
             registry.Register<RenderPersonIndex, RenderMarriageByDateIndexHandler>();
             registry.Register<RenderPersonIndex, RenderMarriageByNameIndexHandler>();
-                
+            
+            // Indexes for follow up research:
+            registry.Register<RenderPersonIndex, RenderPersonIndexByUnknownDateOfBirthAsMarkdownHandler>();
+            
+            // Source index
             registry.Register<RenderSourceIndex, RenderSourceIndexAsMarkdownHandler>();
 
+            // Sources
             registry.Register<RenderSource, RenderSourceAsMarkdownHandler>();
         });
         services.AddTransient(typeof(ExceptionPolicyHandler<>));
