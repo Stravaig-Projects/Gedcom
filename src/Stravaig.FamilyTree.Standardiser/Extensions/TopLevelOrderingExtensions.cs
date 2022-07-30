@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Stravaig.Gedcom;
@@ -25,7 +26,51 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
                 var family = database.FamilyRecords[pointer.Value];
                 return OrderRecordsForFamily(family);
             }
+
+            if (parentTag == GedcomSourceRecord.SourceTag && pointer.HasValue)
+            {
+                var source = database.SourceRecords[pointer.Value];
+                return OrderRecordsForSource(source);
+            }
             return topLevelRecord.Children;
+        }
+
+        private static IEnumerable<GedcomRecord> OrderRecordsForSource(GedcomSourceRecord source)
+        {
+            var records = source.UnderlyingRecord.Children.ToList();
+            var tagSequence = new GedcomTag[]
+            {
+                GedcomTitleRecord.TitleTag,
+                GedcomDateRecord.DateTag,
+                GedcomSourcePublicationFactsRecord.PublicationTag,
+                GedcomSourceRecord.SourceOriginatorTag, // Author
+                GedcomSourceRecord.AgencyTag,
+                GedcomSourceRecord.FiledByEntryTag,
+                GedcomUserReferenceNumberTypeRecord.ReferenceTypeTag,
+                GedcomUserReferenceNumberRecord.ReferenceTag,
+                GedcomPlaceRecord.PlaceTag,
+                GedcomTextRecord.TextTag,
+                GedcomNoteRecord.NoteTag,
+                GedcomSourceRecord.ChangeTag,
+                GedcomSourceRecord.ObjectTag,
+                GedcomLabelRecord.LabelTag,
+            };
+
+            foreach (var tag in tagSequence)
+            {
+                var taggedRecords = records.Where(r => r.Tag == tag).ToList();
+                foreach (var record in taggedRecords)
+                {
+                    yield return record;
+                    records.Remove(record);
+                }
+            }
+
+            foreach (var record in records.OrderBy(r => r.Tag))
+            {
+                Console.WriteLine(record);
+                yield return record;
+            }
         }
 
         private static IEnumerable<GedcomRecord> OrderRecordsForFamily(GedcomFamilyRecord family)

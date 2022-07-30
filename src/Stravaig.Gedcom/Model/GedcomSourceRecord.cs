@@ -101,9 +101,11 @@ namespace Stravaig.Gedcom.Model
     {
         public static readonly GedcomTag SourceTag = "SOUR".AsGedcomTag();
         private static readonly GedcomTag DataTag = "DATA".AsGedcomTag();
-        private static readonly GedcomTag AgencyTag = "AGNC".AsGedcomTag();
-        private static readonly GedcomTag SourceOriginatorTag = "AUTH".AsGedcomTag();
-        private static readonly GedcomTag FiledByEntryTag = "ABBR".AsGedcomTag();
+        public static readonly GedcomTag AgencyTag = "AGNC".AsGedcomTag();
+        public static readonly GedcomTag SourceOriginatorTag = "AUTH".AsGedcomTag();
+        public static readonly GedcomTag FiledByEntryTag = "ABBR".AsGedcomTag();
+        public static readonly GedcomTag ChangeTag = "CHAN".AsGedcomTag();
+        public static readonly GedcomTag ObjectTag = "OBJE".AsGedcomTag();
 
         private readonly Lazy<GedcomTitleRecord> _lazyTitle;
         private readonly Lazy<GedcomTextRecord> _lazyText;
