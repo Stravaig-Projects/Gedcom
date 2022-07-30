@@ -128,7 +128,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         {
             string item, description;
 
-            if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageTag)
+            if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageLicenceTag)
+                (item, description) = WriteMarriageEvent(entry);
+            else if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageTag)
                 (item, description) = WriteMarriageEvent(entry);
             else if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.DivorceTag)
                 (item, description) = WriteDivorceEvent(entry);
@@ -212,6 +214,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         private (string, string) WriteMarriageEvent(TimelineEntry entry)
         {
             string item = "Marriage";
+            if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageLicenceTag)
+                item += " Licence";
             var sb = new StringBuilder();
             if (entry.Family.Spouses.Any(s => s == entry.Subject))
             {
@@ -239,16 +243,18 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
         private void RenderMarriageEventWhereSubjectIsChild(TimelineEntry entry, StringBuilder sb)
         {
+            sb.Append("Marriage ");
+            if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageLicenceTag)
+                sb.Append("licence ");
+            sb.Append("of ");
             if (entry.Family.Spouses.Length == 1)
             {
-                sb.Append("Marriage of ");
                 var spouse = entry.Family.Spouses.First();
                 RenderSpouse(entry, spouse, sb);
                 sb.Append("and unknown");
             }
             else if (entry.Family.Spouses.Length == 2)
             {
-                sb.Append("Marriage of ");
                 var spouse = entry.Family.Spouses.First();
                 RenderSpouse(entry, spouse, sb);
                 sb.Append(" and ");
@@ -257,15 +263,17 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             }
             else
             {
-                sb.Append("Marriage of unknown parents or guardians");
+                sb.Append("unknown parents or guardians");
             }
 
-            sb.Append(" ");
+            sb.Append(' ');
         }
 
         private string GetMarriageEventItemWhereSubjectIsChild(TimelineEntry entry)
         {
             string item = "Marriage";
+            if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageLicenceTag)
+                item += " Licence";
             Relationship[] relations = entry.Family.Spouses
                 .Select(s => entry.Subject.GetRelationshipTo(s))
                 .ToArray();
@@ -293,7 +301,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         {
             if (spouse.IsAlive())
             {
-                sb.Append("X");
+                sb.Append('X');
             }
             else
             {
@@ -307,10 +315,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             var spouse = entry.Family.Spouses.FirstOrDefault(s => s != entry.Subject);
             if (spouse != null)
             {
-                sb.Append("Married to ");
+                sb.Append(entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageLicenceTag
+                    ? "Applied for marriage licence with "
+                    : "Married to ");
                 if (spouse.IsAlive())
                 {
-                    sb.Append("X");
+                    sb.Append('X');
                 }
                 else
                 {
@@ -318,7 +328,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                     sb.Append($"[{spouse.NameWithoutMarker}]({link})");
                 }
 
-                sb.Append(" ");
+                sb.Append(' ');
             }
         }
 

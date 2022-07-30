@@ -84,7 +84,7 @@ namespace Stravaig.Gedcom.Model
         private static readonly GedcomTag MarriageBannTag = "MARB".AsGedcomTag();
         private static readonly GedcomTag MarriageContractTag = "MARC".AsGedcomTag();
 
-        private static readonly GedcomTag MarriageLicenceTag = "MARL".AsGedcomTag();
+        public static readonly GedcomTag MarriageLicenceTag = "MARL".AsGedcomTag();
         public static readonly GedcomTag MarriageTag = "MARR".AsGedcomTag();
         private static readonly GedcomTag MarriageSettlementTag = "MARS".AsGedcomTag();
 
