@@ -96,8 +96,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                             familyNameFirst: true);
                         writer.Write($"* {name}");
                         if (person.Count > 1)
-                            writer.Write($", mentioned {"time".ToQuantity(person.Count)}");
-                        writer.WriteLine(".");
+                        {
+                            writer.Write(", mentioned ");
+                            writer.Write(person.Count == 2 ? "twice" : "time".ToQuantity(person.Count));
+                        }
+                        writer.WriteLine('.');
                     }
 
                     writer.WriteLine();
