@@ -58,7 +58,9 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         public override RenderIndividual Handle(RenderIndividual command)
         {
             _logger.LogInformation(
-                $"Render As Markdown {command.Individual.CrossReferenceId} : {command.Individual.Name}");
+                "Render As Markdown {IndividualCrossReferenceId} : {IndividualName}",
+                command.Individual.CrossReferenceId,
+                command.Individual.Name);
 
             InitHandler(command);
             WriteHeader(command.Individual);
