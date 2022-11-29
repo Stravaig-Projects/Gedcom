@@ -13,7 +13,7 @@
       <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
       <PackageReference Include="Paramore.Brighter" Version="8.1.1399" />
-      <PackageReference Include="Paramore.Brighter.Extensions.DependencyInjection" Version="2.0.4" />
+      <PackageReference Include="Paramore.Brighter.Extensions.DependencyInjection" Version="9.3.5" />
     </ItemGroup>
 
     <ItemGroup>
