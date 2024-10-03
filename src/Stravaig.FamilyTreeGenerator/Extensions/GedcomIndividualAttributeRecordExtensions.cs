@@ -82,6 +82,9 @@ public static class GedcomIndividualAttributeRecordExtensions
         builder.Add("Fish Salesman", new[]{Sales});
         builder.Add("Fishergirl", new[]{FishWorker});
         builder.Add("Fishwife", new[]{FishWorker});
+        builder.Add("Fishwoman", new[]{FishWorker});
+        builder.Add("Fishworker", new[]{FishWorker});
+        builder.Add("Fisherwoman", new[]{FishWorker});
         builder.Add("Fisherwomen", new[]{FishWorker});
         builder.Add(FishWorker, new[]{FishWorker});
         

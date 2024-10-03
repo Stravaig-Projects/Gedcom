@@ -197,7 +197,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 sb.Append("Divorced");
             }
 
-            sb.Append(" ");
+            sb.Append(' ');
             if (entry.FamilyEvent.Address != null)
             {
                 sb.Append("at ");
