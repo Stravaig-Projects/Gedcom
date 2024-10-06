@@ -105,7 +105,7 @@ namespace Stravaig.Gedcom.Model
         public static readonly GedcomTag SourceOriginatorTag = "AUTH".AsGedcomTag();
         public static readonly GedcomTag FiledByEntryTag = "ABBR".AsGedcomTag();
         public static readonly GedcomTag ChangeTag = "CHAN".AsGedcomTag();
-        public static readonly GedcomTag ObjectTag = "OBJE".AsGedcomTag();
+        //public static readonly GedcomTag ObjectTag = "OBJE".AsGedcomTag();
 
         private readonly Lazy<GedcomTitleRecord> _lazyTitle;
         private readonly Lazy<GedcomTextRecord> _lazyText;
@@ -120,16 +120,17 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<GedcomLabelRecord[]> _lazyLabels;
         private readonly Lazy<string[]> _lazyLabelTitles;
         private readonly Lazy<GedcomUserReferenceNumberTypeRecord> _lazyRefType;
-        
+        private readonly Lazy<GedcomObjectRecord[]> _lazyObjects;
+
         public GedcomSourceRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
         {
             if (record.Tag != SourceTag)
                 throw new ArgumentException($"Expected a \"SOUR\" record, but got a \"{record.Tag}\" instead.");
-            
+
             if (!record.CrossReferenceId.HasValue)
                 throw new ArgumentException("Expected the record to have a cross reference id, but it did not.", nameof(record));
-            
+
             _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
             _lazyTitle = new Lazy<GedcomTitleRecord>(GetTitleRecord);
             _lazyText = new Lazy<GedcomTextRecord>(GetTextRecord);
@@ -143,6 +144,16 @@ namespace Stravaig.Gedcom.Model
             _lazyLabels = new Lazy<GedcomLabelRecord[]>(GetLabels);
             _lazyLabelTitles = new Lazy<string[]>(() => Labels.Select(l => l.Title).ToArray());
             _lazyRefType = new Lazy<GedcomUserReferenceNumberTypeRecord>(GetReferenceTypeRecord);
+            _lazyObjects = new Lazy<GedcomObjectRecord[]>(GetObjectRecords);
+        }
+
+        private GedcomObjectRecord[] GetObjectRecords()
+        {
+            var objectRecords = _record.Children
+                .Where(r => r.Tag == GedcomObjectRecord.ObjectTag && r.CrossReferenceId.HasValue)
+                .Select(r => _database.ObjectRecords[r.CrossReferenceId.Value])
+                .ToArray();
+            return objectRecords;
         }
 
         private GedcomUserReferenceNumberTypeRecord GetReferenceTypeRecord()
@@ -152,7 +163,7 @@ namespace Stravaig.Gedcom.Model
                 return new GedcomUserReferenceNumberTypeRecord(record, _database);
             return null;
         }
-        
+
         private GedcomUserReferenceNumberRecord[] GetReferences()
         {
             var result = _record.Children
@@ -169,7 +180,7 @@ namespace Stravaig.Gedcom.Model
                 return new GedcomSourcePublicationFactsRecord(record, _database);
             return null;
         }
-        
+
         private GedcomTitleRecord GetTitleRecord()
         {
             var record = _record.Children.FirstOrDefault(r => r.Tag == GedcomTitleRecord.TitleTag);
@@ -220,7 +231,7 @@ namespace Stravaig.Gedcom.Model
             }
 
         }
-        
+
         private string GetResponsibleAgency()
         {
             // The Agency tag being directly under the Source record is
@@ -236,14 +247,14 @@ namespace Stravaig.Gedcom.Model
 
             return agencyRecord?.Value;
         }
-        
+
         private string GetSourceOriginator()
         {
             var record = _record.Children.FirstOrDefault(r => r.Tag == SourceOriginatorTag);
             return record?.Value;
         }
 
-        
+
         // This is checked in the constructor already.
         // ReSharper disable once PossibleInvalidOperationException
         public GedcomPointer CrossReferenceId => _record.CrossReferenceId.Value;

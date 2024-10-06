@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using Humanizer;
 using Microsoft.Extensions.Logging;
 using Paramore.Brighter;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 using Stravaig.FamilyTree.Common.Extensions;
 using Stravaig.FamilyTree.Common.Humaniser;
 using Stravaig.FamilyTreeGenerator.Extensions;
@@ -14,6 +19,7 @@ using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model;
 using Stravaig.Gedcom.Model.Extensions;
+using Size = System.Drawing.Size;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 {
@@ -21,6 +27,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
     // Instantiated by Paramore Brighter
     public class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual>, IDisposable
     {
+        private const double ProfilePictureSize = 200;
         private readonly ILogger<RenderIndividualAsMarkdownHandler> _logger;
         private readonly IStaticFootnoteOrganiser _footnoteOrganiser;
         private readonly IAssociatesOrganiser _associatesOrganiser;
@@ -32,7 +39,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private readonly IOccupationRenderer _occupationRenderer;
         private FileStream _fs;
         private TextWriter _writer;
-        
+
         public RenderIndividualAsMarkdownHandler(
             ILogger<RenderIndividualAsMarkdownHandler> logger,
             IStaticFootnoteOrganiser footnoteOrganiser,
@@ -73,7 +80,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             WriteAssociations(command.Individual);
             _footnoteOrganiser.WriteFootnotes(_writer, command.Individual);
             WriteFooter(command.Individual);
-            
+
             return base.Handle(command);
         }
 
@@ -90,12 +97,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             _writer = new StreamWriter(_fs, Encoding.UTF8);
         }
-        
+
         private void WriteImmediateFamily(GedcomIndividualRecord subject)
         {
             if (subject.FamilyLinks.NotAny())
                 return;
-            
+
             _writer.WriteLine("## Immediate Family");
             _writer.WriteLine();
 
@@ -112,7 +119,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             }
             _writer.WriteLine();
         }
-        
+
         private void WriteNames(GedcomIndividualRecord subject)
         {
             if (subject.Names.Length > 1)
@@ -178,7 +185,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 siblings.AddRange(family.Children);
                 parentsAndGuardians.AddRange(family.Spouses);
             }
-            
+
         }
 
         private void WriteHeader(GedcomIndividualRecord subject)
@@ -191,9 +198,12 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _writer.WriteLine($"permalink: /people/{simpleIndividualId}");
             _writer.WriteLine("---");
             _writer.WriteLine();
-            
+
             var name = subject.NameWithoutMarker;
             _writer.WriteLine($"# {name}");
+
+            WriteProfilePicture(subject);
+
             var birthDate = subject.BirthEvent?.Date;
             var deathDate = subject.DeathEvent?.Date;
 
@@ -237,6 +247,44 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             }
 
             _writer.WriteLine();
+        }
+
+        private void WriteProfilePicture(GedcomIndividualRecord subject)
+        {
+            var profilePictureObject = subject.Objects
+                .FirstOrDefault(o => o.HasLabel("Publish Image") && o.IsFileType("jpg"));
+            if (profilePictureObject == null)
+                return;
+
+            var fullFilePath = _fileNamer.GetMediaFile(profilePictureObject);
+
+            using var image = Image.Load(fullFilePath);
+            var width = (double)image.Width;
+            var height = (double)image.Height;
+            if (width > ProfilePictureSize)
+            {
+                var scale = width / ProfilePictureSize;
+                height /= scale;
+                width = ProfilePictureSize;
+            }
+
+            if (height > ProfilePictureSize)
+            {
+                var scale = height / ProfilePictureSize;
+                width /= scale;
+                height = ProfilePictureSize;
+            }
+
+            image.Mutate(ipc => ipc.Resize((int)width, (int)height));
+            using var memoryStream = new MemoryStream();
+            image.Save(memoryStream, new JpegEncoder()
+            {
+                SkipMetadata = true,
+                Quality = 75,
+            });
+            byte[] imageBytes = memoryStream.ToArray();
+            string base64String = Convert.ToBase64String(imageBytes);
+            _writer.WriteLine($"<img alt=\"{HttpUtility.HtmlEncode(profilePictureObject.Title)}\" class=\"profile-pic\" src=\"data:image/jpg;base64,{base64String}\"/>");
         }
 
         private void WriteFooter(GedcomIndividualRecord subject)

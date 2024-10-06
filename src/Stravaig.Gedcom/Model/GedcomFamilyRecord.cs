@@ -20,16 +20,16 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
         private readonly Lazy<GedcomFamilyEventRecord[]> _lazyFamilyEvents;
         private readonly Lazy<GedcomSourceRecord[]> _lazySources;
-        
+
         public GedcomFamilyRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
         {
             if (record.Tag != FamilyTag)
                 throw new ArgumentException($"Must be a \"FAM_RECORD\" ({FamilyTag}).");
-            
+
             if (!record.CrossReferenceId.HasValue)
                 throw new ArgumentException($"A \"FAM_RECORD\" ({FamilyTag}) must have a CrossReferenceId.");
-            
+
             _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
             _lazyFamilyEvents = new Lazy<GedcomFamilyEventRecord[]>(GetFamilyEvents);
             _lazySources = new Lazy<GedcomSourceRecord[]>(GetSourceRecords);
@@ -50,12 +50,20 @@ namespace Stravaig.Gedcom.Model
 
         public GedcomIndividualRecord[] Spouses => _record.Children
             .Where(r => SpouseTags.Contains(r.Tag))
-            .Select(r => _database.IndividualRecords[r.Value.AsGedcomPointer()])
+            .Select(r => _database.IndividualRecords
+                .TryGetValue(r.Value.AsGedcomPointer(), out var result)
+                ? result
+                : null)
+            .Where(r => r != null)
             .ToArray();
-        
+
         public GedcomIndividualRecord[] Children => _record.Children
             .Where(r => r.Tag == ChildTag)
-            .Select(r => _database.IndividualRecords[r.Value.AsGedcomPointer()])
+            .Select(r => _database.IndividualRecords
+                    .TryGetValue(r.Value.AsGedcomPointer(), out var result)
+                    ? result
+                    : null)
+            .Where(r => r != null)
             .ToArray();
 
         public GedcomNoteRecord[] Notes => _lazyNotes.Value;

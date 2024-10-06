@@ -27,9 +27,6 @@ namespace Stravaig.Gedcom.Model
             return formRecord.Value;
         }
 
-
-
-
         public string Name => _record.Value;
 
         public string Form => _form.Value;

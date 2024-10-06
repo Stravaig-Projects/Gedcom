@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Stravaig.Gedcom
 {
-    [DebuggerDisplay("{Level} {CrossReferenceId} {Tag} {Value} with {Children.Count} children")]
+    [DebuggerDisplay("{DebugDisplay}")]
 
     public class GedcomRecord
     {
@@ -28,11 +28,11 @@ namespace Stravaig.Gedcom
 
         public static GedcomRecord From(GedcomLine line, GedcomRecord parent)
         {
-            return parent == null 
-                ? new GedcomRecord(line) 
+            return parent == null
+                ? new GedcomRecord(line)
                 : new GedcomRecord(line, parent);
         }
-        
+
         public GedcomTag Tag => _line.Tag;
         public GedcomLevel Level => _line.Level;
         public GedcomPointer? CrossReferenceId => _line.CrossReferenceId;
@@ -49,7 +49,11 @@ namespace Stravaig.Gedcom
         public IReadOnlyList<GedcomRecord> SiblingsExclusive =>
             SiblingsInclusive.Where(s => s != this)
                 .ToArray();
-        
+
+        #if DEBUG
+        internal string DebugDisplay => $"Record: {Level} {CrossReferenceId} {Tag} {Value} with {Children.Count} children.";
+        #endif
+
         private void AttachChild(GedcomRecord child)
         {
             _children.Add(child);

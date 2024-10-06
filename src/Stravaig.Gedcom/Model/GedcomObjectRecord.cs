@@ -6,7 +6,7 @@ namespace Stravaig.Gedcom.Model
 {
     public class GedcomObjectRecord : Record
     {
-        public static readonly GedcomTag SourceTag = "SOUR".AsGedcomTag();
+        public static readonly GedcomTag ObjectTag = "OBJE".AsGedcomTag();
 
         private readonly Lazy<GedcomFileRecord> _fileRecord;
         private readonly Lazy<GedcomTitleRecord> _titleRecord;
@@ -19,6 +19,12 @@ namespace Stravaig.Gedcom.Model
             _titleRecord = new Lazy<GedcomTitleRecord>(GetTitleRecord);
             _labels = new Lazy<GedcomLabelRecord[]>(GetLabels);
         }
+
+        public bool HasLabel(string labelName)
+            => Labels.Any(l => l.Title.Equals(labelName, StringComparison.CurrentCultureIgnoreCase));
+
+        public bool IsFileType(string typeName)
+            => FileType.Equals(typeName, StringComparison.OrdinalIgnoreCase);
 
         private GedcomFileRecord GetFileRecord()
         {
@@ -42,8 +48,8 @@ namespace Stravaig.Gedcom.Model
         {
             var labelRefs = _record.Children.Where(r => r.Tag == GedcomLabelRecord.LabelTag);
             var labelRecords = labelRefs
-                .Where(r => r.CrossReferenceId.HasValue)
-                .Select(r => _database.LabelRecords[r.CrossReferenceId.Value])
+                .Where(r => !string.IsNullOrWhiteSpace(r.Value))
+                .Select(r => _database.LabelRecords[r.Value.AsGedcomPointer()])
                 .ToArray();
 
             return labelRecords;

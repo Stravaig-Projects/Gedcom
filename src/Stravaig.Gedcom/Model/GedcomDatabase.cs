@@ -14,7 +14,8 @@ namespace Stravaig.Gedcom.Model
         private readonly Dictionary<GedcomPointer, GedcomNoteRecord> _noteRecords;
         private readonly Dictionary<GedcomPointer, GedcomSourceRecord> _sourceRecords;
         private readonly Dictionary<GedcomPointer, GedcomLabelRecord> _labelRecords;
-        
+        private readonly Dictionary<GedcomPointer, GedcomObjectRecord> _objectRecords;
+
         public GedcomDatabase()
         {
             _records = new List<GedcomRecord>();
@@ -24,9 +25,10 @@ namespace Stravaig.Gedcom.Model
             _noteRecords = new Dictionary<GedcomPointer, GedcomNoteRecord>();
             _sourceRecords = new Dictionary<GedcomPointer, GedcomSourceRecord>();
             _labelRecords = new Dictionary<GedcomPointer, GedcomLabelRecord>();
+            _objectRecords = new Dictionary<GedcomPointer, GedcomObjectRecord>();
             Settings = new DatabaseSettings();
         }
-        
+
         public DatabaseSettings Settings { get; }
 
         public void Populate(GedcomRecordReader reader)
@@ -64,6 +66,8 @@ namespace Stravaig.Gedcom.Model
         public IReadOnlyDictionary<GedcomPointer, GedcomSourceRecord> SourceRecords => _sourceRecords;
         public IReadOnlyDictionary<GedcomPointer, GedcomLabelRecord> LabelRecords => _labelRecords;
 
+        public IReadOnlyDictionary<GedcomPointer, GedcomObjectRecord> ObjectRecords => _objectRecords;
+
         private void ProcessRecord(GedcomRecord record)
         {
             _records.Add(record);
@@ -81,8 +85,9 @@ namespace Stravaig.Gedcom.Model
                     _sourceRecords.Add(pointer, new GedcomSourceRecord(record, this));
                 else if (record.Tag == GedcomLabelRecord.LabelTag)
                     _labelRecords.Add(pointer, new GedcomLabelRecord(record, this));
+                else if (record.Tag == GedcomObjectRecord.ObjectTag)
+                    _objectRecords.Add(pointer, new GedcomObjectRecord(record, this));
             }
-            
         }
     }
 }

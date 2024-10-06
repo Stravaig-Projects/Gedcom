@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using CommandLine;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,7 @@ class Program
         var options = ExtractCommandLineInfo(args);
         if (options == null)
             return;
-            
+
         using var provider = BuildServiceProvider(options);
         _logger = provider.GetService<ILogger<Program>>();
         var commander = provider.GetRequiredService<IAmACommandProcessor>();
@@ -52,7 +53,7 @@ class Program
         var provider = services.BuildServiceProvider();
         return provider;
     }
-        
+
     private static void AddApplicationServices(ServiceCollection services, CommandLineOptions options)
     {
         services.AddBrighter(opts =>
@@ -73,7 +74,7 @@ class Program
         }).Handlers(registry =>
         {
             registry.Register<Application, ApplicationHandler>();
-                
+
             registry.Register<InitFileSystem, InitFileSystemForMarkdownHandler>();
 
             // People pages & data files.
@@ -81,7 +82,7 @@ class Program
             registry.Register<RenderIndividual, RenderPersonAncestorsAsJsonHandler>();
             registry.Register<RenderIndividual, RenderPersonDescendantsAsJsonHandler>();
             registry.Register<RenderIndividual, RenderPersonFamilyTreeAsJsonHandler>();
-                
+
             // Indexes
             registry.Register<RenderPersonIndex, RenderPersonIndexByNameAsMarkdownHandler>();
             registry.Register<RenderPersonIndex, RenderPersonIndexByAllKnownNamesAsMarkdownHandler>();
@@ -92,10 +93,10 @@ class Program
             registry.Register<RenderPersonIndex, RenderPersonIndexByOccupationHandler>();
             registry.Register<RenderPersonIndex, RenderMarriageByDateIndexHandler>();
             registry.Register<RenderPersonIndex, RenderMarriageByNameIndexHandler>();
-            
+
             // Indexes for follow up research:
             registry.Register<RenderPersonIndex, RenderPersonIndexByUnknownDateOfBirthAsMarkdownHandler>();
-            
+
             // Source index
             registry.Register<RenderSourceIndex, RenderSourceIndexAsMarkdownHandler>();
 
@@ -103,7 +104,7 @@ class Program
             registry.Register<RenderSource, RenderSourceAsMarkdownHandler>();
         });
         services.AddTransient(typeof(ExceptionPolicyHandler<>));
-            
+
         services.AddTransient<IStaticFootnoteOrganiser, MarkdownFootnoteOrganiser>();
         services.AddTransient<IAssociatesOrganiser, AssociatesOrganiser>();
         services.AddTransient<IIndividualNameRenderer, IndividualNameMarkdownRenderer>();
@@ -117,7 +118,7 @@ class Program
         services.AddSingleton(p=>
         {
             CommandLineOptions opts = p.GetRequiredService<CommandLineOptions>();
-            return GetDatabase(opts.SourceFile);
+            return GetDatabase(opts.FullSourceFile());
         });
         services.AddSingleton<IFileNamer, FileNamer>();
         services.AddSingleton<IDateRenderer, DateRenderer>();
@@ -136,9 +137,12 @@ class Program
             builder.AddDebug();
         });
     }
-        
+
     private static GedcomDatabase GetDatabase(string optionsSourceFile)
     {
+        if (!File.Exists(optionsSourceFile))
+            throw new FileNotFoundException($"File {optionsSourceFile} not found.");
+
         GedcomSettings.LineLength = LineLengthSettings.Any;
         GedcomDatabase result = new GedcomDatabase();
         result.PopulateFromFile(optionsSourceFile);

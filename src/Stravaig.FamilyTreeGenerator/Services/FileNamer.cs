@@ -13,10 +13,10 @@ namespace Stravaig.FamilyTreeGenerator.Services
 
         string GetDataFile(GedcomIndividualRecord individual, string filename);
 
-        
+
         string GetSourceFile(GedcomSourceRecord source, string relativeTo = null);
         string GetSourceFile(GedcomSourceRecord source, GedcomIndividualRecord relativeTo);
-        
+
         string GetByNameIndexFile(string relativeTo = null);
         string GetByAllNamesIndexFile(string relativeTo = null);
 
@@ -31,7 +31,9 @@ namespace Stravaig.FamilyTreeGenerator.Services
         string GetByMarriageByNameIndexFile(string relativeTo = null);
 
         string GetSourceIndexFile(string relativeTo = null);
-        
+
+        string GetMediaFile(GedcomObjectRecord objectRecord);
+
         IEnumerable<DirectoryInfo>  RequiredDirectories();
         DirectoryInfo BaseDirectory();
     }
@@ -44,7 +46,14 @@ namespace Stravaig.FamilyTreeGenerator.Services
         {
             _options = options;
         }
-        
+
+        public string GetMediaFile(GedcomObjectRecord objectRecord)
+        {
+            var fileName = objectRecord.FileName;
+            var fullPath = Path.Combine(_options.SourceFolder, _options.MediaFolder, fileName);
+            return fullPath;
+        }
+
         public string GetIndividualFile(GedcomIndividualRecord individual, GedcomIndividualRecord relativeTo)
         {
             var individualFile = GetIndividualFile(relativeTo);
@@ -62,7 +71,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
             var fileName = $"{individual.CrossReferenceId}-{personName}-b{birth}-d{death}.md".ToLowerInvariant();
             var path = Path.Join(peopleDir, fileName);
             path = path.Replace("\\", "/");
-            
+
             return path;
         }
 
@@ -73,7 +82,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
             var path = Path.Join(dir, filename);
             return path;
         }
-        
+
         public string GetSourceFile(GedcomSourceRecord source, string relativeTo = null)
         {
             var sourceDir = SourceDirectory(relativeTo);
@@ -98,13 +107,13 @@ namespace Stravaig.FamilyTreeGenerator.Services
             const string fileName = "index-by-family-name.md";
             return GetIndexFile(fileName, relativeTo);
         }
-        
+
         public string GetByAllNamesIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-all-names.md";
             return GetIndexFile(fileName, relativeTo);
         }
-        
+
         public string GetByBirthLocationIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-birth-location.md";
@@ -122,13 +131,13 @@ namespace Stravaig.FamilyTreeGenerator.Services
             const string fileName = "index-by-death-location.md";
             return GetIndexFile(fileName, relativeTo);
         }
-        
+
         public string GetByDateOfBirthIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-date-of-birth.md";
             return GetIndexFile(fileName, relativeTo);
         }
-        
+
         public string GetByUnknownDateOfBirthIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-unknown-date-of-birth.md";
@@ -146,7 +155,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
             const string fileName = "index-marriage-by-date.md";
             return GetIndexFile(fileName, relativeTo);
         }
-        
+
         public string GetByMarriageByNameIndexFile(string relativeTo = null)
         {
             const string fileName = "index-marriage-by-name.md";
@@ -180,7 +189,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
             path = path.Replace("\\", "/");
             return path;
         }
-        
+
         private string PeopleDirectory(string relativeTo = null)
         {
             var peopleDirectory = Path.Join(BaseDirectory().FullName, "people");

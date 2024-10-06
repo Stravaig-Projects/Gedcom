@@ -52,7 +52,7 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
                 GedcomTextRecord.TextTag,
                 GedcomNoteRecord.NoteTag,
                 GedcomSourceRecord.ChangeTag,
-                GedcomSourceRecord.ObjectTag,
+                GedcomObjectRecord.ObjectTag,
                 GedcomLabelRecord.LabelTag,
             };
 
@@ -79,7 +79,7 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
             var restrictionNotice = records.FirstOrDefault(r => r.Tag == GedcomIndividualRecord.RestrictionNoticeTag);
             if (restrictionNotice != null)
                 yield return restrictionNotice;
-            
+
             var events = family.Events
                 .OrderBy(e => e.Date)
                 .ThenBy(e => e.Tag);
@@ -97,17 +97,17 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
             var children = records.Where(r => r.Tag == GedcomFamilyRecord.ChildTag);
             foreach (var child in children)
                 yield return child;
-            
+
             // TODO: Number of Children
-            
+
             // TODO: LDS Submission
-            
+
             // TODO: LDS Spouse sealing
-            
+
             // TODO: REFN
-            
+
             // TODO: RIN
-            
+
             var changeDate = records.FirstOrDefault(r => r.Tag == ChangeTag);
             if (changeDate != null)
                 yield return changeDate;
@@ -116,7 +116,7 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
                 .OrderBy(r => r.Value);
             foreach (var note in notes)
                 yield return note;
-            
+
             var sources = records.Where(r => r.Tag == GedcomSourceRecord.SourceTag)
                 .OrderBy(r => r.Value);
             foreach (var source in sources)
@@ -157,7 +157,7 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
                 .ThenBy(a => a.Tag);
             foreach (var attr in attributes)
                 yield return attr.UnderlyingRecord;
-            
+
             // TODO: LDS Ordinance
 
             var childToFamilies = person.FamilyLinks
@@ -171,25 +171,25 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
                 .OrderBy(fl => fl.Link);
             foreach (var spouseToFamily in spouseToFamilies)
                 yield return spouseToFamily.UnderlyingRecord;
-            
+
             // TODO: SUBM
-            
+
             // TODO: Association
-            
+
             // TODO: ALIA
-            
+
             // TODO: ANCI
-            
+
             // TODO: DESI
-            
+
             // TODO: RFN
-            
+
             // TODO: AFN
-            
+
             // TODO: REFN
-            
+
             // TODO: RIN
-            
+
             // TODO: Change Date
 
             var changeDate = records.FirstOrDefault(r => r.Tag == ChangeTag);
@@ -200,7 +200,7 @@ namespace Stravaig.FamilyTree.Standardiser.Extensions
                 .OrderBy(r => r.Value);
             foreach (var note in notes)
                 yield return note;
-            
+
             var sources = records.Where(r => r.Tag == GedcomSourceRecord.SourceTag)
                 .OrderBy(r => r.Value);
             foreach (var source in sources)

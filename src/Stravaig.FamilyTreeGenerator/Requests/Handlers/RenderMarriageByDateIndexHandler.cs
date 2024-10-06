@@ -20,10 +20,10 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
         private readonly IDateRenderer _dateRenderer;
 
-        public RenderMarriageByDateIndexHandler(ILogger<RenderMarriageByDateIndexHandler> logger, 
+        public RenderMarriageByDateIndexHandler(ILogger<RenderMarriageByDateIndexHandler> logger,
             IIndividualNameRenderer nameRenderer,
             IDateRenderer dateRenderer,
-            IFileNamer fileNamer) 
+            IFileNamer fileNamer)
             : base(logger, nameRenderer, fileNamer)
         {
             _dateRenderer = dateRenderer;
@@ -35,7 +35,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             writer.WriteLine();
             writer.WriteLine("A list of marriages, civil partnerships and civil unions by date.");
             writer.WriteLine("");
-            
+
             var knowns = families
                 .SelectMany(f => f.Events
                     .Where(fe => MarriageTags.Contains(fe.Tag) && (fe.Date?.HasCoherentDate ?? false))
@@ -65,7 +65,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                     writer.WriteLine();
                 }
             }
-            
+
             WriteUnknownDateMarriages(writer, families);
 
         }
@@ -82,7 +82,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             }
             writer.Write(RenderPartner(partners[0]));
             writer.Write(" and ");
-            writer.Write(RenderPartner(partners[1]));
+            writer.Write(partners.Length > 1 ? RenderPartner(partners[1]) : "unknown");
+
             if (entry.Event.Place != null)
             {
                 writer.Write(" at ");
@@ -98,7 +99,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 .SelectMany(f => f.Events
                     .Where(fe => MarriageTags.Contains(fe.Tag) && !(fe.Date?.HasCoherentDate ?? false))
                     .Select(fe => new Entry{Family = f, Event = fe}));
-            
+
             writer.WriteLine("## Unknown Date");
             writer.WriteLine();
             foreach (var entry in unknowns)

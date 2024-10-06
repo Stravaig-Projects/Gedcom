@@ -1,16 +1,18 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom.Model
 {
+    [DebuggerDisplay("{DebugDisplay}")]
     public class GedcomIndividualRecord : Record, ISubject
     {
         public static readonly GedcomTag Tag = "INDI".AsGedcomTag();
         public static readonly GedcomTag SexTag = "SEX".AsGedcomTag();
         public static readonly GedcomTag RestrictionNoticeTag = "RESN".AsGedcomTag();
         public static readonly GedcomTag FamilySearchIdTag = "_FID".AsGedcomTag();
-        
+
         private readonly Lazy<GedcomNameRecord[]> _lazyNames;
         private readonly Lazy<GedcomIndividualEventRecord[]> _lazyEvents;
         private readonly Lazy<GedcomFamilyLinkRecord[]> _lazyFamilies;
@@ -18,6 +20,7 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<string> _lazyFamilySearchId;
         private readonly Lazy<GedcomIndividualAttributeRecord[]> _lazyAttributes;
         private readonly Lazy<GedcomSourceRecord[]> _lazySources;
+        private readonly Lazy<GedcomObjectRecord[]> _lazyObjects;
 
         public GedcomIndividualRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -26,7 +29,7 @@ namespace Stravaig.Gedcom.Model
                 throw new ArgumentException($"Must be an \"INDIVIDUAL_RECORD\" ({Tag}) record, but was {record.Tag}.");
             if (!record.CrossReferenceId.HasValue)
                 throw new ArgumentException("An \"INDIVIDUAL_RECORD\" must have a CrossReferenceId.");
-            
+
             _lazyNames = new Lazy<GedcomNameRecord[]>(
                 () => _record.Children
                     .Where(r => r.Tag == GedcomNameRecord.NameTag)
@@ -45,11 +48,30 @@ namespace Stravaig.Gedcom.Model
                     .Select(r => new GedcomFamilyLinkRecord(r, _database))
                     .ToArray());
 
+            _lazyObjects = new Lazy<GedcomObjectRecord[]>(
+                () => _record.Children
+                    .Where(r => r.Tag == GedcomObjectRecord.ObjectTag && !string.IsNullOrWhiteSpace(r.Value))
+                    .Select(r => _database.ObjectRecords[r.Value.AsGedcomPointer()])
+                    .ToArray());
+
             _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
             _lazyFamilySearchId = new Lazy<string>(GetFamilySearchId);
             _lazyAttributes = new Lazy<GedcomIndividualAttributeRecord[]>(GetAttributeRecords);
             _lazySources = new Lazy<GedcomSourceRecord[]>(GetSourceRecords);
         }
+
+        #if DEBUG
+        internal string DebugDisplay
+        {
+            get
+            {
+                if (_lazyNames.IsValueCreated)
+                    return $"{GetType().Name}: {CrossReferenceId} {Name} (b:{BirthEvent?.Date?.RawDateValue ?? "Unknown"} - d:{DeathEvent?.Date?.RawDateValue ?? "Unknown"})";
+
+                return $"{GetType().Name}: {_record.DebugDisplay}";
+            }
+        }
+        #endif
 
         private string GetFamilySearchId()
         {
@@ -70,12 +92,14 @@ namespace Stravaig.Gedcom.Model
         // Checked in the ctor.
         public GedcomPointer CrossReferenceId => _record.CrossReferenceId.Value;
 
+        public GedcomObjectRecord[] Objects => _lazyObjects.Value;
+
         public string RestrictionNotice => _record.Children
             .FirstOrDefault(r => r.Tag == RestrictionNoticeTag)
             ?.Value;
 
         public int AssumedDeathAge => _database.Settings.AssumedDeathAge;
-        
+
         public string Name => Names.FirstOrDefault()?.Name;
 
         public string NameWithoutMarker => Name?.Replace("/", "").Trim();
@@ -83,7 +107,7 @@ namespace Stravaig.Gedcom.Model
         public string FamilyName => Name == null
             ? string.Empty
             : Name.Substring(
-                Name.IndexOf("/", StringComparison.Ordinal) + 1, 
+                Name.IndexOf("/", StringComparison.Ordinal) + 1,
                 Name.LastIndexOf("/", StringComparison.Ordinal) - Name.IndexOf("/", StringComparison.Ordinal) - 1)
                 .Trim();
 
@@ -103,7 +127,7 @@ namespace Stravaig.Gedcom.Model
         }
 
         public GedcomNameRecord[] Names => _lazyNames.Value;
-        
+
         public GedcomSex Sex => _record.Children.FirstOrDefault(r => r.Tag == SexTag)?.Value.AsGedcomSex() ?? GedcomSex.NotKnown;
 
         public GedcomFamilyLinkRecord[] FamilyLinks => _lazyFamilies.Value;
@@ -117,11 +141,11 @@ namespace Stravaig.Gedcom.Model
             FamilyLinks.Where(fl => fl.Type == GedcomFamilyType.SpouseToFamily)
                 .Select(fl => fl.Family)
                 .ToArray();
-        
+
         public GedcomIndividualEventRecord[] Events => _lazyEvents.Value;
         public GedcomIndividualAttributeRecord[] Attributes => _lazyAttributes.Value;
         public GedcomSourceRecord[] Sources => _lazySources.Value;
-        
+
         public GedcomIndividualEventRecord BirthEvent =>
             Events.FirstOrDefault(e => e.Tag == GedcomIndividualEventRecord.BirthTag);
 
