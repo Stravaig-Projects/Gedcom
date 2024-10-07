@@ -38,13 +38,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
             var sourceEntry = command.SourceEntry;
             var source = sourceEntry.Source;
-            
+
             _logger.LogInformation($"Rendering Source: {source.Title}.");
 
             var fileName = _fileNamer.GetSourceFile(source);
             _logger.LogInformation($"Writing file to: {fileName}");
             using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-            using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
+            var utf8NoBom = new UTF8Encoding(false);
+            using TextWriter writer = new StreamWriter(fs, utf8NoBom);
 
             WriteHeader(writer, source);
             WriteSourceText(writer, source);
@@ -84,7 +85,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                     }
                     writer.WriteMarkdownBlockQuote(source.Notes[i].Text.RemoveNamesOfTheLiving(source.ReferencedBy));
                     writer.WriteLine();
-                } 
+                }
             }
         }
 
@@ -98,7 +99,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 {
                     writer.WriteLine(
                         "_Redacted because this source is referenced by a (potentially) living person and may contain personally identifiable information._");
-                    writer.WriteLine();                    
+                    writer.WriteLine();
                 }
                 else if (source.LabelTitles.Contains("PERSONAL", StringComparer.InvariantCultureIgnoreCase))
                 {
@@ -122,7 +123,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             writer.WriteLine($"permalink: /sources/{source.CrossReferenceId.ToSimpleSourceId()}");
             writer.WriteLine("---");
             writer.WriteLine();
-            
+
             writer.WriteLine($"# {source.Title.RemoveNamesOfTheLiving(source.ReferencedBy)}");
             writer.WriteLine();
 
@@ -148,7 +149,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             }
             else if (source.References.Length == 1)
             {
-                WriteReference(writer, source.References[0], source);                
+                WriteReference(writer, source.References[0], source);
             }
             writer.WriteLine();
             writer.WriteLine();
@@ -160,7 +161,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.Write($"({source.ReferenceType.Type}) ");
             if (reference.Type.HasContent())
                 writer.Write($"({reference.Type}) ");
-            
+
             if (reference.Reference.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 writer.Write($"[Open original source at {reference.Reference}]({reference.Reference})");
             else

@@ -95,7 +95,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             var fileName = _fileNamer.GetIndividualFile(command.Individual);
             _logger.LogInformation($"Writing to file: {fileName}");
             _fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-            _writer = new StreamWriter(_fs, Encoding.UTF8);
+            var utf8NoBom = new UTF8Encoding(false);
+            _writer = new StreamWriter(_fs, utf8NoBom);
         }
 
         private void WriteImmediateFamily(GedcomIndividualRecord subject)
