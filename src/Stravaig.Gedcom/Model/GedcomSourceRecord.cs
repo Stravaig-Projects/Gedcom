@@ -105,7 +105,6 @@ namespace Stravaig.Gedcom.Model
         public static readonly GedcomTag SourceOriginatorTag = "AUTH".AsGedcomTag();
         public static readonly GedcomTag FiledByEntryTag = "ABBR".AsGedcomTag();
         public static readonly GedcomTag ChangeTag = "CHAN".AsGedcomTag();
-        //public static readonly GedcomTag ObjectTag = "OBJE".AsGedcomTag();
 
         private readonly Lazy<GedcomTitleRecord> _lazyTitle;
         private readonly Lazy<GedcomTextRecord> _lazyText;
