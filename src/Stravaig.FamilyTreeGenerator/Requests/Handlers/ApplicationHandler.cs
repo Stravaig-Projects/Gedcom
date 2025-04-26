@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         private readonly ILogger<ApplicationHandler> _logger;
         private readonly GedcomDatabase _database;
         private readonly IAmACommandProcessor _commander;
-        private readonly Dictionary<GedcomPointer, SourceEntry> _sources;
+        private readonly Dictionary<GedcomPointer, SourceEntry> _sources = new();
+        private readonly Dictionary<GedcomPointer, GedcomObjectRecord> _objects = new();
 
         public ApplicationHandler(
             ILogger<ApplicationHandler> logger,
@@ -25,7 +27,6 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             _logger = logger;
             _commander = commander;
             _database = database;
-            _sources = new Dictionary<GedcomPointer, SourceEntry>();
         }
 
         public override Application Handle(Application command)
@@ -47,8 +48,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             var sourceEntries = _sources.Values.ToArray();
             _commander.Publish(new RenderSourceIndex(sourceEntries));
             foreach(var sourceEntry in sourceEntries)
-                _commander.Publish(new RenderSource(sourceEntry));
-            
+                _commander.Publish(new RenderSource(sourceEntry, AddObject));
+
+            var objects = _objects.Values.ToArray();
+            Console.WriteLine(
+                $"Rendering {objects.Length} objects: {string.Join("'; ", objects.Select(o => o.CrossReferenceId))}");
+            foreach (var obj in objects)
+                _commander.Publish(new RenderObject(obj));
+
             _logger.LogInformation("Done!");
             return base.Handle(command);
         }
@@ -64,6 +71,16 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             {
                 sourceEntry = new SourceEntry(source, individual);
                 _sources.Add(source.CrossReferenceId, sourceEntry);
+            }
+        }
+
+        private void AddObject(GedcomObjectRecord obj)
+        {
+            //Console.WriteLine($"Adding object: {obj.CrossReferenceId}\n{obj.UnderlyingRecord}");
+            //Console.ReadLine();
+            if (obj.CrossReferenceId.HasValue)
+            {
+                _objects[obj.CrossReferenceId.Value] = obj;
             }
         }
     }

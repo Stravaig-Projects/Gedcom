@@ -1,14 +1,18 @@
+using System;
 using Stravaig.FamilyTreeGenerator.Requests.Models;
+using Stravaig.Gedcom.Model;
 
-namespace Stravaig.FamilyTreeGenerator.Requests
+namespace Stravaig.FamilyTreeGenerator.Requests;
+
+public class RenderSource : Request
 {
-    public class RenderSource : Request
-    {
-        public SourceEntry SourceEntry { get; }
+    public SourceEntry SourceEntry { get; }
 
-        public RenderSource(SourceEntry sourceEntry)
-        {
-            SourceEntry = sourceEntry;
-        }
+    public Action<GedcomObjectRecord> AddObject { get; }
+
+    public RenderSource(SourceEntry sourceEntry, Action<GedcomObjectRecord> addObjectAction)
+    {
+        SourceEntry = sourceEntry;
+        AddObject = addObjectAction;
     }
 }

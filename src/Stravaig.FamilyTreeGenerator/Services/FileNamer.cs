@@ -32,7 +32,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
 
         string GetSourceIndexFile(string relativeTo = null);
 
+        string GetSourceMediaFile(GedcomObjectRecord objectRecord);
+
+        string GetDestinationMediaFile(GedcomObjectRecord objectRecord);
+
         string GetMediaFile(GedcomObjectRecord objectRecord);
+
 
         IEnumerable<DirectoryInfo>  RequiredDirectories();
         DirectoryInfo BaseDirectory();
@@ -47,10 +52,21 @@ namespace Stravaig.FamilyTreeGenerator.Services
             _options = options;
         }
 
-        public string GetMediaFile(GedcomObjectRecord objectRecord)
+        public string GetSourceMediaFile(GedcomObjectRecord objectRecord)
         {
             var fileName = objectRecord.FileName;
             var fullPath = Path.Combine(_options.SourceFolder, _options.MediaFolder, fileName);
+            return fullPath;
+        }
+
+        public string GetDestinationMediaFile(GedcomObjectRecord objectRecord)
+        {
+            return Path.Join(GetMediaDirectory(), objectRecord.FileName);
+        }
+
+        public string GetMediaFile(GedcomObjectRecord objectRecord)
+        {
+            var fullPath = Path.Combine("../media", objectRecord.FileName);
             return fullPath;
         }
 
@@ -172,6 +188,7 @@ namespace Stravaig.FamilyTreeGenerator.Services
             yield return BaseDirectory();
             yield return new DirectoryInfo(PeopleDirectory());
             yield return new DirectoryInfo(SourceDirectory());
+            yield return new DirectoryInfo(GetMediaDirectory());
         }
 
         public DirectoryInfo BaseDirectory()
@@ -203,6 +220,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
             if (relativeTo != null)
                 sourceDirectory = Path.GetRelativePath(relativeTo, sourceDirectory);
             return sourceDirectory;
+        }
+
+        private string GetMediaDirectory()
+        {
+            var mediaDirectory = Path.Join(BaseDirectory().FullName, "media");
+            return mediaDirectory;
         }
 
         private string GetDataDirectory(string id)

@@ -49,9 +49,38 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
 
             WriteHeader(writer, source);
             WriteSourceText(writer, source);
+            WriteObjects(writer, source, command);
             WriteNotes(writer, source);
             WriteReferencedBy(writer, sourceEntry);
             return base.Handle(command);
+        }
+
+        private void WriteObjects(TextWriter writer, GedcomSourceRecord source, RenderSource command)
+        {
+            var objects = source.Objects
+                .Where(o => o.HasLabel(Labels.PublishImage) &&
+                            o.IsFileType(FileTypes.Jpg))
+                .OrderBy(o => o.Title)
+                .ToArray();
+
+            if (objects.Length == 0)
+                return;
+
+            writer.WriteLine("## Images");
+            writer.WriteLine();
+
+            foreach (var obj in objects)
+            {
+                writer.WriteLine($"### {obj.Title}");
+                writer.WriteLine();
+                if (obj.Date != null)
+                {
+                    writer.WriteLine($"{_dateRenderer.RenderAsProse(obj.Date)}");
+                }
+                writer.WriteLine($"![{obj.Title}]({_fileNamer.GetMediaFile(obj)})");
+                writer.WriteLine();
+                command.AddObject(obj);
+            }
         }
 
         private void WriteReferencedBy(TextWriter writer, SourceEntry entry)

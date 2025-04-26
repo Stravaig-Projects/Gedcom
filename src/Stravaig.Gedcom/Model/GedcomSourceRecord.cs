@@ -149,8 +149,8 @@ namespace Stravaig.Gedcom.Model
         private GedcomObjectRecord[] GetObjectRecords()
         {
             var objectRecords = _record.Children
-                .Where(r => r.Tag == GedcomObjectRecord.ObjectTag && r.CrossReferenceId.HasValue)
-                .Select(r => _database.ObjectRecords[r.CrossReferenceId.Value])
+                .Where(r => r.Tag == GedcomObjectRecord.ObjectTag && !string.IsNullOrWhiteSpace(r.Value))
+                .Select(r => _database.ObjectRecords[r.Value.AsGedcomPointer()])
                 .ToArray();
             return objectRecords;
         }
@@ -260,6 +260,8 @@ namespace Stravaig.Gedcom.Model
 
         public GedcomNoteRecord[] Notes => _lazyNotes.Value;
         public GedcomDateRecord Date => _lazyDate.Value;
+
+        public GedcomObjectRecord[] Objects => _lazyObjects.Value;
 
         public string Title => _lazyTitle.Value?.Text;
 

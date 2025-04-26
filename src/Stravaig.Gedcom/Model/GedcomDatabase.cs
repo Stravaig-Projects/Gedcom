@@ -7,29 +7,16 @@ namespace Stravaig.Gedcom.Model
 {
     public class GedcomDatabase
     {
-        private readonly List<GedcomRecord> _records;
-        private readonly Dictionary<GedcomPointer, GedcomRecord> _crossReferencedRecords;
-        private readonly Dictionary<GedcomPointer, GedcomIndividualRecord> _individualRecords;
-        private readonly Dictionary<GedcomPointer, GedcomFamilyRecord> _familyRecords;
-        private readonly Dictionary<GedcomPointer, GedcomNoteRecord> _noteRecords;
-        private readonly Dictionary<GedcomPointer, GedcomSourceRecord> _sourceRecords;
-        private readonly Dictionary<GedcomPointer, GedcomLabelRecord> _labelRecords;
-        private readonly Dictionary<GedcomPointer, GedcomObjectRecord> _objectRecords;
+        private readonly List<GedcomRecord> _records = new List<GedcomRecord>();
+        //private readonly Dictionary<GedcomPointer, GedcomRecord> _crossReferencedRecords = new Dictionary<GedcomPointer, GedcomRecord>();
+        private readonly Dictionary<GedcomPointer, GedcomIndividualRecord> _individualRecords = new Dictionary<GedcomPointer, GedcomIndividualRecord>();
+        private readonly Dictionary<GedcomPointer, GedcomFamilyRecord> _familyRecords = new Dictionary<GedcomPointer, GedcomFamilyRecord>();
+        private readonly Dictionary<GedcomPointer, GedcomNoteRecord> _noteRecords = new Dictionary<GedcomPointer, GedcomNoteRecord>();
+        private readonly Dictionary<GedcomPointer, GedcomSourceRecord> _sourceRecords = new Dictionary<GedcomPointer, GedcomSourceRecord>();
+        private readonly Dictionary<GedcomPointer, GedcomLabelRecord> _labelRecords = new Dictionary<GedcomPointer, GedcomLabelRecord>();
+        private readonly Dictionary<GedcomPointer, GedcomObjectRecord> _objectRecords = new Dictionary<GedcomPointer, GedcomObjectRecord>();
 
-        public GedcomDatabase()
-        {
-            _records = new List<GedcomRecord>();
-            _crossReferencedRecords = new Dictionary<GedcomPointer, GedcomRecord>();
-            _individualRecords = new Dictionary<GedcomPointer, GedcomIndividualRecord>();
-            _familyRecords = new Dictionary<GedcomPointer, GedcomFamilyRecord>();
-            _noteRecords = new Dictionary<GedcomPointer, GedcomNoteRecord>();
-            _sourceRecords = new Dictionary<GedcomPointer, GedcomSourceRecord>();
-            _labelRecords = new Dictionary<GedcomPointer, GedcomLabelRecord>();
-            _objectRecords = new Dictionary<GedcomPointer, GedcomObjectRecord>();
-            Settings = new DatabaseSettings();
-        }
-
-        public DatabaseSettings Settings { get; }
+        public DatabaseSettings Settings { get; } = new DatabaseSettings();
 
         public void Populate(GedcomRecordReader reader)
         {
@@ -59,7 +46,7 @@ namespace Stravaig.Gedcom.Model
 
         public IReadOnlyList<GedcomRecord> Records => _records;
 
-        public IReadOnlyDictionary<GedcomPointer, GedcomRecord> CrossReferencedRecords => _crossReferencedRecords;
+        //public IReadOnlyDictionary<GedcomPointer, GedcomRecord> CrossReferencedRecords => _crossReferencedRecords;
         public IReadOnlyDictionary<GedcomPointer, GedcomIndividualRecord> IndividualRecords => _individualRecords;
         public IReadOnlyDictionary<GedcomPointer, GedcomFamilyRecord> FamilyRecords => _familyRecords;
         public IReadOnlyDictionary<GedcomPointer, GedcomNoteRecord> NoteRecords => _noteRecords;
@@ -74,7 +61,7 @@ namespace Stravaig.Gedcom.Model
             if (record.CrossReferenceId.HasValue)
             {
                 var pointer = record.CrossReferenceId.Value;
-                _crossReferencedRecords.Add(pointer, record);
+                //_crossReferencedRecords.Add(pointer, record);
                 if (record.Tag == GedcomIndividualRecord.Tag)
                     _individualRecords.Add(pointer, new GedcomIndividualRecord(record, this));
                 else if (record.Tag == GedcomFamilyRecord.FamilyTag)

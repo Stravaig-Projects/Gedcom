@@ -102,6 +102,9 @@ class Program
 
             // Sources
             registry.Register<RenderSource, RenderSourceAsMarkdownHandler>();
+
+            // Objects
+            registry.Register<RenderObject, RenderObjectHandler>();
         });
         services.AddTransient(typeof(ExceptionPolicyHandler<>));
 
