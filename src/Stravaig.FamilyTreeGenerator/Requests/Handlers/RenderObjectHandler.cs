@@ -30,10 +30,7 @@ public class RenderObjectHandler : RequestHandler<RenderObject>
         var input = _fileNamer.GetSourceMediaFile(obj);
         var output = _fileNamer.GetDestinationMediaFile(obj);
 
-        Console.WriteLine($"  Input: {input}");
-        Console.WriteLine($"Rendering {obj.Title} to {output}");
-        Console.WriteLine("Press any key to continue...");
-        Console.ReadLine();
+        _logger.LogInformation($"Rendering {obj.Title} to {output}");
 
         using var image = Image.Load(input);
         var originalWidth = image.Width;
