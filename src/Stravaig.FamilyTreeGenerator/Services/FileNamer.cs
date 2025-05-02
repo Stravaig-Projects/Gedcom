@@ -20,6 +20,8 @@ namespace Stravaig.FamilyTreeGenerator.Services
         string GetByNameIndexFile(string relativeTo = null);
         string GetByAllNamesIndexFile(string relativeTo = null);
 
+        string GetOnThisDayJsonFile(string relativeTo = null);
+
         string GetByDateOfBirthIndexFile(string relativeTo = null);
         string GetByUnknownDateOfBirthIndexFile(string relativeTo = null);
         string GetByBirthLocationIndexFile(string relativeTo = null);
@@ -127,6 +129,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
         public string GetByAllNamesIndexFile(string relativeTo = null)
         {
             const string fileName = "index-by-all-names.md";
+            return GetIndexFile(fileName, relativeTo);
+        }
+
+        public string GetOnThisDayJsonFile(string relativeTo = null)
+        {
+            const string fileName = "on-this-day.json";
             return GetIndexFile(fileName, relativeTo);
         }
 

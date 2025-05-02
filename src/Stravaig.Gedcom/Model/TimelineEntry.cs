@@ -24,6 +24,7 @@ namespace Stravaig.Gedcom.Model
         public GedcomFamilyEventRecord FamilyEvent { get; }
         
         public GedcomDateRecord Date => _getDate();
+        public GedcomTag Tag { get; }
         public EventType Type { get; }
         public TimelineEntry(GedcomIndividualRecord subject, GedcomIndividualEventRecord individualEvent)
         {
@@ -39,6 +40,7 @@ namespace Stravaig.Gedcom.Model
             IndividualAttribute = individualAttribute ?? throw new ArgumentNullException(nameof(individualAttribute));
             _getDate = GetIndividualAttributeDate;
             Type = EventType.SubjectAttribute;
+            Tag = individualAttribute.Tag;
         }
 
         public TimelineEntry(GedcomIndividualRecord subject, GedcomIndividualRecord otherFamilyMember, GedcomIndividualEventRecord individualEvent)
@@ -48,6 +50,7 @@ namespace Stravaig.Gedcom.Model
             IndividualEvent = individualEvent ?? throw new ArgumentNullException(nameof(individualEvent));
             _getDate = GetIndividualEventDate;
             Type = EventType.FamilyMemberEvent;
+            Tag = individualEvent.Tag;
         }
 
         public TimelineEntry(GedcomIndividualRecord subject, GedcomFamilyRecord family,
@@ -58,6 +61,7 @@ namespace Stravaig.Gedcom.Model
             FamilyEvent = familyEvent ?? throw new ArgumentNullException(nameof(familyEvent));
             _getDate = GetFamilyEventDate;
             Type = EventType.FamilyEvent;
+            Tag = familyEvent.Tag;
         }
 
         public override string ToString()
