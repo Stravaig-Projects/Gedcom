@@ -42,9 +42,8 @@ public class RenderOnThisDayJsonHandler : RequestHandler<RenderPersonIndex>
         _logger.LogInformation("Rendering On This Day Json file.");
 
         var significantEvents = command.Individuals
-            .SelectMany(i => i.GetTimeline(false));
+            .SelectMany(i => i.GetTimeline(false))
             .Where(te => InterestingEvents.Contains(te.Tag) &&
-                         //te.Type is TimelineEntry.EventType.FamilyEvent or TimelineEntry.EventType.SubjectEvent &&
                          te.Type != TimelineEntry.EventType.FamilyMemberEvent &&
                          !te.Date.Type.IsVague() &&
                          te.Date.ExactDate1.HasValue)
@@ -68,8 +67,10 @@ public class RenderOnThisDayJsonHandler : RequestHandler<RenderPersonIndex>
 
     private (int Month, int Day, EventDto Dto) GenerateNewEvent(TimelineEntry te)
     {
+        //Console.WriteLine($"Generating {te.Tag} event for {te.Subject.NameWithoutMarker} on {te.Date.ExactDate1}. Type = {te.Type}.");
         var month = te.Date.ExactDate1!.Value.Month;
         var day = te.Date.ExactDate1!.Value.Day;
+
         if (te.Type == TimelineEntry.EventType.FamilyEvent)
             return (month, day, GenerateFamilyEvent(te));
         return (month, day, GenerateIndividualEvent(te));

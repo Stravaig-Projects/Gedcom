@@ -32,6 +32,7 @@ namespace Stravaig.Gedcom.Model
             IndividualEvent = individualEvent ?? throw new ArgumentNullException(nameof(individualEvent));
             _getDate = GetIndividualEventDate;
             Type = EventType.SubjectEvent;
+            Tag = individualEvent.Tag;
         }
 
         public TimelineEntry(GedcomIndividualRecord subject, GedcomIndividualAttributeRecord individualAttribute)
