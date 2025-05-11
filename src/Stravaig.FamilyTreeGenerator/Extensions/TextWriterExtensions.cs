@@ -12,16 +12,34 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
             {
                 text = text.Trim().RenderLinksAsMarkdown();
                 string[] lines = text.Split(Environment.NewLine);
+                bool isInTable = false;
                 foreach (string line in lines)
                 {
+                    if (line.Contains('|'))
+                    {
+                        if (!isInTable)
+                            writer.WriteLine();
+                        isInTable = true;
+                    }
+                    else
+                    {
+                        if (isInTable)
+                            writer.WriteLine();
+                        isInTable = false;
+                    }
+
                     string escapedLine = line.Replace("~", "\\~");
                     if (string.IsNullOrWhiteSpace(escapedLine))
                         escapedLine = "<br/>";
-                    writer.Write("> ");
+
+                    // Don't put tables in block quotes.
+                    if (!isInTable)
+                        writer.Write("> ");
+
                     writer.WriteLine(escapedLine);
                     
                     // If this is a table, don't put in the new line.
-                    if (!escapedLine.StartsWith("|"))
+                    if (!isInTable)
                         writer.WriteLine(">");
                 }
                 writer.WriteLine();

@@ -89,70 +89,11 @@ public class RenderOnThisDayJsonHandler : RequestHandler<RenderPersonIndex>
 
         return new EventDto()
         {
-            Id1 = te.Subject.CrossReferenceId.ToString(),
+            //Id1 = te.Subject.CrossReferenceId.ToString(),
             Date = te.Date.ExactDate1!.Value.ToString("yyyy-MM-dd"),
             Description = description,
         };
     }
-
-    /*
-                StringBuilder sb = new StringBuilder();
-
-       var subject = entry.OtherFamilyMember ?? entry.Subject;
-
-       if (subject == entry.Subject)
-           sb.Append("Born");
-       else
-       {
-           if (subject.IsAlive())
-               sb.Append("X born");
-           else
-           {
-               _associatesOrganiser.AddAssociate(subject);
-               var link = _fileNamer.GetIndividualFile(entry.OtherFamilyMember, entry.Subject);
-               sb.Append($"[{subject.NameWithoutMarker}]({link}) born");
-           }
-       }
-
-       var parentFamily = subject.ChildToFamilies.FirstOrDefault(); // TODO: Fix this assumption
-       if (parentFamily != null)
-       {
-           var parents = parentFamily.Spouses;
-           if (parents.Any())
-           {
-               var parent = parents[0];
-               if (parent.IsAlive())
-                   sb.Append(" to X");
-               else
-               {
-                   _associatesOrganiser.AddAssociate(parent);
-                   var link = _fileNamer.GetIndividualFile(parents[0], subject);
-                   sb.Append($" to [{parent.NameWithoutMarker}]({link})");
-               }
-               if (parents.Length > 1)
-               {
-                   parent = parents[1];
-                   if (parent.IsAlive())
-                   {
-                       sb.Append(" and X");
-                   }
-                   else
-                   {
-                       _associatesOrganiser.AddAssociate(parent);
-                       var link = _fileNamer.GetIndividualFile(parents[1], subject);
-                       sb.Append($" and [{parent.NameWithoutMarker}]({link})");
-                   }
-               }
-           }
-       }
-
-       if (entry.IndividualEvent.Place != null)
-       {
-           sb.Append($" in {entry.IndividualEvent.NormalisedPlaceName()}");
-       }
-
-       sb.Append(".");
-     */
 
     private string GenerateBirthDescription(TimelineEntry te)
     {
@@ -161,20 +102,28 @@ public class RenderOnThisDayJsonHandler : RequestHandler<RenderPersonIndex>
 
         StringBuilder sb = new StringBuilder();
         var subject = te.Subject;
-        sb.Append("§{");
+        sb.Append("[");
         sb.Append(subject.NameWithoutMarker);
-        sb.Append("}§");
+        sb.Append("](/family-tree/people/i");
+        sb.Append(subject.CrossReferenceId.ToString().Replace("@", string.Empty));
+        sb.Append(")");
         sb.Append(" was born ");
         sb.Append(_dateRenderer.RenderAsProse(te.Date));
         var parents = subject.Parents();
         if (parents.Length > 0)
         {
-            sb.Append(" to ");
+            sb.Append(" to [");
             sb.Append(parents[0].Relative.NameWithoutMarker);
+            sb.Append("](/family-tree/people/i");
+            sb.Append(parents[0].Relative.CrossReferenceId.ToString().Replace("@", string.Empty));
+            sb.Append(")");
             if (parents.Length > 1)
             {
-                sb.Append(" and ");
+                sb.Append(" and [");
                 sb.Append(parents[1].Relative.NameWithoutMarker);
+                sb.Append("](/family-tree/people/i");
+                sb.Append(parents[1].Relative.CrossReferenceId.ToString().Replace("@", string.Empty));
+                sb.Append(")");
             }
         }
 
@@ -196,10 +145,11 @@ public class RenderOnThisDayJsonHandler : RequestHandler<RenderPersonIndex>
     {
         StringBuilder sb = new StringBuilder();
         var subject = te.Subject;
-        sb.Append("§{");
+        sb.Append("[");
         sb.Append(subject.NameWithoutMarker);
-        sb.Append("}§");
-        sb.Append(" died ");
+        sb.Append("](/family-tree/people/i");
+        sb.Append(subject.CrossReferenceId.ToString().Replace("@", string.Empty));
+        sb.Append(") died ");
         sb.Append(_dateRenderer.RenderAsProse(te.Date));
 
         if (te.IndividualEvent.Address != null)
@@ -222,16 +172,19 @@ public class RenderOnThisDayJsonHandler : RequestHandler<RenderPersonIndex>
         if (te.Tag == GedcomFamilyEventRecord.MarriageTag)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("§{");
+            sb.Append("[");
             sb.Append(te.Subject.NameWithoutMarker);
-            sb.Append("}§");
-            sb.Append(" got married");
+            sb.Append("](/family-tree/people/i");
+            sb.Append(te.Subject.CrossReferenceId.ToString().Replace("@", string.Empty));
+            sb.Append(") got married");
             var spouse = te.Family.Spouses.FirstOrDefault(s => s != te.Subject);
             if (spouse?.IsDead() ?? false)
             {
-                sb.Append(" to §{");
+                sb.Append(" to [");
                 sb.Append(spouse.NameWithoutMarker);
-                sb.Append("}§");
+                sb.Append("](/family-tree/people/i");
+                sb.Append(spouse.CrossReferenceId.ToString().Replace("@", string.Empty));
+                sb.Append(")");
             }
             sb.Append(' ');
             sb.Append(_dateRenderer.RenderAsProse(te.Date));
@@ -250,8 +203,8 @@ public class RenderOnThisDayJsonHandler : RequestHandler<RenderPersonIndex>
 
             return new EventDto()
             {
-                Id1 = te.Subject.CrossReferenceId.ToString(),
-                Id2 = spouse?.CrossReferenceId.ToString(),
+                //Id1 = te.Subject.CrossReferenceId.ToString(),
+                //Id2 = spouse?.CrossReferenceId.ToString(),
                 Date = te.Date.ExactDate1!.Value.ToString("yyyy-MM-dd"),
                 Description = description,
             };
@@ -289,8 +242,6 @@ public class RenderOnThisDayJsonHandler : RequestHandler<RenderPersonIndex>
 
     public class EventDto
     {
-        public string Id1 { get; init; }
-        public string Id2 { get; init; }
         public string Date { get; init; }
         public string Description { get; init; }
     }

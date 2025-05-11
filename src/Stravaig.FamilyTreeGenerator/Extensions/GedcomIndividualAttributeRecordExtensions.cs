@@ -23,6 +23,7 @@ public static class GedcomIndividualAttributeRecordExtensions
     private const string EstateAgent = "Estate Agent";
     private const string FactoryWorker = "Factory Worker";
     private const string FarmWorker = "Farm Worker";
+    private const string Fisher = "Fisher";
     private const string FishWorker = "Fish Worker";
     private const string HealthCareProfessional = "Health Care Professional";
     private const string Janitor = "Janitor";
@@ -80,7 +81,10 @@ public static class GedcomIndividualAttributeRecordExtensions
         builder.Add(FarmWorker, new[]{FarmWorker});
         builder.Add("Farm Servant", new[]{FarmWorker});
         builder.Add("Fish Salesman", new[]{Sales});
+        builder.Add(Fisher, [Fisher, FishWorker]);
+        builder.Add("Fisherman", [Fisher, FishWorker]);
         builder.Add("Fishergirl", new[]{FishWorker});
+        builder.Add("Fishing", [Fisher, FishWorker]);
         builder.Add("Fishwife", new[]{FishWorker});
         builder.Add("Fishwoman", new[]{FishWorker});
         builder.Add("Fishworker", new[]{FishWorker});
