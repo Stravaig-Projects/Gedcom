@@ -94,10 +94,19 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.WriteLine("## Source Referenced by");
                 writer.WriteLine();
                 var orderedSubjects = subjects.OrderByStandardSort();
+
+                bool groupByFamilyName = subjects.Select(s => s.FamilyName).Distinct().Take(2).Count() > 1;
+                string indent = groupByFamilyName ? "  " : string.Empty;
+                string lastFamilyName = null;
                 foreach (var subject in orderedSubjects)
                 {
+                    if (groupByFamilyName && lastFamilyName != subject.FamilyName)
+                    {
+                        lastFamilyName = subject.FamilyName;
+                        writer.WriteLine($"* {lastFamilyName}");
+                    }
                     string name = _nameRenderer.RenderLinkedNameWithLifespan(subject, entry.Source);
-                    writer.WriteLine($"* {name}");
+                    writer.WriteLine($"{indent}* {name}");
                 }
             }
         }
@@ -162,7 +171,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             bool writtenHeader = false;
             WriteTableEntry(writer, "Publication", source.PublicationFacts.RenderLinksAsMarkdown(), ref writtenHeader);
             WriteTableEntry(writer, "Originator / Author", source.Originator.RemoveNamesOfTheLiving(source.ReferencedBy), ref writtenHeader);
-            WriteTableEntry(writer, "Date", _dateRenderer.RenderAsShortDate(source.Date), ref writtenHeader);
+            WriteTableEntry(writer, "Original Document Date", _dateRenderer.RenderAsShortDate(source.Date), ref writtenHeader);
             WriteTableEntry(writer, "Responsible Agency", source.ResponsibleAgency, ref writtenHeader);
             WriteTableEntry(writer, "Filed by Entry", source.FiledByEntry, ref writtenHeader);
 
@@ -187,6 +196,10 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 }
                 writer.WriteLine();
             }
+
+            WriteTableEntry(writer, "Source Created", _dateRenderer.RenderAsShortDateTime(source.Created.DateRecord), ref writtenHeader);
+            WriteTableEntry(writer, "Source Last Updated", _dateRenderer.RenderAsShortDateTime(source.LastChanged.DateRecord), ref writtenHeader);
+
             writer.WriteLine();
         }
 
@@ -203,6 +216,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
             if (!writtenHeader)
             {
+                writer.WriteLine("## Metadata");
+                writer.WriteLine();
                 writer.WriteLine("Field | Detail");
                 writer.WriteLine("---:|:---");
                 writtenHeader = true;

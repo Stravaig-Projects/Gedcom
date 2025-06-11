@@ -101,8 +101,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteBirthEvent(entry);
             else if (eventRecord.Tag == GedcomIndividualEventRecord.DeathTag)
                 (item, description) = WriteDeathEvent(entry);
-            else if (eventRecord.Tag == GedcomIndividualEventRecord.BuriedTag)
-                (item, description) = WriteBurialEvent(entry);
+            else if (eventRecord.Tag == GedcomIndividualEventRecord.BuriedTag || eventRecord.Tag == GedcomIndividualEventRecord.CrematedTag)
+                (item, description) = WriteDeathRitesEvent(entry);
             else
             {
                 Relationship relationship = entry.Subject.GetRelationshipTo(entry.OtherFamilyMember);
@@ -342,8 +342,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteBirthEvent(entry);
             else if (tag == GedcomIndividualEventRecord.DeathTag)
                 (item, description) = WriteDeathEvent(entry);
-            else if (tag == GedcomIndividualEventRecord.BuriedTag)
-                (item, description) = WriteBurialEvent(entry);
+            else if (tag == GedcomIndividualEventRecord.BuriedTag || tag == GedcomIndividualEventRecord.CrematedTag)
+                (item, description) = WriteDeathRitesEvent(entry);
             else if ((tag == GedcomIndividualAttributeRecord.ResidenceTag) || 
                      (tag == GedcomIndividualAttributeRecord.OccupationTag))
             {
@@ -446,18 +446,35 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             return (item, sb.ToString());
         }
 
-        private (string, string) WriteBurialEvent(TimelineEntry entry)
+        private (string, string) WriteDeathRitesEvent(TimelineEntry entry)
         {
+            string pastTense = "";
+            string noun = "";
+            if (entry.Tag == GedcomIndividualEventRecord.BuriedTag)
+            {
+                pastTense = "buried";
+                noun = "Burial";
+            }
+            else if (entry.Tag == GedcomIndividualEventRecord.CrematedTag)
+            {
+                pastTense = "cremated";
+                noun = "Cremation";
+            }
+            else
+            {
+                pastTense = entry.Tag.ToString();
+                noun = entry.Tag.ToString();
+            }
             StringBuilder sb = new StringBuilder();
 
             var subject = entry.OtherFamilyMember ?? entry.Subject;
             if (subject == entry.Subject)
-                sb.Append("Was buried");
+                sb.Append($"Was {pastTense}");
             else
             {
                 _associatesOrganiser.AddAssociate(subject);
                 var link = _fileNamer.GetIndividualFile(entry.OtherFamilyMember, entry.Subject);
-                sb.Append($"[{subject.NameWithoutMarker}]({link}) was buried");
+                sb.Append($"[{subject.NameWithoutMarker}]({link}) was {pastTense}");
             }
 
             if (entry.IndividualEvent.Place != null)
@@ -467,14 +484,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 
             sb.Append('.');
 
-            string item = "Burial";
+            string item = noun;
             if (entry.OtherFamilyMember != null)
             {
                 var relation = entry.Subject.GetRelationshipTo(entry.OtherFamilyMember);
                 var relationName = relation.IsNotRelated 
                     ? entry.OtherFamilyMember.NameWithoutMarker
                     : _relationshipRenderer.HumanReadable(relation, true);
-                item = "Burial of " + relationName;
+                item = $"{noun} of {relationName}";
             }
             return (item, sb.ToString());
         }

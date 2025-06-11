@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Stravaig.Gedcom.Constants;
 using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model.Comparers;
@@ -14,8 +15,11 @@ namespace Stravaig.Gedcom.Model
         private readonly GedcomRecord _record;
         private readonly GedcomDatabase _database;
         public static readonly GedcomTag DateTag = "DATE".AsGedcomTag();
-        
+        public static readonly GedcomTag TimeTag = "TIME".AsGedcomTag();
+
         private readonly Lazy<DateParser> _parser;
+
+        private readonly GedcomRecord _time;
         
         public GedcomDateRecord(GedcomRecord record, GedcomDatabase database)
         {
@@ -30,22 +34,37 @@ namespace Stravaig.Gedcom.Model
                 result.Parse(this.RawDateValue);
                 return result;
             });
+            _time = record.Children.FirstOrDefault(r => r.Tag == TimeTag);
         }
 
+        public string RawTimeValue => _time?.Value;
+
         public string RawDateValue => _record.Value;
+
         public DateOrderingRule OrderingRule => _database.Settings.DateOrderingRule;
+
         public bool IsSuccessful => string.IsNullOrWhiteSpace(Error);
+
         public bool HasCoherentDate => IsSuccessful && Type != DateType.Phrase;
+
         public string Error => _parser.Value.Error;
+
         public DateType Type => _parser.Value.Type;
+
         public int? Year1 => _parser.Value.Year1;
+
         public int? Month1 => _parser.Value.Month1;
+
         public int? Day1 => _parser.Value.Day1;
+
         public CalendarType Calendar1 => _parser.Value.Calendar1;
 
         public int? Year2 => _parser.Value.Year2;
+
         public int? Month2 => _parser.Value.Month2;
+
         public int? Day2 => _parser.Value.Day2;
+
         public CalendarType Calendar2 => _parser.Value.Calendar2;
 
         public DateTime? ExactDate1 

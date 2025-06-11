@@ -120,6 +120,8 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<string[]> _lazyLabelTitles;
         private readonly Lazy<GedcomUserReferenceNumberTypeRecord> _lazyRefType;
         private readonly Lazy<GedcomObjectRecord[]> _lazyObjects;
+        private readonly GedcomChangeRecord _changeRecord;
+        private readonly CustomCreateRecord _createRecord;
 
         public GedcomSourceRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -144,6 +146,14 @@ namespace Stravaig.Gedcom.Model
             _lazyLabelTitles = new Lazy<string[]>(() => Labels.Select(l => l.Title).ToArray());
             _lazyRefType = new Lazy<GedcomUserReferenceNumberTypeRecord>(GetReferenceTypeRecord);
             _lazyObjects = new Lazy<GedcomObjectRecord[]>(GetObjectRecords);
+
+            var changeRecord = record.Children.FirstOrDefault(r => r.Tag == GedcomChangeRecord.ChangeTag);
+            if (changeRecord != null)
+                _changeRecord = new GedcomChangeRecord(changeRecord, database);
+
+            var createRecord = record.Children.FirstOrDefault(r => r.Tag == CustomCreateRecord.CreateTag);
+            if (createRecord != null)
+                _createRecord = new CustomCreateRecord(createRecord, database);
         }
 
         private GedcomObjectRecord[] GetObjectRecords()
@@ -253,6 +263,8 @@ namespace Stravaig.Gedcom.Model
             return record?.Value;
         }
 
+        public GedcomChangeRecord LastChanged => _changeRecord;
+        public CustomCreateRecord Created => _createRecord;
 
         // This is checked in the constructor already.
         // ReSharper disable once PossibleInvalidOperationException

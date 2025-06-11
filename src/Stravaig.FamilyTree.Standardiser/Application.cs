@@ -13,6 +13,11 @@ namespace Stravaig.FamilyTree.Standardiser
     public class Application
     {
         private static readonly GedcomTag HeadTag = "HEAD".AsGedcomTag();
+
+        private static readonly GedcomTag[] CustomChildTags =
+        [
+            "_CRE".AsGedcomTag(),
+        ];
         
         private readonly ILogger<Application> _logger;
         private readonly CommandLineOptions _options;
@@ -79,7 +84,8 @@ namespace Stravaig.FamilyTree.Standardiser
 
         private void WriteChildRecord(StreamWriter writer, GedcomRecord record)
         {
-            if (record.Tag.IsUserDefined)
+            // Normally custom tags are thrown away, but some can be kept.
+            if (record.Tag.IsUserDefined && !CustomChildTags.Contains(record.Tag))
                 return;
             
             if (record.Tag == GedcomPlaceRecord.PlaceTag)
