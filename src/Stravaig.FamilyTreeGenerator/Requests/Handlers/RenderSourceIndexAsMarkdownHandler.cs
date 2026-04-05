@@ -67,23 +67,6 @@ public class RenderSourceIndexAsMarkdownHandler : RequestHandler<RenderSourceInd
         var acceptableImageCount =
             source.Objects.Count(o => o.HasLabel(Labels.PublishImage) && o.IsFileType(FileTypes.Jpg));
 
-        // if (acceptableImageCount > 0)
-        // {
-        //     Console.WriteLine($"**** {source.Title}");
-        //     foreach (var obj in source.Objects)
-        //     {
-        //         Console.WriteLine($"{obj.CrossReferenceId}:");
-        //         Console.WriteLine($"    FileName: {obj.FileName}");
-        //         Console.WriteLine($"    FileType: {obj.FileType}");
-        //         Console.WriteLine($"    Title: {obj.Title}");
-        //         Console.WriteLine($"    Labels:  {string.Join("; ", obj.Labels.Select(l => l.Title))}");
-        //     }
-        //     Console.WriteLine("****");
-        //
-        //     Console.WriteLine($"Press any key to continue...");
-        //     Console.ReadLine();
-        // }
-
         return acceptableImageCount > 0
             ? $" including {acceptableImageCount} image{(acceptableImageCount == 1 ? string.Empty : "s")}."
             : string.Empty;

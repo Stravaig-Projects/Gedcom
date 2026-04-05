@@ -94,6 +94,7 @@ class Program
             registry.Register<RenderPersonIndex, RenderMarriageByDateIndexHandler>();
             registry.Register<RenderPersonIndex, RenderMarriageByNameIndexHandler>();
             registry.Register<RenderPersonIndex, RenderOnThisDayJsonHandler>();
+            registry.Register<RenderPersonIndex, RenderPersonIndexAsJsonHandler>();
 
             // Indexes for follow up research:
             registry.Register<RenderPersonIndex, RenderPersonIndexByUnknownDateOfBirthAsMarkdownHandler>();

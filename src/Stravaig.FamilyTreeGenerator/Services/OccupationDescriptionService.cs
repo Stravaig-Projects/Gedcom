@@ -37,7 +37,7 @@ public class OccupationDescriptionService : IOccupationDescriptionService
             markdown = markdown.Trim();
             return markdown;
         }
-        catch(Exception ex)
+        catch(Exception)
         {
             if (topLevelOccupation.Equals("Lapidary", StringComparison.InvariantCultureIgnoreCase))
             {

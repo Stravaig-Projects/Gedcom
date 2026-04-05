@@ -22,6 +22,8 @@ namespace Stravaig.FamilyTreeGenerator.Services
 
         string GetOnThisDayJsonFile(string relativeTo = null);
 
+        string GetSearchIndexJsonFile(string relativeTo = null);
+
         string GetByDateOfBirthIndexFile(string relativeTo = null);
         string GetByUnknownDateOfBirthIndexFile(string relativeTo = null);
         string GetByBirthLocationIndexFile(string relativeTo = null);
@@ -38,7 +40,11 @@ namespace Stravaig.FamilyTreeGenerator.Services
 
         string GetDestinationMediaFile(GedcomObjectRecord objectRecord);
 
+        string GetDestinationThumbnailFile(GedcomObjectRecord objectRecord);
+
         string GetMediaFile(GedcomObjectRecord objectRecord);
+
+        string GetMediaThumbnailFile(GedcomObjectRecord objectRecord);
 
 
         IEnumerable<DirectoryInfo>  RequiredDirectories();
@@ -66,9 +72,26 @@ namespace Stravaig.FamilyTreeGenerator.Services
             return Path.Join(GetMediaDirectory(), objectRecord.FileName);
         }
 
+        public string GetDestinationThumbnailFile(GedcomObjectRecord objectRecord)
+        {
+            var thumbnailFileName = Path.GetFileNameWithoutExtension(objectRecord.FileName)
+                                    + "_thumb"
+                                    + Path.GetExtension(objectRecord.FileName);
+            return Path.Join(GetMediaDirectory(), thumbnailFileName);
+        }
+
         public string GetMediaFile(GedcomObjectRecord objectRecord)
         {
             var fullPath = Path.Combine("../media", objectRecord.FileName);
+            return fullPath;
+        }
+
+        public string GetMediaThumbnailFile(GedcomObjectRecord objectRecord)
+        {
+            var thumbnailFileName = Path.GetFileNameWithoutExtension(objectRecord.FileName)
+                + "_thumb"
+                + Path.GetExtension(objectRecord.FileName);
+            var fullPath = Path.Combine("../media", thumbnailFileName);
             return fullPath;
         }
 
@@ -135,6 +158,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
         public string GetOnThisDayJsonFile(string relativeTo = null)
         {
             const string fileName = "on-this-day.json";
+            return GetIndexFile(fileName, relativeTo);
+        }
+
+        public string GetSearchIndexJsonFile(string relativeTo = null)
+        {
+            const string fileName = "search-index.json";
             return GetIndexFile(fileName, relativeTo);
         }
 
