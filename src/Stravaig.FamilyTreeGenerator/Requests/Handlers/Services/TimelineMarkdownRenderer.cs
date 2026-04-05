@@ -363,12 +363,30 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                            ? $":{eventRecord.Type}"
                            : string.Empty);
                 description = eventRecord.RawValue;
+                if (eventRecord.Type.HasContent())
+                {
+                    var type = eventRecord.Type;
+                    if (type == "Honour")
+                        (item, description) = WriteHonour(entry);
+                }
             }
 
             var sources = GetSourceFootnotes(eventRecord);
             var notes = GetNoteFootnotes(eventRecord);
 
             WriteTableRow(entry.Date, item, description, sources, notes);
+        }
+
+        private (string item, string description) WriteHonour(TimelineEntry entry)
+        {
+            string description = "Honoured";
+            if (entry.IndividualEvent.RawValue.HasContent())
+                description += " \"" + entry.IndividualEvent.RawValue + "\"";
+            if (entry.IndividualEvent?.Address != null)
+                description += " at " + entry.IndividualEvent.Address.Text;
+            else if (entry.IndividualEvent?.Place != null)
+                description += " in " + entry.IndividualEvent.NormalisedPlaceName();
+            return ("Honour", description);
         }
 
         private (string item, string description) WriteImmigration(TimelineEntry entry)

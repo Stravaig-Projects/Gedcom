@@ -163,7 +163,6 @@ namespace Stravaig.Gedcom.Model
         public static readonly GedcomTag RetirementTag = "RETI".AsGedcomTag();
         
         public static readonly GedcomTag EventTag = "EVEN".AsGedcomTag();
-
         
         public static readonly GedcomTag[] EventTags =
         {
@@ -214,6 +213,5 @@ namespace Stravaig.Gedcom.Model
                 return null;
             }
         }
-
     }
 }
