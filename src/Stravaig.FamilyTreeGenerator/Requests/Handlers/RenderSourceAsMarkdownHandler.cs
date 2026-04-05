@@ -38,19 +38,52 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
         {
             var sourceEntry = command.SourceEntry;
             var source = sourceEntry.Source;
-            
+
             _logger.LogInformation($"Rendering Source: {source.Title}.");
 
             var fileName = _fileNamer.GetSourceFile(source);
             _logger.LogInformation($"Writing file to: {fileName}");
             using FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-            using TextWriter writer = new StreamWriter(fs, Encoding.UTF8);
+            var utf8NoBom = new UTF8Encoding(false);
+            using TextWriter writer = new StreamWriter(fs, utf8NoBom);
 
             WriteHeader(writer, source);
             WriteSourceText(writer, source);
+            WriteObjects(writer, source, command);
             WriteNotes(writer, source);
             WriteReferencedBy(writer, sourceEntry);
             return base.Handle(command);
+        }
+
+        private void WriteObjects(TextWriter writer, GedcomSourceRecord source, RenderSource command)
+        {
+            if (source.IsReferencedByLivingPerson())
+                return;
+
+            var objects = source.Objects
+                .Where(o => o.HasLabel(Labels.PublishImage) &&
+                            o.IsFileType(FileTypes.Jpg))
+                .OrderBy(o => o.Title)
+                .ToArray();
+
+            if (objects.Length == 0)
+                return;
+
+            writer.WriteLine("## Images");
+            writer.WriteLine();
+
+            foreach (var obj in objects)
+            {
+                writer.WriteLine($"### {obj.Title}");
+                writer.WriteLine();
+                if (obj.Date != null)
+                {
+                    writer.WriteLine($"{_dateRenderer.RenderAsProse(obj.Date)}");
+                }
+                writer.WriteLine($"![{obj.Title}]({_fileNamer.GetMediaFile(obj)})");
+                writer.WriteLine();
+                command.AddObject(obj);
+            }
         }
 
         private void WriteReferencedBy(TextWriter writer, SourceEntry entry)
@@ -61,10 +94,19 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.WriteLine("## Source Referenced by");
                 writer.WriteLine();
                 var orderedSubjects = subjects.OrderByStandardSort();
+
+                bool groupByFamilyName = subjects.Select(s => s.FamilyName).Distinct().Take(2).Count() > 1;
+                string indent = groupByFamilyName ? "  " : string.Empty;
+                string lastFamilyName = null;
                 foreach (var subject in orderedSubjects)
                 {
+                    if (groupByFamilyName && lastFamilyName != subject.FamilyName)
+                    {
+                        lastFamilyName = subject.FamilyName;
+                        writer.WriteLine($"* {lastFamilyName}");
+                    }
                     string name = _nameRenderer.RenderLinkedNameWithLifespan(subject, entry.Source);
-                    writer.WriteLine($"* {name}");
+                    writer.WriteLine($"{indent}* {name}");
                 }
             }
         }
@@ -84,7 +126,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                     }
                     writer.WriteMarkdownBlockQuote(source.Notes[i].Text.RemoveNamesOfTheLiving(source.ReferencedBy));
                     writer.WriteLine();
-                } 
+                }
             }
         }
 
@@ -98,7 +140,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 {
                     writer.WriteLine(
                         "_Redacted because this source is referenced by a (potentially) living person and may contain personally identifiable information._");
-                    writer.WriteLine();                    
+                    writer.WriteLine();
                 }
                 else if (source.LabelTitles.Contains("PERSONAL", StringComparer.InvariantCultureIgnoreCase))
                 {
@@ -122,36 +164,64 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             writer.WriteLine($"permalink: /sources/{source.CrossReferenceId.ToSimpleSourceId()}");
             writer.WriteLine("---");
             writer.WriteLine();
-            
+
             writer.WriteLine($"# {source.Title.RemoveNamesOfTheLiving(source.ReferencedBy)}");
             writer.WriteLine();
 
-            writer.WriteLine("Field | Detail");
-            writer.WriteLine("---:|:---");
-            writer.WriteLine($"Publication | {source.PublicationFacts.RenderLinksAsMarkdown()}");
-            writer.WriteLine($"Originator / Author | {source.Originator.RemoveNamesOfTheLiving(source.ReferencedBy)}");
-            writer.WriteLine($"Date | {_dateRenderer.RenderAsShortDate(source.Date)}");
-            writer.WriteLine($"Responsible Agency | {source.ResponsibleAgency}");
-            writer.WriteLine($"Filed by Entry | {source.FiledByEntry}");
+            bool writtenHeader = false;
+            WriteTableEntry(writer, "Publication", source.PublicationFacts.RenderLinksAsMarkdown(), ref writtenHeader);
+            WriteTableEntry(writer, "Originator / Author", source.Originator.RemoveNamesOfTheLiving(source.ReferencedBy), ref writtenHeader);
+            WriteTableEntry(writer, "Original Document Date", _dateRenderer.RenderAsShortDate(source.Date), ref writtenHeader);
+            WriteTableEntry(writer, "Responsible Agency", source.ResponsibleAgency, ref writtenHeader);
+            WriteTableEntry(writer, "Filed by Entry", source.FiledByEntry, ref writtenHeader);
 
-            writer.Write("References | ");
-            if (source.References.Length > 1)
+            if (source.References.Length > 0)
             {
-                writer.Write("<ul>");
-                foreach (var reference in source.References)
+                WriteMetadataHeader(writer, ref writtenHeader);;
+                writer.Write("References | ");
+                if (source.References.Length > 1)
                 {
-                    writer.Write("<li>");
-                    WriteReference(writer, reference, source);
-                    writer.Write("</li>");
+                    writer.Write("<ul>");
+                    foreach (var reference in source.References)
+                    {
+                        writer.Write("<li>");
+                        WriteReference(writer, reference, source);
+                        writer.Write("</li>");
+                    }
+                    writer.Write("</ul>");
                 }
-                writer.Write("</ul>");
+                else if (source.References.Length == 1)
+                {
+                    WriteReference(writer, source.References[0], source);
+                }
+                writer.WriteLine();
             }
-            else if (source.References.Length == 1)
+
+            WriteTableEntry(writer, "Source Created", _dateRenderer.RenderAsShortDateTime(source.Created.DateRecord), ref writtenHeader);
+            WriteTableEntry(writer, "Source Last Updated", _dateRenderer.RenderAsShortDateTime(source.LastChanged.DateRecord), ref writtenHeader);
+
+            writer.WriteLine();
+        }
+
+        private static void WriteTableEntry(TextWriter writer, string field, string value, ref bool writtenHeader)
+        {
+            if (value.HasContent())
             {
-                WriteReference(writer, source.References[0], source);                
+                WriteMetadataHeader(writer, ref writtenHeader);
+                writer.WriteLine($"{field} | {value}");
             }
-            writer.WriteLine();
-            writer.WriteLine();
+        }
+
+        private static void WriteMetadataHeader(TextWriter writer, ref bool writtenHeader)
+        {
+            if (!writtenHeader)
+            {
+                writer.WriteLine("## Metadata");
+                writer.WriteLine();
+                writer.WriteLine("Field | Detail");
+                writer.WriteLine("---:|:---");
+                writtenHeader = true;
+            }
         }
 
         private static void WriteReference(TextWriter writer, GedcomUserReferenceNumberRecord reference, GedcomSourceRecord source)
@@ -160,7 +230,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.Write($"({source.ReferenceType.Type}) ");
             if (reference.Type.HasContent())
                 writer.Write($"({reference.Type}) ");
-            
+
             if (reference.Reference.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 writer.Write($"[Open original source at {reference.Reference}]({reference.Reference})");
             else

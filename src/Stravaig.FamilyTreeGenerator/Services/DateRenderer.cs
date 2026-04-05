@@ -10,6 +10,8 @@ namespace Stravaig.FamilyTreeGenerator.Services
     {
         string RenderAsProse(GedcomDateRecord dateRecord);
         string RenderAsShortDate(GedcomDateRecord dateRecord);
+
+        string RenderAsShortDateTime(GedcomDateRecord dateRecord);
     }
 
     public class DateRenderer: IDateRenderer
@@ -42,6 +44,12 @@ namespace Stravaig.FamilyTreeGenerator.Services
                 sb.Append(date2);
             }
 
+            if (!string.IsNullOrWhiteSpace(dateRecord.RawTimeValue))
+            {
+                sb.Append(" at ");
+                sb.Append(dateRecord.RawTimeValue);
+            }
+
             return sb.ToString();
         }
 
@@ -68,6 +76,14 @@ namespace Stravaig.FamilyTreeGenerator.Services
                 sb.Append(date2);
             
             return sb.ToString();
+        }
+
+        public string RenderAsShortDateTime(GedcomDateRecord dateRecord)
+        {
+            if (string.IsNullOrWhiteSpace(dateRecord.RawTimeValue))
+                return RenderAsShortDate(dateRecord);
+
+            return $"{RenderAsShortDate(dateRecord)} {dateRecord.RawTimeValue}";
         }
 
         private string ShortDate(int? year, int? month, int? day)

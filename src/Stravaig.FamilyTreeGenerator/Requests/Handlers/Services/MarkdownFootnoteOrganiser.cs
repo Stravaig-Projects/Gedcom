@@ -4,6 +4,7 @@ using Stravaig.FamilyTreeGenerator.Extensions;
 using Stravaig.FamilyTreeGenerator.Services;
 using Stravaig.Gedcom.Extensions;
 using Stravaig.Gedcom.Model;
+using Stravaig.Gedcom.Model.Extensions;
 
 namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
 {
@@ -81,7 +82,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                     writer.WriteLine("* References: ");
                     foreach (var reference in source.References)
                     {
-                        writer.Write($"  * ");
+                        writer.Write("  * ");
                         if (source.ReferenceType != null)
                             writer.Write($"({source.ReferenceType.Type}) ");
                         if (reference.Type.HasContent())
@@ -89,7 +90,32 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                         writer.WriteLine(reference.Reference);
                     }
                 }
+
+                WriteImages(writer, source);
             }
+        }
+
+        private void WriteImages(TextWriter writer, GedcomSourceRecord source)
+        {
+            if (source.IsReferencedByLivingPerson())
+                return;
+
+            var objects = source.Objects
+                .Where(o => o.HasLabel(Labels.PublishImage) &&
+                            o.IsFileType(FileTypes.Jpg))
+                .OrderBy(o => o.Title)
+                .ToArray();
+
+            if (objects.Length == 0)
+                return;
+
+            writer.Write("*");
+
+            foreach (var obj in objects)
+            {
+                writer.Write($" ![{obj.Title}]({_fileNamer.GetMediaThumbnailFile(obj)})");
+            }
+            writer.WriteLine();
         }
     }
 }

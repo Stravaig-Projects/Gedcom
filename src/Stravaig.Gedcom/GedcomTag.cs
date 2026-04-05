@@ -3,7 +3,7 @@ using Stravaig.Gedcom.Extensions;
 
 namespace Stravaig.Gedcom
 {
-    public readonly struct GedcomTag : IComparable<GedcomTag>
+    public readonly struct GedcomTag : IComparable<GedcomTag>, IEquatable<GedcomTag>
     {
         private const char Underscore = (char) 0x5F;
         private readonly string _value;
@@ -32,18 +32,12 @@ namespace Stravaig.Gedcom
 
         public override int GetHashCode()
         {
-            return _value.GetHashCode();
+            return (_value != null ? _value.GetHashCode() : 0);
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-
-            if (obj is GedcomTag tag)
-                return _value.Equals(tag._value);
-
-            return false;
+            return obj is GedcomTag other && Equals(other);
         }
 
         public static bool operator ==(GedcomTag a, GedcomTag b) => a._value == b._value;
@@ -52,6 +46,11 @@ namespace Stravaig.Gedcom
         public int CompareTo(GedcomTag other)
         {
             return string.Compare(_value, other._value, StringComparison.Ordinal);
+        }
+
+        public bool Equals(GedcomTag other)
+        {
+            return _value.Equals(other._value, StringComparison.Ordinal);
         }
     }
 }
