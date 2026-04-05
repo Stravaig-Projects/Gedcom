@@ -95,12 +95,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 writer.WriteLine();
                 var orderedSubjects = subjects.OrderByStandardSort();
 
-                bool groupByFamilyName = subjects.Select(s => s.FamilyName).Distinct().Take(2).Count() > 1;
+                bool groupByFamilyName = subjects.Select(s => s.FamilyName.ToLowerInvariant())
+                    .Distinct().Take(2).Count() > 1;
                 string indent = groupByFamilyName ? "  " : string.Empty;
                 string lastFamilyName = null;
                 foreach (var subject in orderedSubjects)
                 {
-                    if (groupByFamilyName && lastFamilyName != subject.FamilyName)
+                    if (groupByFamilyName && !subject.FamilyName.Equals(lastFamilyName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         lastFamilyName = subject.FamilyName;
                         writer.WriteLine($"* {lastFamilyName}");

@@ -28,7 +28,7 @@ public class RenderPersonIndexByNameAsMarkdownHandler : RenderPersonIndexBaseHan
     protected  override void WriteIndex(TextWriter writer, GedcomIndividualRecord[] people)
     {
         var familyGroups = people
-            .GroupBy(p => p.FamilyName)
+            .GroupBy(p => p.FamilyName.ToLowerInvariant())
             .OrderBy(g => g.Key)
             .ToArray();
 
@@ -38,7 +38,7 @@ public class RenderPersonIndexByNameAsMarkdownHandler : RenderPersonIndexBaseHan
             if (string.IsNullOrWhiteSpace(family.Key))
                 writer.WriteLine("## ???");
             else
-                writer.WriteLine($"## {family.Key}");
+                writer.WriteLine($"## {family.First().FamilyName}");
             writer.WriteLine();
 
                 

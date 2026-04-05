@@ -12,8 +12,8 @@ namespace Stravaig.FamilyTree.Common.Extensions
             this IEnumerable<GedcomIndividualRecord> sequence)
         {
             return sequence
-                .OrderBy(s => s.FamilyName)
-                .ThenBy(s => s.NameWithoutMarker)
+                .OrderBy(s => s.FamilyName.ToLowerInvariant())
+                .ThenBy(s => s.NameWithoutMarker.ToLowerInvariant())
                 .ThenBy(s => s.BirthEvent?.Date);
         }
 
@@ -22,8 +22,8 @@ namespace Stravaig.FamilyTree.Common.Extensions
         {
             return sequence
                 .OrderBy(s => s.BirthEvent?.Date)
-                .ThenBy(s => s.FamilyName)
-                .ThenBy(s => s.NameWithoutMarker);
+                .ThenBy(s => s.FamilyName.ToLowerInvariant())
+                .ThenBy(s => s.NameWithoutMarker.ToLowerInvariant());
         }
     }
 }
