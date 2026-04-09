@@ -21,6 +21,12 @@ namespace Stravaig.FamilyTree.Common.Footnotes
             _footnotes = new List<Footnote>();
         }
 
+        public bool HasFootnote(GedcomSourceRecord source) =>
+            _footnotes.Any(f => f.Source != null && f.Source.CrossReferenceId == source.CrossReferenceId);
+
+        public bool HasFootnote(GedcomNoteRecord note) =>
+            _footnotes.Any(f => f.Note != null && note.CrossReferenceId.HasValue);
+
         public int AddFootnote(GedcomSourceRecord source)
         {
             var existing = _footnotes.FirstOrDefault(f => f.Source != null &&

@@ -195,7 +195,7 @@ namespace Stravaig.Gedcom.Model
             : base(record, database)
         {
             Subject = subject ?? throw new ArgumentNullException(nameof(subject));
-                               if (!EventTags.Contains(record.Tag))
+            if (!EventTags.Contains(record.Tag))
                 throw new ArgumentException($"The record must be a known event type. One of {string.Join(", ", EventTags.Select(et=>et.ToString()))}.");
         }
         

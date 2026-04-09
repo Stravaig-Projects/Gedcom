@@ -60,11 +60,11 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
             if (source.IsReferencedByLivingPerson())
                 return;
 
-            var objects = source.Objects
-                .Where(o => o.HasLabel(Labels.PublishImage) &&
-                            o.IsFileType(FileTypes.Jpg))
-                .OrderBy(o => o.Title)
-                .ToArray();
+            GedcomObjectRecord[] objects = source.Objects
+                    .Where(o => o.HasLabel(Labels.PublishImage) &&
+                                o.IsFileType(FileTypes.Jpg))
+                    .OrderBy(o => o.Title)
+                    .ToArray();
 
             if (objects.Length == 0)
                 return;
@@ -82,6 +82,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers
                 }
                 writer.WriteLine($"![{obj.Title}]({_fileNamer.GetMediaFile(obj)})");
                 writer.WriteLine();
+
+                foreach (var note in obj.Notes)
+                {
+                    writer.WriteLine(note.Text);
+                    writer.WriteLine();
+                }
+
                 command.AddObject(obj);
             }
         }

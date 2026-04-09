@@ -75,12 +75,43 @@ public class RenderIndividualAsMarkdownHandler : RequestHandler<RenderIndividual
         _timelineRenderer.WriteTimeline(_writer, command.Individual, _footnoteOrganiser, _associatesOrganiser);
         _residenceRenderer.WriteResidence(_writer, command.Individual, _footnoteOrganiser);
         _occupationRenderer.WriteOccupations(_writer, command.Individual, _footnoteOrganiser);
+        WriteAdditionalSources(command.Individual);
         WriteNotes(command.Individual);
         WriteAssociations(command.Individual);
         _footnoteOrganiser.WriteFootnotes(_writer, command.Individual);
         WriteFooter(command.Individual);
 
         return base.Handle(command);
+    }
+
+    private void WriteAdditionalSources(GedcomIndividualRecord individual)
+    {
+        bool isFirst = true;
+        foreach (var source in individual.Sources)
+        {
+            if (_footnoteOrganiser.HasFootnote(source))
+            {
+                continue;
+            }
+
+            int footnoteId = _footnoteOrganiser.AddFootnote(source);
+
+            if (isFirst)
+            {
+                isFirst = false;
+                _writer.WriteLine("## Additional Sources");
+                _writer.WriteLine();
+                _writer.WriteLine("Footnote | Source");
+                _writer.WriteLine("---|---");
+            }
+
+            _writer.Write($"[{footnoteId}](#{footnoteId})");
+            string sourceFile = _fileNamer.GetSourceFile(source, individual);
+            _writer.WriteLine($" | **[{source.Title.RemoveNamesOfTheLiving(source.ReferencedBy)}]({sourceFile})**");
+        }
+
+        if(!isFirst)
+            _writer.WriteLine();
     }
 
     private void InitHandler(RenderIndividual command)

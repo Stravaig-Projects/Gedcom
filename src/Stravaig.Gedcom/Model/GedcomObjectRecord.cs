@@ -12,6 +12,7 @@ namespace Stravaig.Gedcom.Model
         private readonly Lazy<GedcomTitleRecord> _titleRecord;
         private readonly Lazy<GedcomDateRecord> _lazyDate;
         private readonly Lazy<GedcomLabelRecord[]> _labels;
+        private readonly Lazy<GedcomNoteRecord[]> _lazyNotes;
 
         public GedcomObjectRecord(GedcomRecord record, GedcomDatabase database)
             : base(record, database)
@@ -20,6 +21,7 @@ namespace Stravaig.Gedcom.Model
             _titleRecord = new Lazy<GedcomTitleRecord>(GetTitleRecord);
             _labels = new Lazy<GedcomLabelRecord[]>(GetLabels);
             _lazyDate = new Lazy<GedcomDateRecord>(GetDateRecord);
+            _lazyNotes = new Lazy<GedcomNoteRecord[]>(GetNoteRecords);
         }
 
         public bool HasLabel(string labelName)
@@ -27,6 +29,15 @@ namespace Stravaig.Gedcom.Model
 
         public bool IsFileType(string typeName)
             => FileType.Equals(typeName, StringComparison.OrdinalIgnoreCase);
+
+        protected GedcomNoteRecord[] GetNoteRecords()
+        {
+            return GetChildren(GedcomNoteRecord.NoteTag)
+                .Select(r => r.Value.IsGedcomPointer()
+                    ? _database.NoteRecords[r.Value.AsGedcomPointer()]
+                    : new GedcomNoteRecord(r, _database))
+                .ToArray();
+        }
 
         private GedcomFileRecord GetFileRecord()
         {
@@ -68,5 +79,7 @@ namespace Stravaig.Gedcom.Model
         public GedcomLabelRecord[] Labels => _labels.Value;
 
         public GedcomPointer? CrossReferenceId => _record.CrossReferenceId;
+
+        public GedcomNoteRecord[] Notes => _lazyNotes.Value;
     }
 }
