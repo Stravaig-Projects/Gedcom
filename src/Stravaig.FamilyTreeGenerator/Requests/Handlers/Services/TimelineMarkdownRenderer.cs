@@ -356,6 +356,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteImmigration(entry);
             else if (tag == GedcomIndividualEventRecord.NaturalisationTag)
                 (item, description) = WriteNaturalisation(entry);
+            else if (tag == GedcomIndividualEventRecord.CensusTag)
+                (item, description) = WriteCensus(entry);
             else
             {
                 item = $"{tag}" +
@@ -375,6 +377,14 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             var notes = GetNoteFootnotes(eventRecord);
 
             WriteTableRow(entry.Date, item, description, sources, notes);
+        }
+
+        private (string item, string description) WriteCensus(TimelineEntry entry)
+        {
+            var description = entry.IndividualEvent.RawValue;
+            if (string.IsNullOrWhiteSpace(description))
+                description = "Census";
+            return ("Census", description);
         }
 
         private (string item, string description) WriteHonour(TimelineEntry entry)
