@@ -169,21 +169,25 @@ namespace Stravaig.Gedcom.Model
 
         public bool IsBetween(GedcomDateRecord start, GedcomDateRecord end, bool inclusive = true)
         {
-            if (start == null) return false;
-            if (end == null) return false;
-            
-            int startComparison = DateComparer.CompareDate(start, this);
-            if (startComparison == Order.XIsLessThanY || 
-                (inclusive && startComparison == Order.XEqualsY))
+            if (start == null && end == null) return true;
+
+            if (start != null)
             {
-                int endComparison = DateComparer.CompareDate(this, end);
-                if (endComparison == Order.XIsLessThanY || (inclusive && endComparison == Order.XEqualsY))
-                {
-                    return true;
-                }
+                int startComparison = DateComparer.CompareDate(start, this);
+                bool afterStart = startComparison == Order.XIsLessThanY ||
+                                  (inclusive && startComparison == Order.XEqualsY);
+                if (!afterStart) return false;
             }
 
-            return false;
+            if (end != null)
+            {
+                int endComparison = DateComparer.CompareDate(this, end);
+                bool beforeEnd = endComparison == Order.XIsLessThanY ||
+                                 (inclusive && endComparison == Order.XEqualsY);
+                if (!beforeEnd) return false;
+            }
+
+            return true;
         }
     }
 }

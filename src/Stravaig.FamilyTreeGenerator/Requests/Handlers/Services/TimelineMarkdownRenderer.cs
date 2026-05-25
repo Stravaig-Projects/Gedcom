@@ -17,6 +17,7 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
         private readonly IFileNamer _fileNamer;
         private IAssociatesOrganiser _associatesOrganiser;
         private readonly IIndividualNameRenderer _nameRenderer;
+        private bool _hasWrittenHeader = false;
 
         public TimelineMarkdownRenderer(
             IDateRenderer dateRenderer,
@@ -42,15 +43,13 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             if (timeline.NotAny())
                 return;
 
-            _writer.WriteLine("## Timeline");
-            WriteTableHeader();
-
             foreach (var entry in timeline)
             {
                 WriteTimelineEntry(entry);
             }
 
-            _writer.WriteLine();
+            if(_hasWrittenHeader)
+                _writer.WriteLine();
         }
 
         private void WriteTimelineEntry(TimelineEntry entry)
@@ -70,16 +69,22 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             }
         }
 
-        private void WriteTableHeader()
+        private void WriteTimelineHeader()
         {
-            _writer.WriteLine();
-            _writer.WriteLine("Date | Item | Description | Sources | Notes");
-            _writer.WriteLine("---|---|---|---|---");
+            if (!_hasWrittenHeader)
+            {
+                _writer.WriteLine("## Timeline");
+                _writer.WriteLine();
+                _writer.WriteLine("Date | Item | Description | Sources | Notes");
+                _writer.WriteLine("---|---|---|---|---");
+                _hasWrittenHeader = true;
+            }
         }
 
         private void WriteTableRow(GedcomDateRecord date, string item, string description, IEnumerable<int> sources,
             IEnumerable<int> notes)
         {
+            WriteTimelineHeader();
             _writer.Write(_dateRenderer.RenderAsShortDate(date));
             _writer.Write(" | ");
             _writer.Write(item);
@@ -132,6 +137,8 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 (item, description) = WriteMarriageEvent(entry);
             else if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageTag)
                 (item, description) = WriteMarriageEvent(entry);
+            else if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.EngagementTag)
+                (item, description) = WriteEngagementEvent(entry);
             else if (entry.FamilyEvent.Tag == GedcomFamilyEventRecord.DivorceTag)
                 (item, description) = WriteDivorceEvent(entry);
             else
@@ -211,6 +218,29 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
             return (item, sb.ToString());
             
         }
+
+        private (string, string) WriteEngagementEvent(TimelineEntry entry)
+        {
+            string item = "Engagement";
+            var sb = new StringBuilder();
+            if (entry.Family.Spouses.Any(s => s == entry.Subject))
+            {
+                RenderEngagementEventWhereSubjectIsSpouse(entry, sb);
+            }
+
+            if (entry.FamilyEvent.Address != null)
+            {
+                sb.Append("at ");
+                sb.Append(entry.FamilyEvent.Address.Text);
+            }
+            else if (entry.FamilyEvent.Place != null)
+            {
+                sb.Append("in ");
+                sb.Append(entry.FamilyEvent.NormalisedPlaceName());
+            }
+            return (item, sb.ToString());
+        }
+
         private (string, string) WriteMarriageEvent(TimelineEntry entry)
         {
             string item = "Marriage";
@@ -318,6 +348,26 @@ namespace Stravaig.FamilyTreeGenerator.Requests.Handlers.Services
                 sb.Append(entry.FamilyEvent.Tag == GedcomFamilyEventRecord.MarriageLicenceTag
                     ? "Applied for marriage licence with "
                     : "Married to ");
+                if (spouse.IsAlive())
+                {
+                    sb.Append('X');
+                }
+                else
+                {
+                    var link = _fileNamer.GetIndividualFile(spouse, entry.Subject);
+                    sb.Append($"[{spouse.NameWithoutMarker}]({link})");
+                }
+
+                sb.Append(' ');
+            }
+        }
+
+        private void RenderEngagementEventWhereSubjectIsSpouse(TimelineEntry entry, StringBuilder sb)
+        {
+            var spouse = entry.Family.Spouses.FirstOrDefault(s => s != entry.Subject);
+            if (spouse != null)
+            {
+                sb.Append("Engaged to ");
                 if (spouse.IsAlive())
                 {
                     sb.Append('X');

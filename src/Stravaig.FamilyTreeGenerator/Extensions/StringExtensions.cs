@@ -82,16 +82,20 @@ namespace Stravaig.FamilyTreeGenerator.Extensions
             if (string.IsNullOrWhiteSpace(text))
                 return text;
             
-            HashSet<string> names = new HashSet<string>();
+            HashSet<string> names = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
             var dataSubjects = references
                 .SelectMany(GetSubjects)
                 .Distinct()
-                .Where(s => s.IsAlive());
+                .Where(s => s.IsAlive())
+                .ToArray();
             foreach (var subject in dataSubjects)
             {
-                var nameParts = subject.Names
-                    .SelectMany(n => n.Name.Split(' ', '/'))
-                    .Where(n => n.HasContent() && n.Length > 1);
+                string[] allNameParts = subject.Names
+                    .SelectMany(n => n.Name?.Split(' ', '/') ?? [])
+                    .ToArray();
+                var nameParts = allNameParts
+                    .Where(n => n.HasContent() && n.Length > 1)
+                    .ToArray();
                 foreach (string name in nameParts)
                     names.Add(name);
             }
